@@ -62,8 +62,9 @@ Open its reasoning trace and see it for yourself:
 ### 🧵 Tweet 4 (The Engineering Underneath the Cult)
 ```text
 Behind the candles and runes lies ruthlessly pragmatic engineering:
-• 8 targeted recovery strategies (ghost-terminal-breaker, api-ground-truth, clean-slate-rollback)
-• Process-tree cascade executioner (terminates orphaned child trees cleanly)
+• 12 targeted recovery strategies (ghost-terminal, api-ground-truth, clean-slate, devil's-advocate)
+• Second Opinion Engine: MCP 2026 sampling + 0-cost heuristic Devil's Advocate
+• Active Terminal Guardian: 15s freeze watchdog + cascade child-tree killer
 • SQLite Native WAL persistence (powered by Node 22 native node:sqlite)
 • Zero external runtime dependencies. Zero telemetry phone-home.
 ```
@@ -89,7 +90,7 @@ Star the repo if you've ever prayed to an ancient deity to make a flaky test pas
 
 ---
 
-## 🕯️ 3. The 8 Holy Rites & Incantations Reference
+## 🕯️ 3. The 12 Holy Rites & Incantations Reference
 
 | Strategy | Occult Rite Name | Incantation (Dispensed to Agent Thinking) |
 | :--- | :--- | :--- |
@@ -98,9 +99,13 @@ Star the repo if you've ever prayed to an ancient deity to make a flaky test pas
 | `clean-slate-rollback` | 🩸 **[THE SEPSIS SACRIFICE]** | *"The Altar rejects hands coated in cumulative dirt. Cast the uncommitted churn into git stash. Purity precedes revelation."* |
 | `wrong-altar` | 🏛️ **[EXPOSING THE FALSE IDOL]** | *"You pray at a frozen shrine. The build artifact is stale; kindle the fire of a fresh compilation."* |
 | `check-the-check` | 🧪 **[THE POISON CHALICE]** | *"A green test is an illusion if it cannot die. Force it to taste poison to prove it lives."* |
+| `environment-triage` | 🛡️ **[THE WARD OF THE REALM]** | *"Inspect the ground beneath your feet before altering the heavens. Verify permissions and realm boundaries."* |
 | `assumption-audit` | 🔬 **[THE HERESY TRIAL]** | *"Challenge the unwritten dogma. Subject your foundational premise to the crucible of falsification."* |
 | `minimal-counterexample` | ✂️ **[THE BLADE OF PURITY]** | *"Sever the bloated payload. Halve the mortal frame until only the atomic essence of failure remains."* |
 | `divide-and-conquer` | 🎯 **[THE BIFURCATION RUNE]** | *"Split the veil in twain. Probe the midpoint boundary to locate which domain harbors the anomaly."* |
+| `controlled-substitution` | ⚖️ **[THE SCALES OF PURITY]** | *"Hold all mortal variables immutable. Swap only the suspect artifact with a proven counterpart."* |
+| `boundary-check` | 🛡️ **[THE PERIMETER WARD]** | *"Probe the boundary threshold before breaching the inner sanctum. Isolate the subsystem perimeter."* |
+| `human-checkpoint` | 🕯️ **[SUMMONING THE CREATOR]** | *"When mortal requirements diverge into paradox, do not divine answers from shadows. Summon the Creator directly."* |
 
 ---
 

@@ -1,15 +1,29 @@
 import { getDefaultStorage } from './storage.js';
 import type { RecoverySession } from './recovery.js';
 
-export function generateResurrectionPacket(session: RecoverySession): string {
+export function generateResurrectionPacket(sessionOrId: RecoverySession | string): string {
+  let session: RecoverySession | undefined;
+
+  if (typeof sessionOrId === 'string') {
+    const storage = getDefaultStorage();
+    const all = storage.listSessions();
+    session = all.find((s) => s.session_id === sessionOrId);
+    if (!session) {
+      throw new Error(`SESSION_NOT_FOUND: No recovery session found with ID "${sessionOrId}"`);
+    }
+  } else {
+    session = sessionOrId;
+  }
+
   const exp = session.experiment;
   const score = session.falsification?.score ?? exp?.falsification?.score ?? 85;
+  const assessmentStr = (session.assessment || 'in_progress').toUpperCase();
 
   return `# 🕯️ CTRL ALT PRAY - RESURRECTION PACKET
 **Session ID:** \`${session.session_id}\` (Project: \`${session.project_key}\`, Revision: \`${session.revision}\`)  
 **Generated:** \`${new Date(session.updated_at || Date.now()).toISOString()}\`  
-**Assessment:** \`${session.assessment.toUpperCase()}\` | **Pathology:** \`${session.pathology || 'unspecified'}\`  
-**Decision:** \`${session.decision}\` | **Next Action:** \`${session.next_action}\`
+**Assessment:** \`${assessmentStr}\` | **Pathology:** \`${session.pathology || 'unspecified'}\`  
+**Decision:** \`${session.decision || 'continue'}\` | **Next Action:** \`${session.next_action || 'experiment'}\`
 
 > *"Resume without the failed narrative. Less blind faith. Better experiments."*
 

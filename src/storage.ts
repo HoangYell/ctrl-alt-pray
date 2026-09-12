@@ -51,8 +51,8 @@ export interface StorageDriver {
   getSession(projectKey: string, sessionId: string): RecoverySession | undefined;
   saveSession(session: RecoverySession): void;
   listSessions(projectKey?: string): RecoverySession[];
-  getIdempotentResponse<T>(requestId: string, payloadHash?: string): T | undefined;
-  saveIdempotentResponse<T>(requestId: string, response: T, payloadHash?: string): void;
+  getIdempotentResponse<T>(requestId?: string, payloadHash?: string): T | undefined;
+  saveIdempotentResponse<T>(requestId?: string, response?: T, payloadHash?: string): void;
   purge(projectKey: string, sessionId?: string): { deletedSessions: number; deletedIdempotency: number };
   pruneOldSessions(retentionDays: number): { prunedSessions: number; prunedIdempotency: number };
   close(): void;
@@ -155,7 +155,8 @@ export class SqliteStorageDriver implements StorageDriver {
     }
   }
 
-  public getIdempotentResponse<T>(requestId: string, payloadHash?: string): T | undefined {
+  public getIdempotentResponse<T>(requestId?: string, payloadHash?: string): T | undefined {
+    if (!requestId || typeof requestId !== 'string' || requestId.trim().length === 0) return undefined;
     const stmt = this.db.prepare('SELECT payload_hash, response_json FROM idempotency WHERE request_id = ?');
     const row = stmt.get(requestId) as { payload_hash: string | null; response_json: string } | undefined;
     if (!row) return undefined;
@@ -171,7 +172,8 @@ export class SqliteStorageDriver implements StorageDriver {
     }
   }
 
-  public saveIdempotentResponse<T>(requestId: string, response: T, payloadHash?: string): void {
+  public saveIdempotentResponse<T>(requestId?: string, response?: T, payloadHash?: string): void {
+    if (!requestId || typeof requestId !== 'string' || requestId.trim().length === 0 || response === undefined) return;
     const now = Date.now();
     const stmt = this.db.prepare(`
       INSERT OR REPLACE INTO idempotency (request_id, payload_hash, response_json, created_at)
@@ -296,7 +298,8 @@ export class JsonFileStorageDriver implements StorageDriver {
     return all.map((r) => JSON.parse(r.data) as RecoverySession);
   }
 
-  public getIdempotentResponse<T>(requestId: string, payloadHash?: string): T | undefined {
+  public getIdempotentResponse<T>(requestId?: string, payloadHash?: string): T | undefined {
+    if (!requestId || typeof requestId !== 'string' || requestId.trim().length === 0) return undefined;
     const row = this.memoryData.idempotency[requestId];
     if (!row) return undefined;
 
@@ -311,7 +314,8 @@ export class JsonFileStorageDriver implements StorageDriver {
     }
   }
 
-  public saveIdempotentResponse<T>(requestId: string, response: T, payloadHash?: string): void {
+  public saveIdempotentResponse<T>(requestId?: string, response?: T, payloadHash?: string): void {
+    if (!requestId || typeof requestId !== 'string' || requestId.trim().length === 0 || response === undefined) return;
     const now = Date.now();
     this.memoryData.idempotency[requestId] = {
       request_id: requestId,
@@ -411,11 +415,13 @@ export class RecoveryStorage implements StorageDriver {
     return this.driver.listSessions(projectKey);
   }
 
-  public getIdempotentResponse<T>(requestId: string, payloadHash?: string): T | undefined {
+  public getIdempotentResponse<T>(requestId?: string, payloadHash?: string): T | undefined {
+    if (!requestId) return undefined;
     return this.driver.getIdempotentResponse<T>(requestId, payloadHash);
   }
 
-  public saveIdempotentResponse<T>(requestId: string, response: T, payloadHash?: string): void {
+  public saveIdempotentResponse<T>(requestId?: string, response?: T, payloadHash?: string): void {
+    if (!requestId || response === undefined) return;
     this.driver.saveIdempotentResponse<T>(requestId, response, payloadHash);
   }
 
