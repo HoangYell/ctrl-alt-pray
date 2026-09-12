@@ -86,27 +86,100 @@ flowchart LR
 
 ---
 
-## ⚡ Quickstart (10 Seconds)
+## ⚡ One-Click MCP Setup for Every Coding Editor
 
-### Step 1: Arm any repository
+You don't need to manually write JSON files or juggle settings across multiple tools. `ctrl-alt-pray` provides a **1-click universal ignition command** that arms your editor with both the **2-Strikes Circuit Breaker** and the **MCP Server configuration**.
 
-Run this single ignition command in the root of your project:
+### Option A: Universal 1-Click (All Editors in 1 Shot)
 
 ```bash
-npx ctrl-alt-pray init
+# Arms Cursor, Claude, VS Code, Windsurf, Cline, Zed, and JetBrains at once:
+npx ctrl-alt-pray init --all
+
+# Or use the short MCP alias:
+npx ctrl-alt-pray mcp
 ```
 
-`ctrl-alt-pray` automatically detects your active development environment and equips it with the non-negotiable **2-Strikes Circuit Breaker**:
-- **Cursor**: Injects tripwire into `.cursorrules` and provisions `.vscode/mcp.json`.
-- **Claude Code**: Injects into `CLAUDE.md`.
-- **Google Antigravity / Gemini CLI**: Injects into `GEMINI.md`.
-- **Cline / Roo Code**: Injects into `.clinerules`.
-- **OpenCode**: Registers MCP in `opencode.jsonc`.
-- **Universal Fallback**: Creates standard `AGENTS.md` recognized by modern coding agents.
+### Option B: Editor-Specific 1-Click Ignition
 
-### Step 2: Code with peace of mind
+| Editor / Agent | One-Click Command | Config Files Provisioned |
+| :--- | :--- | :--- |
+| **Cursor** | `npx ctrl-alt-pray init cursor` | `.cursorrules`, `.cursor/mcp.json`, `.vscode/mcp.json` |
+| **Claude Code** | `npx ctrl-alt-pray init claude` | `CLAUDE.md`, `.mcp.json` (or `claude mcp add`) |
+| **VS Code / Copilot Agent** | `npx ctrl-alt-pray init vscode` | `.vscode/mcp.json` |
+| **Windsurf (Codeium)** | `npx ctrl-alt-pray init windsurf` | `.windsurfrules`, `.windsurf/mcp.json` |
+| **Cline & Roo Code** | `npx ctrl-alt-pray init cline` | `.clinerules`, `cline_mcp_settings.json` |
+| **Zed Editor** | `npx ctrl-alt-pray init zed` | `.zed/settings.json` (with `context_servers`) |
+| **JetBrains AI (IntelliJ / WebStorm)** | `npx ctrl-alt-pray init jetbrains` | `.idea/mcp.json` |
+| **Google Antigravity / Gemini CLI** | `npx ctrl-alt-pray init gemini` | `GEMINI.md` |
+| **Auto-Detect Current Repo** | `npx ctrl-alt-pray init` | Auto-detects workspace & provisions matching configs |
 
-Work as you always do. But the instant your AI fails twice on the same check, the tripwire forces it to summon the **Altar of Ground Truth (`pray`)** instead of guessing.
+---
+
+### Option C: Manual Copy-Paste JSON Configs
+
+If you prefer pasting JSON directly into your editor settings:
+
+<details>
+<summary><b>1. Cursor, VS Code, Windsurf, JetBrains, or Root <code>.mcp.json</code></b></summary>
+
+Place inside `.cursor/mcp.json`, `.vscode/mcp.json`, `.windsurf/mcp.json`, `.idea/mcp.json`, or `.mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "ctrl-alt-pray": {
+      "command": "npx",
+      "args": ["-y", "ctrl-alt-pray"]
+    }
+  }
+}
+```
+</details>
+
+<details>
+<summary><b>2. Claude Code CLI</b></summary>
+
+Run in your terminal:
+```bash
+claude mcp add ctrl-alt-pray npx -y ctrl-alt-pray
+```
+Or place in `.mcp.json` at your project root.
+</details>
+
+<details>
+<summary><b>3. Zed Editor (<code>.zed/settings.json</code>)</b></summary>
+
+Add under `context_servers`:
+
+```json
+{
+  "context_servers": {
+    "ctrl-alt-pray": {
+      "command": "npx",
+      "args": ["-y", "ctrl-alt-pray"]
+    }
+  }
+}
+```
+</details>
+
+<details>
+<summary><b>4. Cline / Roo Code (<code>cline_mcp_settings.json</code>)</b></summary>
+
+Place in project root or Cline global storage:
+
+```json
+{
+  "mcpServers": {
+    "ctrl-alt-pray": {
+      "command": "npx",
+      "args": ["-y", "ctrl-alt-pray"]
+    }
+  }
+}
+```
+</details>
 
 ---
 

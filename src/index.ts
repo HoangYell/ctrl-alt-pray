@@ -386,8 +386,11 @@ What specific output or error signal would prove this assumption false?`,
 async function main() {
   const arg = process.argv[2];
 
-  if (arg === 'init') {
-    runInit();
+  if (arg === 'init' || arg === 'mcp') {
+    const target = process.argv[3]?.toLowerCase();
+    const isAll = target === '--all' || target === '-a' || target === 'all' || (arg === 'mcp' && !target);
+    const editor = isAll ? undefined : target;
+    runInit(process.cwd(), true, { all: isAll, editor });
     return;
   }
 
@@ -441,8 +444,9 @@ async function main() {
     pray-run <command>
 
   Commands:
-    init             Auto-detect agent environments (Cursor, Claude, OpenCode) & inject Tripwires
-    stats            Display telemetry on intercepted loops, recovery rates, and tokens saved
+    init [editor|--all] Auto-detect or arm all coding editors (Cursor, Claude, VS Code, Windsurf, Cline, Zed, JetBrains)
+    mcp [editor|--all]  One-Click MCP setup: injects MCP server configs into all or selected coding editors
+    stats               Display telemetry on intercepted loops, recovery rates, and tokens saved
     history [id]     The Confessional: replay the 3-step decision tree of a recovered loop
     purge [proj] [id]Administrative purge of sessions and expired cache (>7 days)
     dashboard        Launch local visual recovery dashboard on http://127.0.0.1:3900

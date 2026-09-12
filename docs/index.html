@@ -940,6 +940,142 @@
       color: #ffffff;
     }
 
+    /* One-Click MCP Suite */
+    .mcp-universal-banner {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.12), rgba(6, 182, 212, 0.08));
+      border: 1px solid rgba(99, 102, 241, 0.35);
+      border-radius: 14px;
+      padding: 24px 28px;
+      margin-bottom: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .mcp-banner-info {
+      max-width: 620px;
+    }
+
+    .mcp-banner-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--cyan);
+      background: rgba(6, 182, 212, 0.12);
+      border: 1px solid rgba(6, 182, 212, 0.3);
+      padding: 2px 8px;
+      border-radius: 6px;
+      margin-bottom: 8px;
+      font-family: var(--font-mono);
+    }
+
+    .mcp-banner-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin: 0 0 6px;
+      letter-spacing: -0.02em;
+    }
+
+    .mcp-banner-desc {
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      margin: 0;
+      line-height: 1.5;
+    }
+
+    .mcp-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .mcp-tab-btn {
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.15s ease;
+    }
+
+    .mcp-tab-btn:hover {
+      color: var(--text-main);
+      border-color: var(--border-hover);
+      background: var(--surface-2);
+    }
+
+    .mcp-tab-btn.active {
+      background: var(--surface-3);
+      border-color: var(--indigo);
+      color: #ffffff;
+      box-shadow: 0 0 14px rgba(99, 102, 241, 0.25);
+    }
+
+    .mcp-display-card {
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+    }
+
+    .mcp-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 16px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .mcp-target-badge {
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      color: var(--cyan);
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      padding: 4px 10px;
+      border-radius: 6px;
+    }
+
+    .mcp-code-container {
+      position: relative;
+      background: #020408;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: #e2e8f0;
+      overflow-x: auto;
+    }
+
+    .mcp-code-container pre {
+      margin: 0;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    .mcp-copy-overlay {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+    }
+
     /* Responsive Mobile First */
     @media (max-width: 960px) {
       .header-inner {
@@ -1029,7 +1165,7 @@
         <a href="#simulator">Simulator</a>
         <a href="#pillars">Architecture</a>
         <a href="#rites">12 Holy Rites</a>
-        <a href="#integrations">Integrations</a>
+        <a href="#integrations">1-Click MCP</a>
         <a href="#telemetry">Telemetry</a>
       </nav>
 
@@ -1074,7 +1210,7 @@
       </a>
 
       <a href="https://github.com/HoangYell/ctrl-alt-pray" target="_blank" class="btn btn-secondary">
-        <i data-lucide="github" style="width: 16px; height: 16px;"></i>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
         <span>GitHub Repo</span>
       </a>
 
@@ -1409,67 +1545,75 @@
     </div>
   </section>
 
-  <!-- One-Line Integration -->
+  <!-- One-Click MCP Suite Section -->
   <section id="integrations">
     <div class="container">
       <div class="section-header">
-        <div class="section-tag">Zero Friction</div>
-        <h2 class="section-title">Plug Into Any AI Client</h2>
-        <p class="section-desc">One command auto-detects your workspace and injects the 2-Strikes Circuit Breaker tripwire.</p>
+        <div class="section-tag">One-Click MCP Protocol</div>
+        <h2 class="section-title">One-Click Setup For Every Coding Editor</h2>
+        <p class="section-desc">Instantly equip Cursor, Claude Code, VS Code, Windsurf, Cline, Zed, and JetBrains AI with the 2-Strikes Circuit Breaker and MCP Altar.</p>
       </div>
 
-      <div class="integration-grid">
-        <div class="integration-card">
-          <div class="integration-header">
-            <i data-lucide="mouse-pointer" style="width: 20px; height: 20px; color: var(--cyan);"></i>
-            <span class="integration-title">Cursor (.cursorrules)</span>
-          </div>
-          <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 12px;">
-            Auto-wires into project root to catch infinite edit flip-flops.
+      <!-- Universal 1-Click Banner -->
+      <div class="mcp-universal-banner">
+        <div class="mcp-banner-info">
+          <span class="mcp-banner-badge">
+            <i data-lucide="zap" style="width: 13px; height: 13px;"></i>
+            UNIVERSAL AUTO-IGNITION
+          </span>
+          <h3 class="mcp-banner-title">Arm All Editors In One Shot</h3>
+          <p class="mcp-banner-desc">
+            Scans your workspace, detects active environments, and automatically writes matching <code>.mcp.json</code>, <code>.cursor/mcp.json</code>, <code>.vscode/mcp.json</code>, and guideline tripwires with zero manual typing.
           </p>
-          <div class="code-block">
-            <code>npx ctrl-alt-pray init</code>
-          </div>
         </div>
 
-        <div class="integration-card">
-          <div class="integration-header">
-            <i data-lucide="bot" style="width: 20px; height: 20px; color: #a855f7;"></i>
-            <span class="integration-title">Claude Code (CLAUDE.md)</span>
-          </div>
-          <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 12px;">
-            Enforces 2-Strikes rule directly inside Claude's operating instructions.
-          </p>
-          <div class="code-block">
-            <code>npx ctrl-alt-pray init</code>
-          </div>
+        <div class="install-box" onclick="copySnippet('npx ctrl-alt-pray init --all', this)" title="Click to copy universal 1-click installer">
+          <span>$ npx ctrl-alt-pray init --all</span>
+          <button class="copy-btn" aria-label="Copy Universal Command">
+            <i data-lucide="copy" style="width: 16px; height: 16px;"></i>
+          </button>
         </div>
+      </div>
 
-        <div class="integration-card">
-          <div class="integration-header">
-            <i data-lucide="terminal" style="width: 20px; height: 20px; color: var(--emerald);"></i>
-            <span class="integration-title">Terminal Shell (pray-run)</span>
-          </div>
-          <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 12px;">
-            Supervises tests and dev builds with a 15s freeze watchdog.
-          </p>
-          <div class="code-block">
-            <code>pray-run pnpm test</code>
-          </div>
-        </div>
+      <!-- Multi-Editor Tabs -->
+      <div class="mcp-tabs" id="mcp-tabs">
+        <button class="mcp-tab-btn active" onclick="switchEditor('cursor', this)">
+          <i data-lucide="mouse-pointer" style="width: 15px; height: 15px;"></i>
+          <span>Cursor</span>
+        </button>
+        <button class="mcp-tab-btn" onclick="switchEditor('claude', this)">
+          <i data-lucide="bot" style="width: 15px; height: 15px;"></i>
+          <span>Claude Code</span>
+        </button>
+        <button class="mcp-tab-btn" onclick="switchEditor('vscode', this)">
+          <i data-lucide="code-2" style="width: 15px; height: 15px;"></i>
+          <span>VS Code / Copilot</span>
+        </button>
+        <button class="mcp-tab-btn" onclick="switchEditor('windsurf', this)">
+          <i data-lucide="wind" style="width: 15px; height: 15px;"></i>
+          <span>Windsurf</span>
+        </button>
+        <button class="mcp-tab-btn" onclick="switchEditor('cline', this)">
+          <i data-lucide="sparkles" style="width: 15px; height: 15px;"></i>
+          <span>Cline &amp; Roo</span>
+        </button>
+        <button class="mcp-tab-btn" onclick="switchEditor('zed', this)">
+          <i data-lucide="terminal" style="width: 15px; height: 15px;"></i>
+          <span>Zed Editor</span>
+        </button>
+        <button class="mcp-tab-btn" onclick="switchEditor('jetbrains', this)">
+          <i data-lucide="layers" style="width: 15px; height: 15px;"></i>
+          <span>JetBrains AI</span>
+        </button>
+        <button class="mcp-tab-btn" onclick="switchEditor('terminal', this)">
+          <i data-lucide="shield" style="width: 15px; height: 15px;"></i>
+          <span>Terminal (pray-run)</span>
+        </button>
+      </div>
 
-        <div class="integration-card">
-          <div class="integration-header">
-            <i data-lucide="network" style="width: 20px; height: 20px; color: var(--amber);"></i>
-            <span class="integration-title">MCP Clients (Claude / Roo)</span>
-          </div>
-          <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 12px;">
-            Add to <code>claude_desktop_config.json</code> with 0 configuration.
-          </p>
-          <div class="code-block">
-            <code>"ctrl-alt-pray": { "command": "npx", "args": ["-y", "ctrl-alt-pray"] }</code>
-          </div>
-        </div>
+      <!-- Selected Editor Display Card -->
+      <div class="mcp-display-card" id="mcp-display">
+        <!-- Rendered dynamically via switchEditor() -->
       </div>
     </div>
   </section>
@@ -1559,6 +1703,137 @@
       setTimeout(() => {
         toast.classList.remove('show');
       }, 2500);
+    }
+
+    // Multi-Editor MCP Configuration Data
+    const EDITORS = {
+      cursor: {
+        name: 'Cursor',
+        badge: '.cursor/mcp.json & .cursorrules',
+        command: 'npx ctrl-alt-pray init cursor',
+        path: 'your-project/.cursor/mcp.json',
+        desc: 'Provisions Cursor rules to catch 3:00 AM edit flip-flops and registers the MCP server.',
+        config: `{\n  "mcpServers": {\n    "ctrl-alt-pray": {\n      "command": "npx",\n      "args": ["-y", "ctrl-alt-pray"]\n    }\n  }\n}`
+      },
+      claude: {
+        name: 'Claude Code',
+        badge: 'CLAUDE.md & .mcp.json',
+        command: 'npx ctrl-alt-pray init claude',
+        path: 'your-project/.mcp.json',
+        desc: 'Enforces the 2-Strikes rule directly inside CLAUDE.md and hooks into Claude Code MCP.',
+        config: `{\n  "mcpServers": {\n    "ctrl-alt-pray": {\n      "command": "npx",\n      "args": ["-y", "ctrl-alt-pray"]\n    }\n  }\n}`
+      },
+      vscode: {
+        name: 'VS Code / Copilot',
+        badge: '.vscode/mcp.json',
+        command: 'npx ctrl-alt-pray init vscode',
+        path: 'your-project/.vscode/mcp.json',
+        desc: 'Standard VS Code MCP configuration for GitHub Copilot Agent mode and MCP extensions.',
+        config: `{\n  "mcpServers": {\n    "ctrl-alt-pray": {\n      "command": "npx",\n      "args": ["-y", "ctrl-alt-pray"]\n    }\n  }\n}`
+      },
+      windsurf: {
+        name: 'Windsurf (Codeium)',
+        badge: '.windsurfrules & .windsurf/mcp.json',
+        command: 'npx ctrl-alt-pray init windsurf',
+        path: 'your-project/.windsurf/mcp.json',
+        desc: 'Arms Cascade and Windsurf agents with the 2-Strikes rule and local MCP tools.',
+        config: `{\n  "mcpServers": {\n    "ctrl-alt-pray": {\n      "command": "npx",\n      "args": ["-y", "ctrl-alt-pray"]\n    }\n  }\n}`
+      },
+      cline: {
+        name: 'Cline & Roo Code',
+        badge: '.clinerules & cline_mcp_settings.json',
+        command: 'npx ctrl-alt-pray init cline',
+        path: 'your-project/cline_mcp_settings.json',
+        desc: 'Registers MCP server with Cline / Roo Code and injects prompt-level tripwire.',
+        config: `{\n  "mcpServers": {\n    "ctrl-alt-pray": {\n      "command": "npx",\n      "args": ["-y", "ctrl-alt-pray"]\n    }\n  }\n}`
+      },
+      zed: {
+        name: 'Zed Editor',
+        badge: '.zed/settings.json',
+        command: 'npx ctrl-alt-pray init zed',
+        path: 'your-project/.zed/settings.json',
+        desc: 'Configures context_servers for Zed Assistant using native JSON configuration.',
+        config: `{\n  "context_servers": {\n    "ctrl-alt-pray": {\n      "command": "npx",\n      "args": ["-y", "ctrl-alt-pray"]\n    }\n  }\n}`
+      },
+      jetbrains: {
+        name: 'JetBrains AI',
+        badge: '.idea/mcp.json',
+        command: 'npx ctrl-alt-pray init jetbrains',
+        path: 'your-project/.idea/mcp.json',
+        desc: 'MCP configuration for IntelliJ IDEA, WebStorm, PyCharm, and Junie AI.',
+        config: `{\n  "mcpServers": {\n    "ctrl-alt-pray": {\n      "command": "npx",\n      "args": ["-y", "ctrl-alt-pray"]\n    }\n  }\n}`
+      },
+      terminal: {
+        name: 'Terminal Active Guardian',
+        badge: 'CLI Terminal Wrapper',
+        command: 'pray-run pnpm test',
+        path: 'Terminal Shell',
+        desc: 'Wraps tests or dev commands with a 15-second freeze watchdog and process cascade killer.',
+        config: `# Run any test or build command under active guardian supervision:\npray-run pnpm test\n\n# Or with custom timeout (e.g. 30s):\nPRAY_TIMEOUT=30 pray-run npm run build`
+      }
+    };
+
+    function escapeHtml(str) {
+      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    function switchEditor(key, btnEl) {
+      const editor = EDITORS[key];
+      if (!editor) return;
+
+      document.querySelectorAll('.mcp-tab-btn').forEach(btn => btn.classList.remove('active'));
+      if (btnEl) {
+        btnEl.classList.add('active');
+      } else {
+        const defaultBtn = document.querySelector(`.mcp-tab-btn[onclick*="'${key}'"]`);
+        if (defaultBtn) defaultBtn.classList.add('active');
+      }
+
+      const display = document.getElementById('mcp-display');
+      if (!display) return;
+
+      display.innerHTML = `
+        <div class="mcp-card-header">
+          <div>
+            <div style="font-weight: 700; font-size: 1.15rem; color: var(--text-main); margin-bottom: 4px;">
+              ${editor.name} Setup
+            </div>
+            <div style="color: var(--text-muted); font-size: 0.875rem;">
+              ${editor.desc}
+            </div>
+          </div>
+          <span class="mcp-target-badge">${editor.badge}</span>
+        </div>
+
+        <div style="margin-bottom: 16px;">
+          <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--cyan); margin-bottom: 8px;">
+            1-Click Terminal Command:
+          </div>
+          <div class="install-box" style="width: 100%; justify-content: space-between;" onclick="copySnippet('${editor.command}', this)" title="Click to copy command">
+            <span>$ ${editor.command}</span>
+            <button class="copy-btn" aria-label="Copy Command">
+              <i data-lucide="copy" style="width: 16px; height: 16px;"></i>
+            </button>
+          </div>
+        </div>
+
+        <div>
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+            <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-dim);">
+              Or Manual Configuration: <code>${editor.path}</code>
+            </div>
+            <button class="btn btn-secondary" style="padding: 4px 12px; font-size: 0.75rem;" onclick="copySnippet(EDITORS['${key}'].config, this)">
+              <i data-lucide="copy" style="width: 13px; height: 13px;"></i>
+              <span>Copy Config</span>
+            </button>
+          </div>
+          <div class="mcp-code-container">
+            <pre>${escapeHtml(editor.config)}</pre>
+          </div>
+        </div>
+      `;
+
+      lucide.createIcons();
     }
 
     // 12 Canonical Rites Data
@@ -1804,6 +2079,9 @@
 
     // Initial Simulator Render
     renderScenario(0);
+
+    // Initial One-Click MCP Editor Render
+    switchEditor('cursor');
   </script>
 </body>
 </html>
