@@ -942,8 +942,8 @@
 
     /* One-Click MCP Suite */
     .mcp-universal-banner {
-      background: linear-gradient(135deg, rgba(99, 102, 241, 0.12), rgba(6, 182, 212, 0.08));
-      border: 1px solid rgba(99, 102, 241, 0.35);
+      background: var(--surface-1);
+      border: 1px solid var(--border);
       border-radius: 14px;
       padding: 24px 28px;
       margin-bottom: 32px;
@@ -952,6 +952,11 @@
       justify-content: space-between;
       flex-wrap: wrap;
       gap: 20px;
+      transition: border-color 0.2s ease;
+    }
+
+    .mcp-universal-banner:hover {
+      border-color: var(--border-hover);
     }
 
     .mcp-banner-info {
@@ -965,8 +970,8 @@
       font-size: 0.75rem;
       font-weight: 700;
       color: var(--cyan);
-      background: rgba(6, 182, 212, 0.12);
-      border: 1px solid rgba(6, 182, 212, 0.3);
+      background: rgba(6, 182, 212, 0.08);
+      border: 1px solid rgba(6, 182, 212, 0.25);
       padding: 2px 8px;
       border-radius: 6px;
       margin-bottom: 8px;
@@ -1018,9 +1023,8 @@
 
     .mcp-tab-btn.active {
       background: var(--surface-3);
-      border-color: var(--indigo);
+      border-color: rgba(99, 102, 241, 0.5);
       color: #ffffff;
-      box-shadow: 0 0 14px rgba(99, 102, 241, 0.25);
     }
 
     .mcp-display-card {
@@ -1028,6 +1032,48 @@
       border: 1px solid var(--border);
       border-radius: 14px;
       padding: 24px;
+    }
+
+    .mcp-actions-bar {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .mcp-view-toggle {
+      display: inline-flex;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 3px;
+      gap: 3px;
+    }
+
+    .mcp-view-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+
+    .mcp-view-btn:hover {
+      color: var(--text-main);
+    }
+
+    .mcp-view-btn.active {
+      background: var(--surface-3);
+      color: #ffffff;
+      border-color: rgba(255, 255, 255, 0.1);
     }
 
     .mcp-card-header {
@@ -1165,7 +1211,7 @@
         <a href="#simulator">Simulator</a>
         <a href="#pillars">Architecture</a>
         <a href="#rites">12 Holy Rites</a>
-        <a href="#integrations">1-Click MCP</a>
+        <a href="#mcp-setup">1-Click MCP</a>
         <a href="#telemetry">Telemetry</a>
       </nav>
 
@@ -1546,7 +1592,8 @@
   </section>
 
   <!-- One-Click MCP Suite Section -->
-  <section id="integrations">
+  <section id="mcp-setup">
+    <a id="integrations" style="position: relative; top: -80px; visibility: hidden; display: block;"></a>
     <div class="container">
       <div class="section-header">
         <div class="section-tag">One-Click MCP Protocol</div>
@@ -1567,8 +1614,8 @@
           </p>
         </div>
 
-        <div class="install-box" onclick="copySnippet('npx ctrl-alt-pray init --all', this)" title="Click to copy universal 1-click installer">
-          <span>$ npx ctrl-alt-pray init --all</span>
+        <div class="install-box" onclick="copySnippet('npx ctrl-alt-pray init', this)" title="Click to copy universal 1-click installer">
+          <span>$ npx ctrl-alt-pray init</span>
           <button class="copy-btn" aria-label="Copy Universal Command">
             <i data-lucide="copy" style="width: 16px; height: 16px;"></i>
           </button>
@@ -1604,6 +1651,10 @@
         <button class="mcp-tab-btn" onclick="switchEditor('jetbrains', this)">
           <i data-lucide="layers" style="width: 15px; height: 15px;"></i>
           <span>JetBrains AI</span>
+        </button>
+        <button class="mcp-tab-btn" onclick="switchEditor('gemini', this)">
+          <i data-lucide="cpu" style="width: 15px; height: 15px;"></i>
+          <span>Antigravity / Gemini</span>
         </button>
         <button class="mcp-tab-btn" onclick="switchEditor('terminal', this)">
           <i data-lucide="shield" style="width: 15px; height: 15px;"></i>
@@ -1706,20 +1757,39 @@
     }
 
     // Multi-Editor MCP Configuration Data
+    let currentEditorKey = 'cursor';
+    let currentEditorView = 'config'; // 'config' | 'tripwire'
+
+    const TRIPWIRE_CONTENT = `<!-- START CTRL-ALT-PRAY TRIPWIRE -->
+### 🛑 Anti-Doom-Loop Circuit Breaker (ctrl-alt-pray)
+- **Strict 2-Failure Limit**: If ANY test, build, or command fails twice with the same or related error, STOP editing immediately.
+- **No Blind Guessing**: DO NOT modify files a third time without new discriminating evidence.
+- **Mandatory Action**: Call the MCP tool 'pray' immediately. It will analyze your recent failure, provide an immutable falsification experiment, and reset your hypothesis space.
+- **Terminal Freeze**: If a terminal command hangs or outputs nothing for >15s, cancel it immediately and call 'pray' with strategy="ghost-terminal-breaker".
+- **Rite of Truth**: Do not apologize. State the single falsifiable hypothesis and execute the probe.
+<!-- END CTRL-ALT-PRAY TRIPWIRE -->`;
+
     const EDITORS = {
       cursor: {
         name: 'Cursor',
         badge: '.cursor/mcp.json & .cursorrules',
         command: 'npx ctrl-alt-pray init cursor',
-        path: 'your-project/.cursor/mcp.json',
-        desc: 'Provisions Cursor rules to catch 3:00 AM edit flip-flops and registers the MCP server.',
+        path: '.cursor/mcp.json',
+        fileName: 'mcp.json',
+        deepLink: 'cursor://anysphere.cursor-mcp/install?name=ctrl-alt-pray&command=npx&args=-y,ctrl-alt-pray',
+        deepLinkLabel: 'Open in Cursor',
+        tripwireFile: '.cursorrules',
+        desc: 'Provisions Cursor rules to catch 3:00 AM edit flip-flops and registers the MCP server in .cursor/mcp.json.',
         config: `{\n  "mcpServers": {\n    "ctrl-alt-pray": {\n      "command": "npx",\n      "args": ["-y", "ctrl-alt-pray"]\n    }\n  }\n}`
       },
       claude: {
         name: 'Claude Code',
         badge: 'CLAUDE.md & .mcp.json',
         command: 'npx ctrl-alt-pray init claude',
-        path: 'your-project/.mcp.json',
+        path: '.mcp.json',
+        fileName: '.mcp.json',
+        tripwireFile: 'CLAUDE.md',
+        claudeCmd: 'claude mcp add ctrl-alt-pray npx -y ctrl-alt-pray',
         desc: 'Enforces the 2-Strikes rule directly inside CLAUDE.md and hooks into Claude Code MCP.',
         config: `{\n  "mcpServers": {\n    "ctrl-alt-pray": {\n      "command": "npx",\n      "args": ["-y", "ctrl-alt-pray"]\n    }\n  }\n}`
       },
@@ -1727,7 +1797,11 @@
         name: 'VS Code / Copilot',
         badge: '.vscode/mcp.json',
         command: 'npx ctrl-alt-pray init vscode',
-        path: 'your-project/.vscode/mcp.json',
+        path: '.vscode/mcp.json',
+        fileName: 'mcp.json',
+        deepLink: 'vscode://',
+        deepLinkLabel: 'Open in VS Code',
+        tripwireFile: 'AGENTS.md',
         desc: 'Standard VS Code MCP configuration for GitHub Copilot Agent mode and MCP extensions.',
         config: `{\n  "mcpServers": {\n    "ctrl-alt-pray": {\n      "command": "npx",\n      "args": ["-y", "ctrl-alt-pray"]\n    }\n  }\n}`
       },
@@ -1735,7 +1809,9 @@
         name: 'Windsurf (Codeium)',
         badge: '.windsurfrules & .windsurf/mcp.json',
         command: 'npx ctrl-alt-pray init windsurf',
-        path: 'your-project/.windsurf/mcp.json',
+        path: '.windsurf/mcp.json',
+        fileName: 'mcp.json',
+        tripwireFile: '.windsurfrules',
         desc: 'Arms Cascade and Windsurf agents with the 2-Strikes rule and local MCP tools.',
         config: `{\n  "mcpServers": {\n    "ctrl-alt-pray": {\n      "command": "npx",\n      "args": ["-y", "ctrl-alt-pray"]\n    }\n  }\n}`
       },
@@ -1743,7 +1819,9 @@
         name: 'Cline & Roo Code',
         badge: '.clinerules & cline_mcp_settings.json',
         command: 'npx ctrl-alt-pray init cline',
-        path: 'your-project/cline_mcp_settings.json',
+        path: 'cline_mcp_settings.json',
+        fileName: 'cline_mcp_settings.json',
+        tripwireFile: '.clinerules',
         desc: 'Registers MCP server with Cline / Roo Code and injects prompt-level tripwire.',
         config: `{\n  "mcpServers": {\n    "ctrl-alt-pray": {\n      "command": "npx",\n      "args": ["-y", "ctrl-alt-pray"]\n    }\n  }\n}`
       },
@@ -1751,7 +1829,9 @@
         name: 'Zed Editor',
         badge: '.zed/settings.json',
         command: 'npx ctrl-alt-pray init zed',
-        path: 'your-project/.zed/settings.json',
+        path: '.zed/settings.json',
+        fileName: 'settings.json',
+        tripwireFile: 'AGENTS.md',
         desc: 'Configures context_servers for Zed Assistant using native JSON configuration.',
         config: `{\n  "context_servers": {\n    "ctrl-alt-pray": {\n      "command": "npx",\n      "args": ["-y", "ctrl-alt-pray"]\n    }\n  }\n}`
       },
@@ -1759,8 +1839,20 @@
         name: 'JetBrains AI',
         badge: '.idea/mcp.json',
         command: 'npx ctrl-alt-pray init jetbrains',
-        path: 'your-project/.idea/mcp.json',
+        path: '.idea/mcp.json',
+        fileName: 'mcp.json',
+        tripwireFile: 'AGENTS.md',
         desc: 'MCP configuration for IntelliJ IDEA, WebStorm, PyCharm, and Junie AI.',
+        config: `{\n  "mcpServers": {\n    "ctrl-alt-pray": {\n      "command": "npx",\n      "args": ["-y", "ctrl-alt-pray"]\n    }\n  }\n}`
+      },
+      gemini: {
+        name: 'Google Antigravity / Gemini',
+        badge: 'GEMINI.md & .mcp.json',
+        command: 'npx ctrl-alt-pray init gemini',
+        path: 'GEMINI.md',
+        fileName: 'GEMINI.md',
+        tripwireFile: 'GEMINI.md',
+        desc: 'Enforces the 2-Strikes circuit breaker in GEMINI.md for Google Antigravity & Gemini CLI.',
         config: `{\n  "mcpServers": {\n    "ctrl-alt-pray": {\n      "command": "npx",\n      "args": ["-y", "ctrl-alt-pray"]\n    }\n  }\n}`
       },
       terminal: {
@@ -1768,6 +1860,7 @@
         badge: 'CLI Terminal Wrapper',
         command: 'pray-run pnpm test',
         path: 'Terminal Shell',
+        fileName: null,
         desc: 'Wraps tests or dev commands with a 15-second freeze watchdog and process cascade killer.',
         config: `# Run any test or build command under active guardian supervision:\npray-run pnpm test\n\n# Or with custom timeout (e.g. 30s):\nPRAY_TIMEOUT=30 pray-run npm run build`
       }
@@ -1777,7 +1870,43 @@
       return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     }
 
+    function downloadFile(filename, text) {
+      const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      showToast(`Downloaded ${filename}`);
+    }
+
+    function downloadActiveConfig() {
+      const editor = EDITORS[currentEditorKey];
+      if (!editor) return;
+      if (currentEditorView === 'tripwire' && editor.tripwireFile) {
+        downloadFile(editor.tripwireFile, TRIPWIRE_CONTENT);
+      } else if (editor.fileName) {
+        downloadFile(editor.fileName, editor.config);
+      }
+    }
+
+    function copyActiveContent(btnEl) {
+      const editor = EDITORS[currentEditorKey];
+      if (!editor) return;
+      const content = currentEditorView === 'tripwire' && editor.tripwireFile ? TRIPWIRE_CONTENT : editor.config;
+      copySnippet(content, btnEl);
+    }
+
+    function setEditorView(view) {
+      currentEditorView = view;
+      renderEditorCard(currentEditorKey);
+    }
+
     function switchEditor(key, btnEl) {
+      currentEditorKey = key;
       const editor = EDITORS[key];
       if (!editor) return;
 
@@ -1789,8 +1918,45 @@
         if (defaultBtn) defaultBtn.classList.add('active');
       }
 
+      renderEditorCard(key);
+    }
+
+    function renderEditorCard(key) {
+      const editor = EDITORS[key];
       const display = document.getElementById('mcp-display');
-      if (!display) return;
+      if (!display || !editor) return;
+
+      const isTripwire = currentEditorView === 'tripwire' && editor.tripwireFile;
+      const activeCode = isTripwire ? TRIPWIRE_CONTENT : editor.config;
+      const activeCodePath = isTripwire ? editor.tripwireFile : editor.path;
+
+      let actionsHtml = '';
+      if (editor.deepLink) {
+        actionsHtml += `
+          <a href="${editor.deepLink}" class="btn btn-primary" style="padding: 6px 14px; font-size: 0.8125rem; display: inline-flex; align-items: center; gap: 6px;">
+            <i data-lucide="external-link" style="width: 14px; height: 14px;"></i>
+            <span>${editor.deepLinkLabel || 'Open in Editor'}</span>
+          </a>
+        `;
+      }
+
+      if (editor.fileName) {
+        actionsHtml += `
+          <button class="btn btn-secondary" style="padding: 6px 14px; font-size: 0.8125rem; display: inline-flex; align-items: center; gap: 6px;" onclick="downloadActiveConfig()">
+            <i data-lucide="download" style="width: 14px; height: 14px;"></i>
+            <span>Download ${isTripwire ? editor.tripwireFile : editor.fileName}</span>
+          </button>
+        `;
+      }
+
+      if (editor.claudeCmd) {
+        actionsHtml += `
+          <button class="btn btn-secondary" style="padding: 6px 14px; font-size: 0.8125rem; display: inline-flex; align-items: center; gap: 6px;" onclick="copySnippet('${editor.claudeCmd}', this)">
+            <i data-lucide="terminal" style="width: 14px; height: 14px;"></i>
+            <span>Copy claude mcp add</span>
+          </button>
+        `;
+      }
 
       display.innerHTML = `
         <div class="mcp-card-header">
@@ -1803,6 +1969,10 @@
             </div>
           </div>
           <span class="mcp-target-badge">${editor.badge}</span>
+        </div>
+
+        <div class="mcp-actions-bar">
+          ${actionsHtml}
         </div>
 
         <div style="margin-bottom: 16px;">
@@ -1818,17 +1988,28 @@
         </div>
 
         <div>
-          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
-            <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-dim);">
-              Or Manual Configuration: <code>${editor.path}</code>
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 8px;">
+            <div class="mcp-view-toggle">
+              <button class="mcp-view-btn ${!isTripwire ? 'active' : ''}" onclick="setEditorView('config')">
+                <i data-lucide="settings-2" style="width: 13px; height: 13px;"></i>
+                <span>MCP Server Config</span>
+              </button>
+              ${editor.tripwireFile ? `
+              <button class="mcp-view-btn ${isTripwire ? 'active' : ''}" onclick="setEditorView('tripwire')">
+                <i data-lucide="shield-alert" style="width: 13px; height: 13px;"></i>
+                <span>Tripwire Rule (${editor.tripwireFile})</span>
+              </button>` : ''}
             </div>
-            <button class="btn btn-secondary" style="padding: 4px 12px; font-size: 0.75rem;" onclick="copySnippet(EDITORS['${key}'].config, this)">
-              <i data-lucide="copy" style="width: 13px; height: 13px;"></i>
-              <span>Copy Config</span>
-            </button>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 0.75rem; color: var(--text-dim); font-family: var(--font-mono);">${activeCodePath}</span>
+              <button class="btn btn-secondary" style="padding: 4px 12px; font-size: 0.75rem;" onclick="copyActiveContent(this)">
+                <i data-lucide="copy" style="width: 13px; height: 13px;"></i>
+                <span>Copy ${isTripwire ? 'Tripwire' : 'Config'}</span>
+              </button>
+            </div>
           </div>
           <div class="mcp-code-container">
-            <pre>${escapeHtml(editor.config)}</pre>
+            <pre>${escapeHtml(activeCode)}</pre>
           </div>
         </div>
       `;

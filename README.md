@@ -86,99 +86,37 @@ flowchart LR
 
 ---
 
-## ⚡ One-Click MCP Setup for Every Coding Editor
+## ⚡ One-Click MCP Setup
 
-You don't need to manually write JSON files or juggle settings across multiple tools. `ctrl-alt-pray` provides a **1-click universal ignition command** that arms your editor with both the **2-Strikes Circuit Breaker** and the **MCP Server configuration**.
-
-### Option A: Universal 1-Click (All Editors in 1 Shot)
+Arm your agent with the **2-Strikes Circuit Breaker** and the **Altar of Ground Truth** in seconds:
 
 ```bash
-# Arms Cursor, Claude, VS Code, Windsurf, Cline, Zed, and JetBrains at once:
-npx ctrl-alt-pray init --all
-
-# Or use the short MCP alias:
-npx ctrl-alt-pray mcp
+# Universal 1-Click Auto-Ignition (Auto-detects Cursor, Claude, Windsurf, VS Code, etc.):
+npx ctrl-alt-pray init
 ```
 
-### Option B: Editor-Specific 1-Click Ignition
+> [!TIP]
+> ### 🌐 Interactive 1-Click Web Setup & IDE Presets
+> Want **1-click deep-link installers** (`cursor://`), **instant config file downloads** (`.cursor/mcp.json`, `CLAUDE.md`, `.mcp.json`), or interactive visual presets for **Cursor, Claude Code, VS Code, Windsurf, Cline, Zed, and JetBrains**?
+> 
+> 👉 **[Launch the 1-Click Web Configurator (ctrl-alt-pray.pages.dev/#mcp-setup) →](https://ctrl-alt-pray.pages.dev/#mcp-setup)**
 
-| Editor / Agent | One-Click Command | Config Files Provisioned |
+<details>
+<summary><b>📋 Quick Terminal Commands by Editor (Click to expand)</b></summary>
+
+| Editor / Agent | 1-Click CLI Command | Files Automatically Provisioned |
 | :--- | :--- | :--- |
-| **Cursor** | `npx ctrl-alt-pray init cursor` | `.cursorrules`, `.cursor/mcp.json`, `.vscode/mcp.json` |
-| **Claude Code** | `npx ctrl-alt-pray init claude` | `CLAUDE.md`, `.mcp.json` (or `claude mcp add`) |
-| **VS Code / Copilot Agent** | `npx ctrl-alt-pray init vscode` | `.vscode/mcp.json` |
+| **All Editors in 1 Shot** | `npx ctrl-alt-pray init --all` | Arms all 9 editors simultaneously |
+| **Cursor** | `npx ctrl-alt-pray init cursor` | `.cursorrules`, `.cursor/mcp.json` |
+| **Claude Code** | `npx ctrl-alt-pray init claude` | `CLAUDE.md`, `.mcp.json` |
+| **VS Code / Copilot** | `npx ctrl-alt-pray init vscode` | `.vscode/mcp.json` |
 | **Windsurf (Codeium)** | `npx ctrl-alt-pray init windsurf` | `.windsurfrules`, `.windsurf/mcp.json` |
 | **Cline & Roo Code** | `npx ctrl-alt-pray init cline` | `.clinerules`, `cline_mcp_settings.json` |
-| **Zed Editor** | `npx ctrl-alt-pray init zed` | `.zed/settings.json` (with `context_servers`) |
-| **JetBrains AI (IntelliJ / WebStorm)** | `npx ctrl-alt-pray init jetbrains` | `.idea/mcp.json` |
-| **Google Antigravity / Gemini CLI** | `npx ctrl-alt-pray init gemini` | `GEMINI.md` |
-| **Auto-Detect Current Repo** | `npx ctrl-alt-pray init` | Auto-detects workspace & provisions matching configs |
+| **Zed Editor** | `npx ctrl-alt-pray init zed` | `.zed/settings.json` (`context_servers`) |
+| **JetBrains AI** | `npx ctrl-alt-pray init jetbrains` | `.idea/mcp.json` |
+| **Google Antigravity / Gemini** | `npx ctrl-alt-pray init gemini` | `GEMINI.md` |
 
----
-
-### Option C: Manual Copy-Paste JSON Configs
-
-If you prefer pasting JSON directly into your editor settings:
-
-<details>
-<summary><b>1. Cursor, VS Code, Windsurf, JetBrains, or Root <code>.mcp.json</code></b></summary>
-
-Place inside `.cursor/mcp.json`, `.vscode/mcp.json`, `.windsurf/mcp.json`, `.idea/mcp.json`, or `.mcp.json`:
-
-```json
-{
-  "mcpServers": {
-    "ctrl-alt-pray": {
-      "command": "npx",
-      "args": ["-y", "ctrl-alt-pray"]
-    }
-  }
-}
-```
-</details>
-
-<details>
-<summary><b>2. Claude Code CLI</b></summary>
-
-Run in your terminal:
-```bash
-claude mcp add ctrl-alt-pray npx -y ctrl-alt-pray
-```
-Or place in `.mcp.json` at your project root.
-</details>
-
-<details>
-<summary><b>3. Zed Editor (<code>.zed/settings.json</code>)</b></summary>
-
-Add under `context_servers`:
-
-```json
-{
-  "context_servers": {
-    "ctrl-alt-pray": {
-      "command": "npx",
-      "args": ["-y", "ctrl-alt-pray"]
-    }
-  }
-}
-```
-</details>
-
-<details>
-<summary><b>4. Cline / Roo Code (<code>cline_mcp_settings.json</code>)</b></summary>
-
-Place in project root or Cline global storage:
-
-```json
-{
-  "mcpServers": {
-    "ctrl-alt-pray": {
-      "command": "npx",
-      "args": ["-y", "ctrl-alt-pray"]
-    }
-  }
-}
-```
+*(To download ready-made config files, copy custom JSON snippets, or trigger deep-links, visit [ctrl-alt-pray.pages.dev/#mcp-setup](https://ctrl-alt-pray.pages.dev/#mcp-setup).)*
 </details>
 
 ---
