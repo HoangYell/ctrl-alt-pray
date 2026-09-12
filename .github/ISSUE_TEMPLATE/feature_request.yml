@@ -1,0 +1,27 @@
+name: Feature request
+about: Suggest a recovery or workflow improvement
+description: Propose a feature that improves stuck-loop detection or recovery flow
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What repeated pattern does the system miss today?
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: Proposal
+      description: Describe the new behavior, heuristic, or strategy.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Why this matters
+      description: Explain the value, cost, or risk.
+    validations:
+      required: true
+

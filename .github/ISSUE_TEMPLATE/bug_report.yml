@@ -1,0 +1,30 @@
+name: Bug report
+about: Report a stuck-loop or recovery issue
+description: Describe the observed failure and the specific evidence that changed the decision
+labels: [bug]
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What failed or got stuck?
+      placeholder: Describe the task, the loop, and the current blocker.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Include logs, outputs, or the exact question that keeps recurring.
+      placeholder: Paste only the relevant evidence.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected next step
+      description: What should the agent or system do next?
+      placeholder: State the minimal next probe or the missing fact required.
+    validations:
+      required: true
+
