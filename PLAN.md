@@ -725,7 +725,7 @@ Just as `yell-radar` classifies content into 6 mineral tiers, `ctrl-alt-pray` fo
 3. 🏛️ **Altar Clash (Target Misalignment)**: Editing source while testing stale `dist/`, wrong port collision, caching layer masking changes.
 4. 🧪 **False Green (Negative Control Bypass)**: Passing test suite caused by swallowed exceptions, skipped assertions, or empty test blocks.
 5. 🧹 **Code Sepsis (Cumulative Churn)**: Spreading edits across $\ge 4$ files without verification, piling speculative edits on top of failures.
-6. 🔁 **Doom Flip (Oscillation / Lật Bánh Tráng)**: Flipping a boolean or branch back and forth between two known-failed states.
+6. 🔁 **Doom Flip (Oscillation / Infinite Flip-Flop)**: Flipping a boolean or branch back and forth between two known-failed states.
 
 ### B. Anti-Apology & Agent Slop Linter (Adapted from `score-article.mjs` Slop Purge)
 When an agent enters cognitive panic, its transcript degenerates into predictable placation filler (*"I apologize for the oversight..."*, *"You are completely right, let me fix that..."*).

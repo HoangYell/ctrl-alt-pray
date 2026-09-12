@@ -68,7 +68,7 @@ describe('Universal Harvester', () => {
     expect(session.revision).toBe(1);
     expect(session.experiment).toBeDefined();
     expect(session.rite).toBeDefined();
-    expect(session.nhan_pham).toBeDefined();
+    expect(session.divine_favor).toBeDefined();
   });
 
   it('runs pluggable adapters (test archaeology, cursor, claude) with graceful degradation (PLAN.md Section 14.B)', async () => {

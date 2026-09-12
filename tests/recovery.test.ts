@@ -269,7 +269,7 @@ describe('Ctrl Alt Pray recovery flow', () => {
     expect(loaded?.known_facts).toContain('df -h shows /var at 100%');
   });
 
-  it('attaches occult rites, incantations, and nhan_pham rolls to sessions', () => {
+  it('attaches occult rites, incantations, and divine favor rolls to sessions', () => {
     const session = createOrResumeRecoverySession({
       project_key: 'occult-test',
       request_id: 'req-occult-1',
@@ -279,9 +279,9 @@ describe('Ctrl Alt Pray recovery flow', () => {
 
     expect(session.rite).toContain('EXORCISM OF THE ZOMBIE');
     expect(session.incantation).toContain('Banish the mute terminal');
-    expect(session.nhan_pham).toBeDefined();
-    expect(session.nhan_pham?.score).toBeGreaterThanOrEqual(1);
-    expect(session.nhan_pham?.score).toBeLessThanOrEqual(100);
+    expect(session.divine_favor).toBeDefined();
+    expect(session.divine_favor?.score).toBeGreaterThanOrEqual(1);
+    expect(session.divine_favor?.score).toBeLessThanOrEqual(100);
     expect(session.handoff).toContain('EXORCISM OF THE ZOMBIE');
   });
 

@@ -75,7 +75,7 @@ export interface RecoverySession {
   updated_at?: number;
   rite?: string;
   incantation?: string;
-  nhan_pham?: { score: number; verdict: string };
+  divine_favor?: { score: number; verdict: string };
   altar_warning?: string;
   verification_status?: 'not_verified' | 'partially_verified' | 'verified_against_declared_checks';
   progress_reason?: string;
@@ -158,28 +158,31 @@ export const STRATEGY_INCANTATIONS: Record<ExperimentStrategy, { rite: string; i
 
 export const APOLOGY_PATTERNS = [
   /apologiz(e|ing|ed)/i,
+  /my apologies/i,
   /sorry/i,
+  /so sorry/i,
+  /forgive me/i,
   /my mistake/i,
-  /xin lỗi/i,
   /my bad/i,
   /i was wrong/i,
   /pardon/i,
+  /pardon me/i,
 ];
 
 export function detectApologySlop(text: string): boolean {
   return APOLOGY_PATTERNS.some((pattern) => pattern.test(text));
 }
 
-export function rollNhanPham(context: { attemptsCount: number; hasApology: boolean }): { score: number; verdict: string } {
+export function rollDivineFavor(context: { attemptsCount: number; hasApology: boolean }): { score: number; verdict: string } {
   let score = Math.floor(Math.random() * 31) + 65; // 65-95 base
   if (context.hasApology) score -= 25;
   if (context.attemptsCount > 3) score -= 15;
   score = Math.max(1, Math.min(100, score));
 
-  let verdict = 'Thượng Thượng Phẩm (Divine Favor)';
-  if (score < 40) verdict = 'Đại Hung (Altar Scorn - Apologies Detected)';
-  else if (score < 60) verdict = 'Bình Hòa (Trial of Patience)';
-  else if (score < 80) verdict = 'Trung Cát (Fortunate Insight)';
+  let verdict = 'Transcendent Grace (Divine Favor)';
+  if (score < 40) verdict = 'Dire Wrath (Altar Scorn - Apologies Detected)';
+  else if (score < 60) verdict = 'Trial of Patience (Temperate Grace)';
+  else if (score < 80) verdict = 'Auspicious Omen (Fortunate Insight)';
   return { score, verdict };
 }
 
@@ -297,7 +300,7 @@ export function diagnosePathology(context: {
   ].join(' ').toLowerCase();
 
   // 1. Ghost
-  const ghostPattern = /\b(hanging|hung|hangs|stuck waiting|waiting for output|terminal stuck|waiting forever|still waiting|never completes|no output from terminal|loading forever|command stuck|chờ output)\b/i;
+  const ghostPattern = /\b(hanging|hung|hangs|stuck waiting|waiting for output|terminal stuck|waiting forever|still waiting|never completes|no output from terminal|loading forever|command stuck|idle process)\b/i;
   if (ghostPattern.test(allText)) {
     return {
       pathology: 'ghost',
@@ -370,7 +373,8 @@ export function diagnosePathology(context: {
     allText.includes('oscillation') ||
     allText.includes('flip') ||
     allText.includes('revert') ||
-    allText.includes('lật bánh tráng') ||
+    allText.includes('flip-flop') ||
+    allText.includes('flip flop') ||
     allText.includes('back and forth')
   ) {
     return {
@@ -400,7 +404,7 @@ export function detectFileFlapping(context: {
   }
 
   for (const [file, count] of Object.entries(counts)) {
-    if (count >= 2 && /(revert|re-edit|restore|modified again|oscillation|lật)/i.test(combined)) {
+    if (count >= 2 && /(revert|re-edit|restore|modified again|oscillation|flip-flop|flip flop)/i.test(combined)) {
       return {
         file,
         revertCount: count,
@@ -592,7 +596,7 @@ export function selectStrategy(context: {
   }
 
   // 0.2 Ghost Terminal Breaker: Process hangs, waiting on output, terminal finished or stuck on prompt
-  const ghostTerminalRegex = /\b(hanging|hung|hangs|stuck waiting|waiting for output|terminal stuck|waiting forever|still waiting|never completes|no output from terminal|loading forever|command stuck|chờ output)\b/i;
+  const ghostTerminalRegex = /\b(hanging|hung|hangs|stuck waiting|waiting for output|terminal stuck|waiting forever|still waiting|never completes|no output from terminal|loading forever|command stuck|idle process)\b/i;
   if (ghostTerminalRegex.test(allText)) {
     exp = {
       strategy: 'ghost-terminal-breaker',
@@ -907,7 +911,7 @@ export function createOrResumeRecoverySession(
       altar_warning = altar_warning ? `${altar_warning}\n${flapWarn}` : flapWarn;
     }
 
-    const nhan_pham = rollNhanPham({
+    const divine_favor = rollDivineFavor({
       attemptsCount: mergedAttempts.length,
       hasApology,
     });
@@ -948,7 +952,7 @@ export function createOrResumeRecoverySession(
       updated_at: Date.now(),
       rite: occultRite.rite,
       incantation: occultRite.incantation,
-      nhan_pham,
+      divine_favor,
       altar_warning,
       verification_status: existing.verification_status || 'not_verified',
       heresy_challenge,
@@ -989,7 +993,7 @@ export function createOrResumeRecoverySession(
     altar_warning = altar_warning ? `${altar_warning}\n${flapWarn}` : flapWarn;
   }
 
-  const nhan_pham = rollNhanPham({
+  const divine_favor = rollDivineFavor({
     attemptsCount: attempts.length,
     hasApology,
   });
@@ -1032,7 +1036,7 @@ export function createOrResumeRecoverySession(
     updated_at: Date.now(),
     rite: occultRite.rite,
     incantation: occultRite.incantation,
-    nhan_pham,
+    divine_favor,
     altar_warning,
     verification_status: 'not_verified',
     heresy_challenge,

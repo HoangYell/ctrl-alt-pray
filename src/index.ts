@@ -121,7 +121,7 @@ server.registerTool(
             verification_status: result.verification_status,
             rite: result.rite,
             incantation: result.incantation,
-            nhan_pham: result.nhan_pham,
+            divine_favor: result.divine_favor,
             altar_warning: result.altar_warning,
             heresy_challenge: result.heresy_challenge,
             offering: result.offering,

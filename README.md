@@ -188,7 +188,7 @@ Stop apologizing. Groveling does not pass test suites.
 The Altar demands falsifiable evidence. State your thesis and execute the probe.
 ```
 
-### 2. The "Nhân Phẩm" (Karma RNG) Roll
+### 2. The Divine Favor (Karma RNG) Roll
 The AI receives a karma roll (1–100) inside its reasoning context:
 
 ```text
@@ -196,7 +196,7 @@ Thinking Process:
 - Test failed twice on stale import. Tripping circuit breaker...
 - Calling MCP tool 'pray'...
 - Received Rite: 🏛️ [EXPOSING THE FALSE IDOL]
-- Nhân Phẩm Roll: 96/100 (Thượng Thượng Phẩm — Divine Favor).
+- Divine Favor Roll: 96/100 (Transcendent Grace — Divine Favor).
 - "The artifact is dead, yet you worship its ghost. Purge dist/ and re-verify."
 - Purging dist/ before touching any application code.
 ```

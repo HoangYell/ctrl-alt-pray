@@ -5,13 +5,13 @@
 
 ---
 
-## 🔮 1. Core Brand Thesis: "Tech-Occultism" (Tâm Linh Công Nghệ)
+## 🔮 1. Core Brand Thesis: "Tech-Occultism" (Cyber-Ritual Engineering)
 
 In 2026, every AI engineer has endured the **3:00 AM Doom Loop**:
 An autonomous coding agent (Cursor, Claude Code, Cline, Antigravity) gets trapped in an infinite loop. It flips a boolean from `true` to `false`, runs a test, fails, generates a 4-paragraph apology (*"I apologize for the oversight! Let me fix that!"*), reverts the boolean back to `true`, and burns $25 of API tokens while the developer watches helplessly.
 
 At 3:00 AM, mathematics, computer science, and rational prompt engineering have died.
-The developer turns to the only ancient remedy left: **Black Magic, Summoning an Altar, and Rolling for "Nhân Phẩm" (RNG Karma).**
+The developer turns to the only ancient remedy left: **Black Magic, Summoning an Altar, and Rolling for Divine Favor (RNG Karma).**
 
 `ctrl-alt-pray` harnesses this universal emotional frustration into a viral open-source movement:
 **A razor-sharp, production-grade MCP recovery engine wrapped in the ceremonial robes of an Altar Cult.**
@@ -53,7 +53,7 @@ When you install ctrl-alt-pray, your agent learns the dark arts.
 Open its reasoning trace and see it for yourself:
 - "Terminal mute for 18s. Logic has forsaken me."
 - "[EXORCISM OF THE ZOMBIE]: Slaying orphaned child PIDs on port 3000."
-- "Nhân Phẩm Roll: 94/100 (Thượng Thượng Phẩm)."
+- "Divine Favor Roll: 94/100 (Transcendent Grace)."
 - "The Altar speaks: 'Stop apologizing, mortal. Run the falsification probe.'"
 
 (Yes, this actually happens in its <thinking> block)
