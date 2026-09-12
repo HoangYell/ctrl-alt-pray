@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Engineering Articles & Research — Ctrl Alt Pray</title>
+  <meta name="description" content="In-depth technical guides, autopsy reports, and architectural deep dives on autonomous AI coding agents, doom loops, terminal supervisors, and epistemic debugging.">
+  <meta property="og:title" content="Engineering Articles — Ctrl Alt Pray">
+  <meta property="og:description" content="Technical deep dives on preventing AI coding agent doom loops, killing zombie processes, and Popperian falsification probes.">
+  <meta property="og:image" content="../assets/ai-hero-meme.webp">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+  <style>
+    :root {
+      --bg: #06080d;
+      --surface-1: #0d111b;
+      --surface-2: #131826;
+      --surface-3: #1c2236;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(255, 255, 255, 0.18);
+      --accent: #6366f1;
+      --accent-glow: rgba(99, 102, 241, 0.2);
+      --emerald: #10b981;
+      --amber: #f59e0b;
+      --rose: #f43f5e;
+      --cyan: #06b6d4;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { background-color: var(--bg); color: var(--text-main); font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
+    body { min-height: 100vh; line-height: 1.6; }
+
+    .bg-grid {
+      position: fixed; inset: 0;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 40px 40px; pointer-events: none; z-index: 0;
+    }
+
+    .container { max-width: 1080px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+    header {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(6, 8, 13, 0.85); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .header-inner { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+    .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text-main); font-weight: 700; font-size: 1.1rem; }
+    .brand-icon { width: 32px; height: 32px; border-radius: 8px; background: linear-gradient(135deg, #4f46e5, #06b6d4); display: flex; align-items: center; justify-content: center; color: white; }
+    
+    nav { display: flex; align-items: center; gap: 24px; }
+    nav a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color 0.15s ease; }
+    nav a:hover, nav a.active { color: var(--text-main); }
+
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-size: 0.875rem; font-weight: 600; padding: 8px 16px; border-radius: 8px; cursor: pointer; text-decoration: none; transition: all 0.2s ease; border: 1px solid transparent; }
+    .btn-secondary { background: var(--surface-2); color: var(--text-main); border-color: var(--border); }
+    .btn-secondary:hover { background: var(--surface-3); border-color: var(--border-hover); }
+
+    .hero { padding: 64px 0 48px; text-align: left; }
+    .badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 9999px; background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.3); color: #a5b4fc; font-size: 0.75rem; font-weight: 600; margin-bottom: 16px; }
+    h1 { font-size: clamp(2rem, 4vw, 2.75rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.2; margin-bottom: 12px; }
+    .hero p { font-size: 1.125rem; color: var(--text-muted); max-width: 680px; }
+
+    .articles-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; padding-bottom: 80px; }
+    .article-card {
+      background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px;
+      padding: 28px; display: flex; flex-direction: column; justify-content: space-between;
+      text-decoration: none; color: inherit; transition: all 0.25s ease;
+    }
+    .article-card:hover {
+      transform: translateY(-3px); border-color: var(--border-hover);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+      background: var(--surface-2);
+    }
+    .card-meta { display: flex; align-items: center; gap: 10px; font-size: 0.75rem; color: var(--text-dim); margin-bottom: 12px; }
+    .card-tag { padding: 2px 8px; border-radius: 6px; background: var(--surface-3); color: #818cf8; font-weight: 600; font-family: var(--font-mono); }
+    .article-card h2 { font-size: 1.25rem; font-weight: 700; line-height: 1.35; margin-bottom: 10px; color: var(--text-main); }
+    .article-card p { font-size: 0.925rem; color: var(--text-muted); line-height: 1.55; margin-bottom: 20px; flex-grow: 1; }
+    .card-footer { display: flex; align-items: center; justify-content: space-between; font-size: 0.85rem; font-weight: 600; color: #818cf8; border-top: 1px solid var(--border); padding-top: 16px; }
+
+    footer { border-top: 1px solid var(--border); padding: 40px 0; background: var(--surface-1); }
+    .footer-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: gap; }
+    .footer-links { display: flex; gap: 20px; }
+    .footer-links a { color: var(--text-muted); text-decoration: none; font-size: 0.875rem; }
+    .footer-links a:hover { color: var(--text-main); }
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+
+  <header>
+    <div class="container header-inner">
+      <a href="../" class="brand">
+        <div class="brand-icon"><i data-lucide="flame" style="width: 18px; height: 18px;"></i></div>
+        <span>ctrl-alt-pray</span>
+      </a>
+
+      <nav>
+        <a href="../#what-is-it">Plain English</a>
+        <a href="../#simulator">Simulator</a>
+        <a href="../#rites">12 Holy Rites</a>
+        <a href="../#mcp-setup">1-Click MCP</a>
+        <a href="../articles/" class="active">Articles</a>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="https://github.com/HoangYell/ctrl-alt-pray" target="_blank" class="btn btn-secondary">
+          <i data-lucide="star" style="width: 15px; height: 15px;"></i>
+          <span>GitHub</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="hero">
+      <div class="badge">
+        <i data-lucide="book-open" style="width: 14px; height: 14px;"></i>
+        <span>Engineering Publications</span>
+      </div>
+      <h1>Autonomous AI Agent Autopsy & Field Manuals</h1>
+      <p>Hard architectural analyses, process tree forensics, and epistemic debugging methodologies for developers building with Cursor, Claude Code, and autonomous coding agents.</p>
+    </div>
+
+    <div class="articles-grid">
+      <!-- Article 1 -->
+      <a href="why-ai-agents-enter-doom-loops.html" class="article-card">
+        <div>
+          <div class="card-meta">
+            <span class="card-tag">SYSTEMS</span>
+            <span>6 min read</span>
+          </div>
+          <h2>Why Autonomous AI Coding Agents Enter Doom Loops (And Why Prompts Can't Stop Them)</h2>
+          <p>Dissecting the autoregressive context contamination and cognitive tunnel vision that causes agents to churn dirty files in a 3:00 AM loop, and why deterministic circuit breakers outperform prompt pleas.</p>
+        </div>
+        <div class="card-footer">
+          <span>Read Article</span>
+          <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
+        </div>
+      </a>
+
+      <!-- Article 2 -->
+      <a href="killing-ghost-terminals-and-zombie-processes.html" class="article-card">
+        <div>
+          <div class="card-meta">
+            <span class="card-tag">OS & PROCESSES</span>
+            <span>8 min read</span>
+          </div>
+          <h2>Killing Ghost Terminals: How to Stop AI Agents from Freezing on Port Conflicts and Prompts</h2>
+          <p>The forensics behind silent terminal hangs: unhandled (y/n)? stdin prompts, rogue watch-mode loops, and orphaned worker threads locking ports :3000 and :5173. Introducing the Cascade Tree Killer.</p>
+        </div>
+        <div class="card-footer">
+          <span>Read Article</span>
+          <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
+        </div>
+      </a>
+
+      <!-- Article 3 -->
+      <a href="falsification-probes-ground-truth-debugging.html" class="article-card">
+        <div>
+          <div class="card-meta">
+            <span class="card-tag">METHODOLOGY</span>
+            <span>10 min read</span>
+          </div>
+          <h2>Epistemic Debugging: 12 Canonical Falsification Probes to Force AI Agents into Reality</h2>
+          <p>Applying Karl Popper's falsificationism to autonomous coding. Replacing polite conversational apologies with the 12 Canonical Rites: Wrong Altar, Check the Check, and Clean-Context Resurrection.</p>
+        </div>
+        <div class="card-footer">
+          <span>Read Article</span>
+          <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
+        </div>
+      </a>
+
+      <!-- Article 4 -->
+      <a href="zero-friction-mcp-setup-guide.html" class="article-card">
+        <div>
+          <div class="card-meta">
+            <span class="card-tag">TUTORIAL</span>
+            <span>4 min read</span>
+          </div>
+          <h2>Arming Cursor, Claude Code, and Windsurf: The 10-Second MCP Safety Net Guide</h2>
+          <p>A hands-on, zero-friction guide to provisioning the 2-Strikes Circuit Breaker across all 9 major editors, checking visual telemetry on port 3900, and saving tokens with zero runtime dependencies.</p>
+        </div>
+        <div class="card-footer">
+          <span>Read Article</span>
+          <i data-lucide="arrow-right" style="width: 16px; height: 16px;"></i>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container footer-inner">
+      <div style="font-size: 0.875rem; color: var(--text-dim);">
+        <p>Ctrl Alt Pray — When Ctrl+Z isn't enough. Prayers are optional. Evidence is required.</p>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/HoangYell/ctrl-alt-pray" target="_blank">GitHub</a>
+        <a href="https://www.npmjs.com/package/ctrl-alt-pray" target="_blank">npm</a>
+        <a href="../">Home</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>lucide.createIcons();</script>
+</body>
+</html>

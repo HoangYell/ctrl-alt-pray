@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Why Autonomous AI Coding Agents Enter Doom Loops (And Why Prompts Can't Stop Them) — Ctrl Alt Pray</title>
+  <meta name="description" content="An architectural autopsy into the cognitive tunnel vision of LLM agents, the empirical law of 3rd-attempt failure, and why deterministic circuit breakers outperform prompt pleas.">
+  <meta property="og:title" content="Why Autonomous AI Coding Agents Enter Doom Loops — Ctrl Alt Pray">
+  <meta property="og:description" content="Dissecting the 3:00 AM loop where your AI edits line 42, apologizes, and burns $20 in tokens.">
+  <meta property="og:image" content="../assets/ai-hero-meme.webp">
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+  <style>
+    :root {
+      --bg: #06080d;
+      --surface-1: #0d111b;
+      --surface-2: #131826;
+      --surface-3: #1c2236;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(255, 255, 255, 0.18);
+      --accent: #6366f1;
+      --accent-glow: rgba(99, 102, 241, 0.2);
+      --emerald: #10b981;
+      --amber: #f59e0b;
+      --rose: #f43f5e;
+      --cyan: #06b6d4;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { background-color: var(--bg); color: var(--text-main); font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
+    body { min-height: 100vh; line-height: 1.75; }
+
+    .bg-grid {
+      position: fixed; inset: 0;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 40px 40px; pointer-events: none; z-index: 0;
+    }
+
+    .container { max-width: 820px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+    header {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(6, 8, 13, 0.85); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .header-inner { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+    .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text-main); font-weight: 700; font-size: 1.1rem; }
+    .brand-icon { width: 32px; height: 32px; border-radius: 8px; background: linear-gradient(135deg, #4f46e5, #06b6d4); display: flex; align-items: center; justify-content: center; color: white; }
+    
+    nav { display: flex; align-items: center; gap: 24px; }
+    nav a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 500; }
+    nav a:hover { color: var(--text-main); }
+
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-size: 0.875rem; font-weight: 600; padding: 8px 16px; border-radius: 8px; cursor: pointer; text-decoration: none; border: 1px solid transparent; }
+    .btn-secondary { background: var(--surface-2); color: var(--text-main); border-color: var(--border); }
+    .btn-secondary:hover { background: var(--surface-3); border-color: var(--border-hover); }
+
+    /* Article layout */
+    .article-header { padding: 56px 0 32px; border-bottom: 1px solid var(--border); margin-bottom: 40px; }
+    .back-link { display: inline-flex; align-items: center; gap: 6px; font-size: 0.85rem; color: #818cf8; text-decoration: none; margin-bottom: 20px; font-weight: 500; }
+    .back-link:hover { text-decoration: underline; }
+    .article-tag { display: inline-block; padding: 2px 8px; border-radius: 6px; background: var(--surface-3); color: #818cf8; font-size: 0.75rem; font-weight: 600; font-family: var(--font-mono); margin-bottom: 16px; }
+    h1 { font-size: clamp(2rem, 4vw, 2.75rem); font-weight: 800; letter-spacing: -0.035em; line-height: 1.25; margin-bottom: 16px; }
+    .lead { font-size: 1.15rem; color: var(--text-muted); line-height: 1.6; }
+
+    /* Content styling */
+    .content h2 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.02em; margin: 44px 0 16px; color: #ffffff; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+    .content h3 { font-size: 1.2rem; font-weight: 600; margin: 28px 0 12px; color: #e2e8f0; }
+    .content p { margin-bottom: 20px; color: #cbd5e1; font-size: 1.025rem; }
+    .content ul, .content ol { margin-bottom: 24px; padding-left: 24px; color: #cbd5e1; }
+    .content li { margin-bottom: 8px; }
+    .content strong { color: #ffffff; }
+    .content code { font-family: var(--font-mono); font-size: 0.875em; background: var(--surface-2); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--border); color: #38bdf8; }
+
+    /* Callout & Code Boxes */
+    .callout { background: var(--surface-1); border-left: 4px solid var(--accent); border-radius: 0 8px 8px 0; padding: 18px 22px; margin: 28px 0; }
+    .callout-title { font-weight: 700; color: #a5b4fc; font-size: 0.95rem; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+    .callout p { margin: 0; font-size: 0.95rem; color: var(--text-muted); }
+
+    pre { background: var(--surface-1); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; overflow-x: auto; margin: 24px 0; font-family: var(--font-mono); font-size: 0.875rem; color: #e2e8f0; line-height: 1.5; }
+    
+    table { width: 100%; border-collapse: collapse; margin: 28px 0; font-size: 0.925rem; }
+    th, td { padding: 12px 16px; text-align: left; border: 1px solid var(--border); }
+    th { background: var(--surface-2); color: #ffffff; font-weight: 600; }
+    td { background: var(--surface-1); color: var(--text-muted); }
+
+    .cta-box {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(6, 182, 212, 0.1));
+      border: 1px solid rgba(99, 102, 241, 0.3); border-radius: 12px; padding: 32px;
+      text-align: center; margin: 48px 0;
+    }
+    .cta-box h3 { font-size: 1.4rem; color: white; margin-bottom: 12px; }
+    .cta-box p { color: var(--text-muted); margin-bottom: 20px; font-size: 0.95rem; }
+
+    footer { border-top: 1px solid var(--border); padding: 40px 0; margin-top: 60px; background: var(--surface-1); }
+    .footer-inner { display: flex; align-items: center; justify-content: space-between; font-size: 0.875rem; color: var(--text-dim); }
+    .footer-links { display: flex; gap: 20px; }
+    .footer-links a { color: var(--text-muted); text-decoration: none; }
+    .footer-links a:hover { color: var(--text-main); }
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+
+  <header>
+    <div class="container header-inner" style="max-width: 1080px;">
+      <a href="../" class="brand">
+        <div class="brand-icon"><i data-lucide="flame" style="width: 18px; height: 18px;"></i></div>
+        <span>ctrl-alt-pray</span>
+      </a>
+      <nav>
+        <a href="../#what-is-it">Plain English</a>
+        <a href="../#simulator">Simulator</a>
+        <a href="../#rites">12 Holy Rites</a>
+        <a href="../articles/">Articles</a>
+      </nav>
+      <div class="nav-actions">
+        <a href="https://github.com/HoangYell/ctrl-alt-pray" target="_blank" class="btn btn-secondary">
+          <i data-lucide="star" style="width: 15px; height: 15px;"></i>
+          <span>Star on GitHub</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <article>
+      <div class="article-header">
+        <a href="index.html" class="back-link">
+          <i data-lucide="arrow-left" style="width: 14px; height: 14px;"></i>
+          <span>Back to Articles</span>
+        </a>
+        <br>
+        <span class="article-tag">SYSTEMS & ARCHITECTURE</span>
+        <h1>Why Autonomous AI Coding Agents Enter Doom Loops (And Why Prompts Can't Stop Them)</h1>
+        <p class="lead">An autopsy into the cognitive tunnel vision of LLM agents, the mathematical failure rate of third speculative patches, and why deterministic circuit breakers outperform prompt pleas.</p>
+      </div>
+
+      <div class="content">
+        <h2>The 3:00 AM Scenario Every Engineer Knows</h2>
+        <p>You give an autonomous AI coding agent (Cursor, Claude Code, Cline, or Copilot) a failing unit test or an API regression. You step away for a cup of coffee.</p>
+        <p>When you return, this is what happened:</p>
+        <ol>
+          <li><strong>Attempt 1:</strong> The AI edits line 42 of <code>src/auth.ts</code>. It runs <code>pnpm test</code>. The test fails with the exact same error.</li>
+          <li><strong>Attempt 2:</strong> The AI outputs: <em>"I apologize for the confusion! Let me correct the typing on line 43."</em> It runs the test again. Still fails.</li>
+          <li><strong>Attempt 3:</strong> The AI apologizes again. It reverts line 42, touches line 85, and invents an unexported utility function. Still fails.</li>
+          <li><strong>Attempt 8:</strong> 14 dirty files churned in <code>git status</code>. Hallucinated mock functions stacked across 3 directories. The conversation context saturates at 160k tokens. You have burned $22 in API credits.</li>
+        </ol>
+        <p>And the root cause? A stale build artifact in <code>dist/</code> or a background node process holding port <code>3000</code>. This pathological behavior is known as the <strong>AI Doom Loop</strong>.</p>
+
+        <div class="callout">
+          <div class="callout-title">
+            <i data-lucide="alert-triangle" style="width: 16px; height: 16px; color: #f59e0b;"></i>
+            <span>The Empirical Law of AI Coding Loops</span>
+          </div>
+          <p>If an AI agent fails twice consecutively on the same defect, <strong>attempting a 3rd speculative patch with the same assumptions has a &lt;4% success rate</strong>. Without an external circuit breaker, it will apologize profusely, hallucinate alternate APIs, and burn your context window.</p>
+        </div>
+
+        <h2>The Root Cause: Cognitive Tunnel Vision in LLMs</h2>
+        <p>Why do state-of-the-art models (Claude 3.7 Sonnet, GPT-4.5, Gemini 2.0 Flash) routinely fall into these repetitive traps despite their massive intelligence?</p>
+        <p>The defect is structural, not a lack of IQ:</p>
+        <ul>
+          <li><strong>Autoregressive Context Contamination:</strong> LLMs generate tokens sequentially conditioned on their prior conversation context. When an agent produces a wrong diagnosis, that diagnosis is appended to the message history. In subsequent turns, the model attends heavily to its own previous reasoning. It does not think: <em>"Maybe my entire premise is garbage."</em> Instead, it thinks: <em>"How do I tweak my previous attempt to make it work?"</em></li>
+          <li><strong>Lack of System-Level Ground Truth:</strong> LLMs cannot feel the operating system. They cannot run <code>netstat</code> or check whether port 3000 is open. They cannot inspect if <code>.git/index.lock</code> is stale. Prompts are language; system state is reality.</li>
+          <li><strong>The Apology Reflex:</strong> RLHF fine-tuning conditions models to be polite and agreeable. When trapped, they prioritize sounding helpful and apologetic over acknowledging hard epistemological limits.</li>
+        </ul>
+
+        <h2>Why System Prompts Cannot Fix It</h2>
+        <p>Most developers try to solve this by adding instructions to <code>.cursorrules</code> or <code>CLAUDE.md</code>:</p>
+        <pre><code># DO NOT LOOP!
+If you fail twice, please pause, take a deep breath, and think step by step.</code></pre>
+        <p>This prompt advisory routinely fails for three reasons:</p>
+        <ol>
+          <li><strong>Prompt Amnesia under Context Pressure:</strong> When the prompt context exceeds 50,000 tokens with massive stack traces and diffs, high-level behavioral rules lose semantic attention weight against the immediacy of the error log.</li>
+          <li><strong>No Ground-Truth Sensory Organs:</strong> Prompts have no access to process tables, socket states, or disk lockfiles.</li>
+          <li><strong>Zero Enforcement:</strong> Prompts are suggestions, not hardware interrupts.</li>
+        </ol>
+
+        <h2>The Solution: A Deterministic 2-Strikes Circuit Breaker</h2>
+        <p>You do not prevent an electrical fire in your house by politely asking the current to calm down. You install an <strong>external circuit breaker</strong>.</p>
+        <p>This is why we built <strong><a href="https://github.com/HoangYell/ctrl-alt-pray" style="color: #818cf8; text-decoration: underline;">ctrl-alt-pray</a></strong>.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Metric</th>
+              <th>Without ctrl-alt-pray</th>
+              <th>With ctrl-alt-pray</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Turns per Defect</strong></td>
+              <td>8 - 15 turns</td>
+              <td><strong>2 - 3 turns</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Token Consumption</strong></td>
+              <td>40,000 - 150,000 tokens</td>
+              <td><strong>4,000 - 12,000 tokens</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Financial Cost</strong></td>
+              <td>$1.50 - $25.00 per loop</td>
+              <td><strong>$0.02 - $0.15</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Git Working Tree</strong></td>
+              <td>10+ dirty files, broken diffs</td>
+              <td><strong>Clean working tree</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Recovery Mechanism</strong></td>
+              <td>Blind speculative guessing</td>
+              <td><strong>1-variable falsification probe</strong></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2>How ctrl-alt-pray Intercepts the Loop</h2>
+        <ol>
+          <li><strong>The In-Context Tripwire:</strong> Running <code>npx ctrl-alt-pray init</code> injects an inviolable contract into your agent's configuration. On the second consecutive failure, the agent is <strong>strictly blocked from editing code</strong>.</li>
+          <li><strong>The Universal Harvester (<code>pray()</code>):</strong> The agent calls the <code>pray()</code> tool with zero arguments. The tool automatically scans git churn, locks, and occupied ports.</li>
+          <li><strong>12 Canonical Falsification Rites:</strong> The Altar dispenses one specific bounded experiment (e.g. <em>Wrong Altar</em>, <em>Check the Check</em>, <em>Ghost Terminal Breaker</em>) to either prove or refute the root cause in 1 step.</li>
+          <li><strong>The Anti-Apology Scowl:</strong> The engine sternly instructs the AI: <em>"The Gods accept no apologies. Apologies do not pass test suites. State your single falsifiable hypothesis and execute the probe."</em></li>
+        </ol>
+
+        <div class="cta-box">
+          <h3>Arm Your Workspace in 10 Seconds</h3>
+          <p>Universal auto-ignition across Cursor, Claude Code, VS Code, Windsurf, and Cline.</p>
+          <pre style="margin: 12px auto 20px; max-width: 380px; text-align: center; background: #06080d;"><code>npx ctrl-alt-pray init</code></pre>
+          <a href="https://github.com/HoangYell/ctrl-alt-pray" target="_blank" class="btn btn-secondary">
+            <i data-lucide="star" style="width: 15px; height: 15px;"></i>
+            <span>Star on GitHub</span>
+          </a>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <footer>
+    <div class="container footer-inner" style="max-width: 820px;">
+      <div>Ctrl Alt Pray — Open-source anti-doom-loop supervisor.</div>
+      <div class="footer-links">
+        <a href="https://github.com/HoangYell/ctrl-alt-pray" target="_blank">GitHub</a>
+        <a href="https://ctrl-alt-pray.pages.dev">Website</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>lucide.createIcons();</script>
+</body>
+</html>

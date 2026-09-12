@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Arming Cursor, Claude Code, and Windsurf in 10 Seconds — Ctrl Alt Pray</title>
+  <meta name="description" content="A hands-on, zero-friction setup guide to provisioning the 2-Strikes Circuit Breaker across Cursor, Claude Code, VS Code, Windsurf, and Cline.">
+  <meta property="og:title" content="Arming Cursor & Claude Code in 10 Seconds — Ctrl Alt Pray">
+  <meta property="og:description" content="1-Click MCP install links, CLI auto-ignition, and local visual telemetry on port 3900.">
+  <meta property="og:image" content="../assets/ai-hero-meme.webp">
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+  <style>
+    :root {
+      --bg: #06080d;
+      --surface-1: #0d111b;
+      --surface-2: #131826;
+      --surface-3: #1c2236;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(255, 255, 255, 0.18);
+      --accent: #6366f1;
+      --accent-glow: rgba(99, 102, 241, 0.2);
+      --emerald: #10b981;
+      --amber: #f59e0b;
+      --rose: #f43f5e;
+      --cyan: #06b6d4;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { background-color: var(--bg); color: var(--text-main); font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
+    body { min-height: 100vh; line-height: 1.75; }
+
+    .bg-grid {
+      position: fixed; inset: 0;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 40px 40px; pointer-events: none; z-index: 0;
+    }
+
+    .container { max-width: 820px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+    header {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(6, 8, 13, 0.85); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .header-inner { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+    .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text-main); font-weight: 700; font-size: 1.1rem; }
+    .brand-icon { width: 32px; height: 32px; border-radius: 8px; background: linear-gradient(135deg, #4f46e5, #06b6d4); display: flex; align-items: center; justify-content: center; color: white; }
+    
+    nav { display: flex; align-items: center; gap: 24px; }
+    nav a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 500; }
+    nav a:hover { color: var(--text-main); }
+
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-size: 0.875rem; font-weight: 600; padding: 8px 16px; border-radius: 8px; cursor: pointer; text-decoration: none; border: 1px solid transparent; }
+    .btn-secondary { background: var(--surface-2); color: var(--text-main); border-color: var(--border); }
+    .btn-secondary:hover { background: var(--surface-3); border-color: var(--border-hover); }
+
+    .article-header { padding: 56px 0 32px; border-bottom: 1px solid var(--border); margin-bottom: 40px; }
+    .back-link { display: inline-flex; align-items: center; gap: 6px; font-size: 0.85rem; color: #818cf8; text-decoration: none; margin-bottom: 20px; font-weight: 500; }
+    .article-tag { display: inline-block; padding: 2px 8px; border-radius: 6px; background: var(--surface-3); color: #818cf8; font-size: 0.75rem; font-weight: 600; font-family: var(--font-mono); margin-bottom: 16px; }
+    h1 { font-size: clamp(2rem, 4vw, 2.75rem); font-weight: 800; letter-spacing: -0.035em; line-height: 1.25; margin-bottom: 16px; }
+    .lead { font-size: 1.15rem; color: var(--text-muted); line-height: 1.6; }
+
+    .content h2 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.02em; margin: 44px 0 16px; color: #ffffff; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+    .content h3 { font-size: 1.2rem; font-weight: 600; margin: 28px 0 12px; color: #e2e8f0; }
+    .content p { margin-bottom: 20px; color: #cbd5e1; font-size: 1.025rem; }
+    .content ul, .content ol { margin-bottom: 24px; padding-left: 24px; color: #cbd5e1; }
+    .content li { margin-bottom: 8px; }
+    .content strong { color: #ffffff; }
+    .content code { font-family: var(--font-mono); font-size: 0.875em; background: var(--surface-2); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--border); color: #38bdf8; }
+
+    pre { background: var(--surface-1); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; overflow-x: auto; margin: 24px 0; font-family: var(--font-mono); font-size: 0.875rem; color: #e2e8f0; line-height: 1.5; }
+    
+    table { width: 100%; border-collapse: collapse; margin: 28px 0; font-size: 0.875rem; }
+    th, td { padding: 10px 14px; text-align: left; border: 1px solid var(--border); }
+    th { background: var(--surface-2); color: #ffffff; font-weight: 600; }
+    td { background: var(--surface-1); color: var(--text-muted); }
+
+    .cta-box {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(6, 182, 212, 0.1));
+      border: 1px solid rgba(99, 102, 241, 0.3); border-radius: 12px; padding: 32px;
+      text-align: center; margin: 48px 0;
+    }
+
+    footer { border-top: 1px solid var(--border); padding: 40px 0; margin-top: 60px; background: var(--surface-1); }
+    .footer-inner { display: flex; align-items: center; justify-content: space-between; font-size: 0.875rem; color: var(--text-dim); }
+    .footer-links { display: flex; gap: 20px; }
+    .footer-links a { color: var(--text-muted); text-decoration: none; }
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+
+  <header>
+    <div class="container header-inner" style="max-width: 1080px;">
+      <a href="../" class="brand">
+        <div class="brand-icon"><i data-lucide="flame" style="width: 18px; height: 18px;"></i></div>
+        <span>ctrl-alt-pray</span>
+      </a>
+      <nav>
+        <a href="../#what-is-it">Plain English</a>
+        <a href="../#simulator">Simulator</a>
+        <a href="../#rites">12 Holy Rites</a>
+        <a href="../articles/">Articles</a>
+      </nav>
+      <div class="nav-actions">
+        <a href="https://github.com/HoangYell/ctrl-alt-pray" target="_blank" class="btn btn-secondary">
+          <i data-lucide="star" style="width: 15px; height: 15px;"></i>
+          <span>Star on GitHub</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <article>
+      <div class="article-header">
+        <a href="index.html" class="back-link">
+          <i data-lucide="arrow-left" style="width: 14px; height: 14px;"></i>
+          <span>Back to Articles</span>
+        </a>
+        <br>
+        <span class="article-tag">PRACTICAL SETUP GUIDE</span>
+        <h1>Arming Cursor, Claude Code, and Windsurf: The 10-Second MCP Safety Net Guide</h1>
+        <p class="lead">A step-by-step setup guide to provisioning the 2-Strikes Circuit Breaker across all 9 major editors, reviewing visual telemetry on port 3900, and eliminating token waste.</p>
+      </div>
+
+      <div class="content">
+        <h2>Why Your AI Coding Assistant Needs an External Circuit Breaker</h2>
+        <p>Whether you code inside <strong>Cursor</strong>, run autonomous agents via <strong>Claude Code</strong>, build with <strong>Windsurf</strong>, or pair with <strong>Cline</strong>, your AI assistant operates with read/write filesystem access and terminal execution privileges.</p>
+        <p>Without an external safety net, a single misunderstood prompt can spiral into hundreds of lines of churned dead code and hanging processes. <strong>ctrl-alt-pray</strong> provides a local-first, zero-dependency circuit breaker.</p>
+
+        <h2>Option 1: Universal 1-Click Direct Install (Fastest)</h2>
+        <p>If your editor supports deep-link URL handlers, click one of the buttons below to install immediately:</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Editor</th>
+              <th>Direct 1-Click Action</th>
+              <th>Target Config File</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Cursor</strong></td>
+              <td><a href="cursor://anysphere.cursor-deeplink/mcp/install?name=ctrl-alt-pray&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsImN0cmwtYWx0LXByYXkiXX0%3D" style="color: #818cf8; font-weight: 600;">⚡ 1-Click Install in Cursor</a></td>
+              <td><code>.cursor/mcp.json</code></td>
+            </tr>
+            <tr>
+              <td><strong>VS Code / Copilot</strong></td>
+              <td><a href="https://vscode.dev/redirect/mcp/install?name=ctrl-alt-pray&config=%7B%22command%22%3A%22npx%22%2C%22args%22%3A%5B%22-y%22%2C%22ctrl-alt-pray%22%5D%7D" style="color: #818cf8; font-weight: 600;">⚡ 1-Click Install in VS Code</a></td>
+              <td><code>.vscode/mcp.json</code></td>
+            </tr>
+            <tr>
+              <td><strong>Web Configurator</strong></td>
+              <td><a href="https://ctrl-alt-pray.pages.dev/#mcp-setup" style="color: #818cf8; font-weight: 600;">🌐 Open Interactive Web Configurator</a></td>
+              <td>Custom Download</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h2>Option 2: CLI Auto-Ignition (<code>npx ctrl-alt-pray init</code>)</h2>
+        <p>Open any repository on your machine and run:</p>
+        <pre><code>npx ctrl-alt-pray init</code></pre>
+        <p>The auto-detection engine inspects your directory, detects active editor configurations, and injects both the <strong>MCP server registration</strong> and the <strong>2-Strikes Circuit Breaker rules</strong>.</p>
+
+        <h3>Provisioning All Editors Simultaneously</h3>
+        <p>If you work across multiple editors (e.g. Cursor for frontend and Claude Code for terminal tasks):</p>
+        <pre><code>npx ctrl-alt-pray init --all</code></pre>
+
+        <h2>What Gets Injected: The Anatomy of the Tripwire</h2>
+        <p>Running <code>init</code> embeds an inviolable behavioral contract into your workspace configuration (e.g. <code>.cursorrules</code>, <code>CLAUDE.md</code>, <code>GEMINI.md</code>):</p>
+        <pre><code>&lt;!-- START CTRL-ALT-PRAY TRIPWIRE --&gt;
+### 🛑 Anti-Doom-Loop Circuit Breaker (ctrl-alt-pray)
+1. STRICT 2-FAILURE LIMIT: If ANY test or build fails twice, STOP editing immediately.
+2. NO BLIND GUESSING: Do not touch application code a 3rd time without verified evidence.
+3. MANDATORY ACTION: Invoke MCP tool 'pray'. It will prescribe ONE bounded experiment.
+4. TERMINAL FREEZE: If a command hangs &gt;15s, invoke 'pray' (strategy="ghost-terminal-breaker").
+5. ZERO APOLOGIES: Do not apologize. State your single testable hypothesis and execute the probe.
+&lt;!-- END CTRL-ALT-PRAY TRIPWIRE --&gt;</code></pre>
+
+        <h2>Verifying Your Setup</h2>
+        <h3>1. Launch the Visual Dashboard</h3>
+        <pre><code>ctrl-alt-pray dashboard</code></pre>
+        <p>Open <code>http://127.0.0.1:3900</code> to view an Apple/Linear minimalist recovery ledger displaying intercepted loops and token savings.</p>
+
+        <h3>2. CLI Telemetry</h3>
+        <pre><code>pray stats</code></pre>
+        <p>Prints live statistics on loop recovery rates and estimated token dollars saved.</p>
+
+        <div class="cta-box">
+          <h3>Ready to Arm Your Workspace?</h3>
+          <p>Open-source, local-first, zero runtime dependencies.</p>
+          <pre style="margin: 12px auto 20px; max-width: 380px; text-align: center; background: #06080d;"><code>npx ctrl-alt-pray init</code></pre>
+          <a href="https://github.com/HoangYell/ctrl-alt-pray" target="_blank" class="btn btn-secondary">
+            <i data-lucide="star" style="width: 15px; height: 15px;"></i>
+            <span>Star on GitHub</span>
+          </a>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <footer>
+    <div class="container footer-inner" style="max-width: 820px;">
+      <div>Ctrl Alt Pray — Open-source anti-doom-loop supervisor.</div>
+      <div class="footer-links">
+        <a href="https://github.com/HoangYell/ctrl-alt-pray" target="_blank">GitHub</a>
+        <a href="https://ctrl-alt-pray.pages.dev">Website</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>lucide.createIcons();</script>
+</body>
+</html>

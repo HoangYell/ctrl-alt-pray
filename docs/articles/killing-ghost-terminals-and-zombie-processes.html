@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Killing Ghost Terminals: Stopping AI Agents from Freezing on Port Conflicts — Ctrl Alt Pray</title>
+  <meta name="description" content="Technical forensics into unhandled (y/n)? stdin prompts, rogue watch mode loops, and orphaned worker processes locking ports :3000 and :5173.">
+  <meta property="og:title" content="Killing Ghost Terminals & Zombie Processes — Ctrl Alt Pray">
+  <meta property="og:description" content="How pray-run uses a 15-second freeze watchdog and recursive process-tree executioner to terminate zombie workers.">
+  <meta property="og:image" content="../assets/ai-hero-meme.webp">
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+  <style>
+    :root {
+      --bg: #06080d;
+      --surface-1: #0d111b;
+      --surface-2: #131826;
+      --surface-3: #1c2236;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(255, 255, 255, 0.18);
+      --accent: #6366f1;
+      --accent-glow: rgba(99, 102, 241, 0.2);
+      --emerald: #10b981;
+      --amber: #f59e0b;
+      --rose: #f43f5e;
+      --cyan: #06b6d4;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { background-color: var(--bg); color: var(--text-main); font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
+    body { min-height: 100vh; line-height: 1.75; }
+
+    .bg-grid {
+      position: fixed; inset: 0;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 40px 40px; pointer-events: none; z-index: 0;
+    }
+
+    .container { max-width: 820px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+    header {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(6, 8, 13, 0.85); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .header-inner { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+    .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text-main); font-weight: 700; font-size: 1.1rem; }
+    .brand-icon { width: 32px; height: 32px; border-radius: 8px; background: linear-gradient(135deg, #4f46e5, #06b6d4); display: flex; align-items: center; justify-content: center; color: white; }
+    
+    nav { display: flex; align-items: center; gap: 24px; }
+    nav a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 500; }
+    nav a:hover { color: var(--text-main); }
+
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-size: 0.875rem; font-weight: 600; padding: 8px 16px; border-radius: 8px; cursor: pointer; text-decoration: none; border: 1px solid transparent; }
+    .btn-secondary { background: var(--surface-2); color: var(--text-main); border-color: var(--border); }
+    .btn-secondary:hover { background: var(--surface-3); border-color: var(--border-hover); }
+
+    .article-header { padding: 56px 0 32px; border-bottom: 1px solid var(--border); margin-bottom: 40px; }
+    .back-link { display: inline-flex; align-items: center; gap: 6px; font-size: 0.85rem; color: #818cf8; text-decoration: none; margin-bottom: 20px; font-weight: 500; }
+    .article-tag { display: inline-block; padding: 2px 8px; border-radius: 6px; background: var(--surface-3); color: #818cf8; font-size: 0.75rem; font-weight: 600; font-family: var(--font-mono); margin-bottom: 16px; }
+    h1 { font-size: clamp(2rem, 4vw, 2.75rem); font-weight: 800; letter-spacing: -0.035em; line-height: 1.25; margin-bottom: 16px; }
+    .lead { font-size: 1.15rem; color: var(--text-muted); line-height: 1.6; }
+
+    .content h2 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.02em; margin: 44px 0 16px; color: #ffffff; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+    .content h3 { font-size: 1.2rem; font-weight: 600; margin: 28px 0 12px; color: #e2e8f0; }
+    .content p { margin-bottom: 20px; color: #cbd5e1; font-size: 1.025rem; }
+    .content ul, .content ol { margin-bottom: 24px; padding-left: 24px; color: #cbd5e1; }
+    .content li { margin-bottom: 8px; }
+    .content strong { color: #ffffff; }
+    .content code { font-family: var(--font-mono); font-size: 0.875em; background: var(--surface-2); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--border); color: #38bdf8; }
+
+    .callout { background: var(--surface-1); border-left: 4px solid var(--rose); border-radius: 0 8px 8px 0; padding: 18px 22px; margin: 28px 0; }
+    .callout-title { font-weight: 700; color: #fda4af; font-size: 0.95rem; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+    .callout p { margin: 0; font-size: 0.95rem; color: var(--text-muted); }
+
+    pre { background: var(--surface-1); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; overflow-x: auto; margin: 24px 0; font-family: var(--font-mono); font-size: 0.875rem; color: #e2e8f0; line-height: 1.5; }
+    
+    .cta-box {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(6, 182, 212, 0.1));
+      border: 1px solid rgba(99, 102, 241, 0.3); border-radius: 12px; padding: 32px;
+      text-align: center; margin: 48px 0;
+    }
+
+    footer { border-top: 1px solid var(--border); padding: 40px 0; margin-top: 60px; background: var(--surface-1); }
+    .footer-inner { display: flex; align-items: center; justify-content: space-between; font-size: 0.875rem; color: var(--text-dim); }
+    .footer-links { display: flex; gap: 20px; }
+    .footer-links a { color: var(--text-muted); text-decoration: none; }
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+
+  <header>
+    <div class="container header-inner" style="max-width: 1080px;">
+      <a href="../" class="brand">
+        <div class="brand-icon"><i data-lucide="flame" style="width: 18px; height: 18px;"></i></div>
+        <span>ctrl-alt-pray</span>
+      </a>
+      <nav>
+        <a href="../#what-is-it">Plain English</a>
+        <a href="../#simulator">Simulator</a>
+        <a href="../#rites">12 Holy Rites</a>
+        <a href="../articles/">Articles</a>
+      </nav>
+      <div class="nav-actions">
+        <a href="https://github.com/HoangYell/ctrl-alt-pray" target="_blank" class="btn btn-secondary">
+          <i data-lucide="star" style="width: 15px; height: 15px;"></i>
+          <span>Star on GitHub</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <article>
+      <div class="article-header">
+        <a href="index.html" class="back-link">
+          <i data-lucide="arrow-left" style="width: 14px; height: 14px;"></i>
+          <span>Back to Articles</span>
+        </a>
+        <br>
+        <span class="article-tag">OS & PROCESS TRIAGE</span>
+        <h1>Killing Ghost Terminals: How to Stop AI Agents from Freezing on Port Conflicts and Interactive Prompts</h1>
+        <p class="lead">The engineering behind silent subshell hangs: pipe deadlocks on unhandled (y/n)? prompts, rogue test watchers, and orphaned worker threads locking ports :3000 and :5173.</p>
+      </div>
+
+      <div class="content">
+        <h2>The Silent Freeze: The Developer's Worst Nightmare</h2>
+        <p>When an autonomous AI agent (Cursor, Claude Code, Cline) runs a command in a background subshell, things frequently go dark. You stare at a spinning indicator for 10 minutes. The agent outputs nothing. Your CPU fan spins at maximum RPM.</p>
+        <p>When you finally inspect the process list using <code>ps aux | grep node</code>, you find a graveyard of 15 orphaned worker processes. Port <code>3000</code> is locked. Port <code>5173</code> is occupied. Your Git repository has a stale <code>.git/index.lock</code>.</p>
+
+        <h2>The 3 Silent Hang Vectors in Agent Execution</h2>
+        <p>Autonomous agents execute commands through non-interactive POSIX child processes with redirected pipes (<code>stdin</code>, <code>stdout</code>, <code>stderr</code>). This creates three deadly traps:</p>
+        
+        <h3>1. The Interactive Prompt Trap</h3>
+        <p>Many CLI utilities (such as <code>prisma migrate</code>, <code>npm init</code>, or <code>gcloud</code>) attempt to detect if they are running in an interactive TTY. If that detection is imperfect, the tool pauses and prints: <code>Are you sure you want to proceed? (y/N):</code>. Because the agent waits for stdout to close, both the process and the agent freeze in an unrecoverable pipe deadlock.</p>
+
+        <h3>2. The Rogue Watcher Loop</h3>
+        <p>Modern test runners and bundlers (<code>vitest</code>, <code>jest</code>, <code>vite</code>) default to interactive watch mode unless explicitly passed <code>--run</code> or <code>--watch=false</code>. If an agent issues <code>pnpm test</code>, Vitest enters watch mode and waits forever for file changes. The agent waits for an exit code that will never arrive.</p>
+
+        <h3>3. Orphaned Worker Zombies and Port Trapping</h3>
+        <p>When an agent IDE eventually times out and kills the top-level command, it typically sends <code>SIGINT</code> only to the parent PID. The worker subprocesses (<code>esbuild</code>, <code>vitest-worker</code>) are re-parented to <strong>PID 1 (init/systemd)</strong> and continue running, holding open socket listeners on <code>:3000</code> or <code>:5173</code>. The next command crashes with <code>EADDRINUSE</code>.</p>
+
+        <div class="callout">
+          <div class="callout-title">
+            <i data-lucide="skull" style="width: 16px; height: 16px; color: #f43f5e;"></i>
+            <span>The Compounding Port Hallucination</span>
+          </div>
+          <p>When an AI agent sees <code>EADDRINUSE :::3000</code>, it lacks OS awareness. It assumes the port configuration is broken, modifies <code>vite.config.ts</code> to use port <code>3001</code>, then <code>3002</code>, churning configuration files while the real zombie process keeps running silently in the background.</p>
+        </div>
+
+        <h2>The Solution: Active Terminal Guardian (<code>pray-run</code>)</h2>
+        <p>To eliminate this systemic fragility, <strong>ctrl-alt-pray</strong> provides the Active Terminal Guardian wrapper:</p>
+        <pre><code># Wrap any test or build command:
+pray-run pnpm test
+pray-run npm run dev</code></pre>
+
+        <h3>1. The 15-Second Silence Watchdog</h3>
+        <p>Unlike blunt execution timeouts that kill legitimate 5-minute compilations, <code>pray-run</code> monitors <strong>stream silence</strong>. As long as output flows on stdout/stderr, the timer resets. The instant output stream goes completely silent for &gt;15 seconds, the Guardian intervenes.</p>
+
+        <h3>2. The Cascade Process-Tree Killer</h3>
+        <p>Standard <code>process.kill(pid)</code> leaves worker sub-processes stranded. The Guardian performs recursive process tree traversal:</p>
+        <pre><code>// Recursive PID discovery across child processes
+const getChildPids = (parentPid: number): number[] => {
+  try {
+    const stdout = execSync(`pgrep -P ${parentPid}`, { encoding: "utf8" });
+    const pids = stdout.trim().split("\n").map(Number).filter(Boolean);
+    return [...pids, ...pids.flatMap(getChildPids)];
+  } catch {
+    return [];
+  }
+};</code></pre>
+        <p>When triggered, <code>pray-run</code>:</p>
+        <ol>
+          <li>Sends <code>SIGTERM</code> to the entire PID tree simultaneously.</li>
+          <li>Waits a 1,500ms grace period for graceful teardown.</li>
+          <li>Escalates to <code>SIGKILL (-9)</code> for surviving worker processes.</li>
+          <li>Frees occupied dev ports (<code>3000</code>, <code>4321</code>, <code>5173</code>) and purges stale <code>.git/index.lock</code> files.</li>
+        </ol>
+
+        <h3>3. Flapping Exit Code Circuit Breaker</h3>
+        <p>If the same failing exit code repeats 3 consecutive times, <code>pray-run</code> injects an unmissable terminal circuit breaker banner directly into the agent's context, commanding it to halt speculative edits and invoke the <code>pray</code> MCP tool.</p>
+
+        <div class="cta-box">
+          <h3>Banish Terminal Zombies in Your Workspace</h3>
+          <p>Zero external runtime dependencies. Built strictly on Node.js 22+ standard library.</p>
+          <pre style="margin: 12px auto 20px; max-width: 380px; text-align: center; background: #06080d;"><code>npx ctrl-alt-pray init</code></pre>
+          <a href="https://github.com/HoangYell/ctrl-alt-pray" target="_blank" class="btn btn-secondary">
+            <i data-lucide="star" style="width: 15px; height: 15px;"></i>
+            <span>Star on GitHub</span>
+          </a>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <footer>
+    <div class="container footer-inner" style="max-width: 820px;">
+      <div>Ctrl Alt Pray — Open-source anti-doom-loop supervisor.</div>
+      <div class="footer-links">
+        <a href="https://github.com/HoangYell/ctrl-alt-pray" target="_blank">GitHub</a>
+        <a href="https://ctrl-alt-pray.pages.dev">Website</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>lucide.createIcons();</script>
+</body>
+</html>

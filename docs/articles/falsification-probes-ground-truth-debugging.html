@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Epistemic Debugging: 12 Canonical Falsification Probes — Ctrl Alt Pray</title>
+  <meta name="description" content="Applying Karl Popper's falsificationism to autonomous coding agents. Replacing conversational apologies with deterministic ground-truth probes.">
+  <meta property="og:title" content="Epistemic Debugging: 12 Canonical Falsification Probes — Ctrl Alt Pray">
+  <meta property="og:description" content="Why apologies do not pass test suites. Deep dive into Wrong Altar, Check the Check, and Clean-Context Resurrection.">
+  <meta property="og:image" content="../assets/ai-hero-meme.webp">
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+  <style>
+    :root {
+      --bg: #06080d;
+      --surface-1: #0d111b;
+      --surface-2: #131826;
+      --surface-3: #1c2236;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(255, 255, 255, 0.18);
+      --accent: #6366f1;
+      --accent-glow: rgba(99, 102, 241, 0.2);
+      --emerald: #10b981;
+      --amber: #f59e0b;
+      --rose: #f43f5e;
+      --cyan: #06b6d4;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { background-color: var(--bg); color: var(--text-main); font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
+    body { min-height: 100vh; line-height: 1.75; }
+
+    .bg-grid {
+      position: fixed; inset: 0;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 40px 40px; pointer-events: none; z-index: 0;
+    }
+
+    .container { max-width: 820px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+    header {
+      position: sticky; top: 0; z-index: 50;
+      background: rgba(6, 8, 13, 0.85); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .header-inner { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+    .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text-main); font-weight: 700; font-size: 1.1rem; }
+    .brand-icon { width: 32px; height: 32px; border-radius: 8px; background: linear-gradient(135deg, #4f46e5, #06b6d4); display: flex; align-items: center; justify-content: center; color: white; }
+    
+    nav { display: flex; align-items: center; gap: 24px; }
+    nav a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 500; }
+    nav a:hover { color: var(--text-main); }
+
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-size: 0.875rem; font-weight: 600; padding: 8px 16px; border-radius: 8px; cursor: pointer; text-decoration: none; border: 1px solid transparent; }
+    .btn-secondary { background: var(--surface-2); color: var(--text-main); border-color: var(--border); }
+    .btn-secondary:hover { background: var(--surface-3); border-color: var(--border-hover); }
+
+    .article-header { padding: 56px 0 32px; border-bottom: 1px solid var(--border); margin-bottom: 40px; }
+    .back-link { display: inline-flex; align-items: center; gap: 6px; font-size: 0.85rem; color: #818cf8; text-decoration: none; margin-bottom: 20px; font-weight: 500; }
+    .article-tag { display: inline-block; padding: 2px 8px; border-radius: 6px; background: var(--surface-3); color: #818cf8; font-size: 0.75rem; font-weight: 600; font-family: var(--font-mono); margin-bottom: 16px; }
+    h1 { font-size: clamp(2rem, 4vw, 2.75rem); font-weight: 800; letter-spacing: -0.035em; line-height: 1.25; margin-bottom: 16px; }
+    .lead { font-size: 1.15rem; color: var(--text-muted); line-height: 1.6; }
+
+    .content h2 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.02em; margin: 44px 0 16px; color: #ffffff; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+    .content h3 { font-size: 1.2rem; font-weight: 600; margin: 28px 0 12px; color: #e2e8f0; }
+    .content p { margin-bottom: 20px; color: #cbd5e1; font-size: 1.025rem; }
+    .content ul, .content ol { margin-bottom: 24px; padding-left: 24px; color: #cbd5e1; }
+    .content li { margin-bottom: 8px; }
+    .content strong { color: #ffffff; }
+    .content code { font-family: var(--font-mono); font-size: 0.875em; background: var(--surface-2); padding: 2px 6px; border-radius: 4px; border: 1px solid var(--border); color: #38bdf8; }
+
+    .callout { background: var(--surface-1); border-left: 4px solid var(--accent); border-radius: 0 8px 8px 0; padding: 18px 22px; margin: 28px 0; }
+    .callout-title { font-weight: 700; color: #a5b4fc; font-size: 0.95rem; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+    .callout p { margin: 0; font-size: 0.95rem; color: var(--text-muted); }
+
+    pre { background: var(--surface-1); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; overflow-x: auto; margin: 24px 0; font-family: var(--font-mono); font-size: 0.875rem; color: #e2e8f0; line-height: 1.5; }
+    
+    table { width: 100%; border-collapse: collapse; margin: 28px 0; font-size: 0.875rem; }
+    th, td { padding: 10px 14px; text-align: left; border: 1px solid var(--border); }
+    th { background: var(--surface-2); color: #ffffff; font-weight: 600; }
+    td { background: var(--surface-1); color: var(--text-muted); }
+
+    .cta-box {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(6, 182, 212, 0.1));
+      border: 1px solid rgba(99, 102, 241, 0.3); border-radius: 12px; padding: 32px;
+      text-align: center; margin: 48px 0;
+    }
+
+    footer { border-top: 1px solid var(--border); padding: 40px 0; margin-top: 60px; background: var(--surface-1); }
+    .footer-inner { display: flex; align-items: center; justify-content: space-between; font-size: 0.875rem; color: var(--text-dim); }
+    .footer-links { display: flex; gap: 20px; }
+    .footer-links a { color: var(--text-muted); text-decoration: none; }
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+
+  <header>
+    <div class="container header-inner" style="max-width: 1080px;">
+      <a href="../" class="brand">
+        <div class="brand-icon"><i data-lucide="flame" style="width: 18px; height: 18px;"></i></div>
+        <span>ctrl-alt-pray</span>
+      </a>
+      <nav>
+        <a href="../#what-is-it">Plain English</a>
+        <a href="../#simulator">Simulator</a>
+        <a href="../#rites">12 Holy Rites</a>
+        <a href="../articles/">Articles</a>
+      </nav>
+      <div class="nav-actions">
+        <a href="https://github.com/HoangYell/ctrl-alt-pray" target="_blank" class="btn btn-secondary">
+          <i data-lucide="star" style="width: 15px; height: 15px;"></i>
+          <span>Star on GitHub</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <article>
+      <div class="article-header">
+        <a href="index.html" class="back-link">
+          <i data-lucide="arrow-left" style="width: 14px; height: 14px;"></i>
+          <span>Back to Articles</span>
+        </a>
+        <br>
+        <span class="article-tag">EPISTEMOLOGY & DEBUGGING</span>
+        <h1>Epistemic Debugging: 12 Canonical Falsification Probes to Force AI Agents into Ground Reality</h1>
+        <p class="lead">Applying Sir Karl Popper's falsificationism to autonomous coding agents. Replacing conversational apologies with 12 canonical ground-truth probes.</p>
+      </div>
+
+      <div class="content">
+        <h2>The Core Defect of LLM Debugging: Superstitious Patches</h2>
+        <p>When an autonomous AI agent encounters a failing test, it generates <strong>superstitious patches</strong>. It wraps database queries in unnecessary try/catches, converts synchronous helpers to async without awaiting them, and renames variables randomly.</p>
+        <p>Why? Because LLMs optimize for <strong>token plausibility</strong>, not <strong>epistemic truth</strong>. To an autoregressive model, a plausible-sounding explanation that is completely false looks nearly identical to reality.</p>
+
+        <div class="callout">
+          <div class="callout-title">
+            <i data-lucide="sparkles" style="width: 16px; height: 16px; color: #818cf8;"></i>
+            <span>The Popperian Alternative</span>
+          </div>
+          <p>No theory can be proven by accumulating confirmatory examples; it can only be corroborated by <strong>failing to be falsified</strong> through rigorous experiments designed specifically to break it. In <strong>ctrl-alt-pray</strong>, when an agent fails twice, it is forbidden from writing speculative code. It must execute a falsification probe.</p>
+        </div>
+
+        <h2>Deep Dive: 4 Crucial Falsification Probes</h2>
+
+        <h3>1. Rite 01: <code>wrong-altar</code> (The Stale Build Detector)</h3>
+        <p><strong>The Symptom:</strong> The agent modifies source code in <code>src/</code>, runs tests, and receives the exact same error with identical stack trace line numbers across multiple turns.</p>
+        <p><strong>The Falsification Probe:</strong> Inject a unique runtime marker into the file:</p>
+        <pre><code>console.log("RUNNING_CHECK_" + crypto.randomUUID());</code></pre>
+        <p>Run the test. If this marker does not appear in stdout, the hypothesis <em>"I am testing my modified code"</em> is <strong>falsified in 1 step</strong>. The agent is forced to inspect build artifacts (e.g. <code>dist/</code>, bundler caches) rather than mutating source logic.</p>
+
+        <h3>2. Rite 02: <code>check-the-check</code> (The Poison Chalice)</h3>
+        <p><strong>The Symptom:</strong> A critical production bug is reported, but running <code>npm test</code> reports green (<code>PASS</code>).</p>
+        <p><strong>The Falsification Probe:</strong> Inject an intentionally failing assertion directly into the business logic:</p>
+        <pre><code>throw new Error("POISON_ASSERTION_VERIFICATION");</code></pre>
+        <p>If tests still pass, the test suite is invalid (swallowing errors or testing wrong mocks). The agent must repair the test runner before touching production code.</p>
+
+        <h3>3. Rite 04: <code>api-ground-truth</code> (The Hallucination Squelcher)</h3>
+        <p><strong>The Symptom:</strong> Agent encounters <code>TypeError: client.fetchUser is not a function</code> and starts guessing method names (<code>getUser</code>, <code>queryUser</code>).</p>
+        <p><strong>The Falsification Probe:</strong> Forbid guessing. Execute a 1-line runtime reflection probe:</p>
+        <pre><code>node -e "import('./client.js').then(m => console.log(Object.keys(m.default || m)))"</code></pre>
+        <p>Inspect true runtime exports before writing a single line of invocation code.</p>
+
+        <h3>4. Rite 08: <code>minimal-counterexample</code> (Payload Bisection)</h3>
+        <p><strong>The Symptom:</strong> A 200-field JSON schema fails validation, and the agent speculates across 50 fields.</p>
+        <p><strong>The Falsification Probe:</strong> Payload Bisection. Halve the payload repeatedly until the atomic failure invariant is isolated in &le;5 steps.</p>
+
+        <h2>Clean-Context Resurrection (<code>ctrl-alt-pray resurrect</code>)</h2>
+        <p>When an autonomous session has degraded over 25 turns, continuing in that context poisons model reasoning. The conversation history is saturated with dead stack traces and polite apologies.</p>
+        <p>Running <code>ctrl-alt-pray resurrect [session_id]</code> condenses the entire ledger into a compact, pristine <strong>Resurrection Packet</strong>:</p>
+        <ul>
+          <li><strong>The Inviolable Goal:</strong> High-level functional requirement.</li>
+          <li><strong>Verified Ground Truth:</strong> Facts established by command exit codes.</li>
+          <li><strong>Ruled-Out Hypotheses (FORBIDDEN TO RECYCLE):</strong> Defeated approaches that must never be repeated.</li>
+          <li><strong>Active Bounded Probe:</strong> Exactly one testable experiment.</li>
+        </ul>
+
+        <h2>The 12 Canonical Recovery Recipes</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Strategy</th>
+              <th>Trigger Symptom</th>
+              <th>Prescribed Probe</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>01</strong></td>
+              <td><code>wrong-altar</code></td>
+              <td>Edits produce zero output change</td>
+              <td>Inject unique runtime marker (<code>RUNNING_CHECK_UUID</code>)</td>
+            </tr>
+            <tr>
+              <td><strong>02</strong></td>
+              <td><code>check-the-check</code></td>
+              <td>Tests stay green despite known bug</td>
+              <td>Inject deliberate failing assertion (<code>assert(1 === 2)</code>)</td>
+            </tr>
+            <tr>
+              <td><strong>03</strong></td>
+              <td><code>ghost-terminal-breaker</code></td>
+              <td>Command hangs &gt;15s; pipe deadlock</td>
+              <td>Inspect process tree; cascade kill orphaned child PIDs</td>
+            </tr>
+            <tr>
+              <td><strong>04</strong></td>
+              <td><code>api-ground-truth</code></td>
+              <td><code>TypeError: is not a function</code></td>
+              <td>Run runtime reflection: <code>node -e "console.log(Object.keys(...))"</code></td>
+            </tr>
+            <tr>
+              <td><strong>05</strong></td>
+              <td><code>clean-slate-rollback</code></td>
+              <td>&ge;4 dirty files; messy diffs</td>
+              <td><code>git stash push -u</code>; re-run baseline test</td>
+            </tr>
+            <tr>
+              <td><strong>06</strong></td>
+              <td><code>environment-triage</code></td>
+              <td><code>command not found</code>, <code>EACCES</code></td>
+              <td>Verify binary path (<code>which</code>), permissions (<code>ls -la</code>)</td>
+            </tr>
+            <tr>
+              <td><strong>07</strong></td>
+              <td><code>assumption-audit</code></td>
+              <td>Hypothesis treated as fact</td>
+              <td>Execute single probe strictly designed to <em>disprove</em> it</td>
+            </tr>
+            <tr>
+              <td><strong>08</strong></td>
+              <td><code>minimal-counterexample</code></td>
+              <td>Huge 10MB payload; noisy failure</td>
+              <td>Halve input payload repeatedly until atomic failure isolated</td>
+            </tr>
+            <tr>
+              <td><strong>09</strong></td>
+              <td><code>divide-and-conquer</code></td>
+              <td>Multi-step pipeline failure</td>
+              <td>Log payload state exactly midway between entry and failure</td>
+            </tr>
+            <tr>
+              <td><strong>10</strong></td>
+              <td><code>controlled-substitution</code></td>
+              <td>Plausible causes separated by good input</td>
+              <td>Hold variables constant; swap suspect component with twin</td>
+            </tr>
+            <tr>
+              <td><strong>11</strong></td>
+              <td><code>boundary-check</code></td>
+              <td>Subsystem boundary ambiguous</td>
+              <td>Compare inputs and outputs across boundary before editing code</td>
+            </tr>
+            <tr>
+              <td><strong>12</strong></td>
+              <td><code>human-checkpoint</code></td>
+              <td>Ambiguous product requirement</td>
+              <td>Formulate one concrete multiple-choice question to human</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="cta-box">
+          <h3>Enforce Epistemic Rigor in Your Agents</h3>
+          <p>Equip your coding agent with the 12 Canonical Rites in 10 seconds.</p>
+          <pre style="margin: 12px auto 20px; max-width: 380px; text-align: center; background: #06080d;"><code>npx ctrl-alt-pray init</code></pre>
+          <a href="https://github.com/HoangYell/ctrl-alt-pray" target="_blank" class="btn btn-secondary">
+            <i data-lucide="star" style="width: 15px; height: 15px;"></i>
+            <span>Star on GitHub</span>
+          </a>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <footer>
+    <div class="container footer-inner" style="max-width: 820px;">
+      <div>Ctrl Alt Pray — Open-source anti-doom-loop supervisor.</div>
+      <div class="footer-links">
+        <a href="https://github.com/HoangYell/ctrl-alt-pray" target="_blank">GitHub</a>
+        <a href="https://ctrl-alt-pray.pages.dev">Website</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>lucide.createIcons();</script>
+</body>
+</html>

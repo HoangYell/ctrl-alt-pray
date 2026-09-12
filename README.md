@@ -28,7 +28,7 @@
        [ PRAYERS ARE OPTIONAL. FALSIFIABLE EVIDENCE IS REQUIRED. ]
 ```
 
-**[🌐 Live Website & Simulator](https://ctrl-alt-pray.pages.dev) • [⭐ Star on GitHub](https://github.com/HoangYell/ctrl-alt-pray) • [Plain English (10s)](#-plain-english-for-cynical-engineers-what-is-this-in-10s) • [Quickstart in 10s](#-quickstart-10-seconds) • [Before vs After](#-the-300-am-agony-before-vs-after) • [Core Superpowers](#-core-superpowers) • [The 12 Canonical Rites](#-the-12-canonical-recovery-recipes)**
+**[🌐 Live Website & Simulator](https://ctrl-alt-pray.pages.dev) • [⭐ Star on GitHub](https://github.com/HoangYell/ctrl-alt-pray) • [📚 Engineering Articles](articles/) • [Plain English (10s)](#-plain-english-for-cynical-engineers-what-is-this-in-10s) • [Quickstart in 10s](#-quickstart-10-seconds) • [Before vs After](#-the-300-am-agony-before-vs-after) • [Core Superpowers](#-core-superpowers) • [The 12 Canonical Rites](#-the-12-canonical-recovery-recipes)**
 
 </div>
 
@@ -450,6 +450,24 @@ If you prefer to configure your MCP client manually without `npx ctrl-alt-pray i
   }
 }
 ```
+
+---
+
+## 📚 Engineering Articles & Field Manuals
+
+Deep architectural autopsies and operational guides published directly within this repository:
+
+1. **[Why Autonomous AI Coding Agents Enter Doom Loops (And Why Prompts Can't Stop Them)](articles/01-why-ai-agents-enter-doom-loops.md)** ([Web Version](https://ctrl-alt-pray.pages.dev/articles/why-ai-agents-enter-doom-loops.html))  
+   *Dissecting the autoregressive context contamination and cognitive tunnel vision behind 3:00 AM AI loops, and why deterministic circuit breakers outperform prompt pleas.*
+
+2. **[Killing Ghost Terminals: How to Stop AI Agents from Freezing on Port Conflicts and Interactive Prompts](articles/02-killing-ghost-terminals-and-zombie-processes.md)** ([Web Version](https://ctrl-alt-pray.pages.dev/articles/killing-ghost-terminals-and-zombie-processes.html))  
+   *Forensics of unhandled `(y/n)?` stdin pipe deadlocks, rogue watch mode loops, and orphaned worker threads locking ports :3000 and :5173. Introducing the Cascade Tree Killer.*
+
+3. **[Epistemic Debugging: 12 Canonical Falsification Probes to Force AI Agents into Ground Reality](articles/03-falsification-probes-ground-truth-debugging.md)** ([Web Version](https://ctrl-alt-pray.pages.dev/articles/falsification-probes-ground-truth-debugging.html))  
+   *Applying Karl Popper's falsificationism to autonomous coding. Replacing polite conversational apologies with the 12 Canonical Rites: Wrong Altar, Check the Check, and Clean-Context Resurrection.*
+
+4. **[Arming Cursor, Claude Code, and Windsurf: The 10-Second MCP Safety Net Guide](articles/04-zero-friction-mcp-setup-guide.md)** ([Web Version](https://ctrl-alt-pray.pages.dev/articles/zero-friction-mcp-setup-guide.html))  
+   *A hands-on, zero-friction setup guide to provisioning the 2-Strikes Circuit Breaker across all 9 major editors, checking visual telemetry on port 3900, and eliminating token waste.*
 
 ---
 
