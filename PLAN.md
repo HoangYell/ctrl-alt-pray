@@ -538,7 +538,57 @@ Server-initiated model sampling depends on client support and authorization. It 
 
 Show a side-by-side recording of the same stuck task: repeated patches versus one boundary check that rules out a subsystem. Make the evidence and final test visible. The joke earns attention; the recorded decision change earns trust.
 
-## 14. Open Decisions
+## 14. Universal Harvester & Cross-Platform Swarm Telemetry (Public Standard)
+
+For `ctrl-alt-pray` to serve the wider developer community as an open-source public repository, all host and transcript introspection MUST be strictly **agent-agnostic**, **cross-platform** (Linux, macOS, Windows), and **privacy-first**.
+
+```text
+               ┌────────────────────────────────────────────────────────┐
+               │              ctrl-alt-pray Core Engine                 │
+               └──────────────────────────▲─────────────────────────────┘
+                                          │ Normalized Evidence Bundle
+         ┌────────────────────────────────┴────────────────────────────────┐
+         │              Universal Harvester Adapter Layer                  │
+         └───────┬──────────────┬──────────────┬──────────────┬────────────┘
+                 │              │              │              │
+        ┌────────┴──────┐┌──────┴──────┐┌──────┴──────┐┌──────┴─────────┐
+        │  Git Baseline ││ Claude Code ││    Cursor   ││ Aider / Open   │
+        │ (100% Repos)  ││   Adapter   ││   Adapter   ││  Code / AGY    │
+        └───────────────┘└─────────────┘└─────────────┘└────────────────┘
+```
+
+### A. Principle 1: Git as the Universal Ground Truth
+Regardless of whether an engineer uses Claude Code, Cursor, Copilot, Cline, Aider, OpenCode, or Antigravity, **Git is the universal common denominator**:
+- **File Flapping Detection**: Parse `git status --porcelain` and recent `git diff` to identify files repeatedly modified without passing tests.
+- **Lock Contention**: Check `.git/index.lock` cross-platform without shell dependencies.
+- **Commit Amnesia**: Correlate recent unstaged churn against `git log -n 5` to detect circular reverts.
+- **Platform Guarantee**: Works identically across Linux, macOS, and Windows with zero native binary requirements.
+
+### B. Principle 2: Pluggable Adapter Pattern for AI Clients
+Never hardcode private host paths into the core engine. Implement an extensible `TranscriptAdapter` contract:
+- `GitWorkspaceAdapter`: Baseline provider available in every git repository.
+- `ClaudeCodeAdapter`: Reads local `.claude/` or `~/.claude/` logs when present.
+- `CursorAdapter`: Inspects `.cursor/` and local composer states when detected.
+- `AiderAdapter`: Reads `.aider.chat.history.md` when present in workspace root.
+- `AntigravityAdapter` & `OpenCodeAdapter`: Pluggable community providers.
+- `PastedLogAdapter`: Parses raw terminal strings or error stack traces passed directly by the agent.
+- **Graceful Degradation**: If an adapter cannot access files or lacks permissions, it silently yields to the next provider without throwing errors.
+
+### C. Principle 3: Portable Socket & Host Contention Probing
+Avoid platform-specific shell tools (`ss`, `lsof`, `netstat`, `/proc`):
+- **Cross-Platform Socket Check**: Use Node.js native `node:net` to probe standard dev ports (`3000`, `4321`, `5173`, `8080`, `9222`). Attempting a transient listen or ping reveals `EADDRINUSE` port collision natively on Windows, macOS, and Linux without requiring root permissions.
+- **Orphaned Process Safety**: Warn when a port responds to HTTP pings while the current agent's build command has not yet completed.
+
+### D. Principle 4: Secret Redaction & Privacy Shield
+Inspecting logs or transcripts carries the risk of absorbing credentials:
+- **Mandatory Redaction Pipeline**: Every extracted log line is filtered through regex sanitizers stripping GitHub tokens (`ghp_`), OpenAI/Anthropic keys (`sk-`), AWS credentials (`AKIA`), and `Bearer` authorization headers before entering the ledger.
+- **Strict Workspace Scope**: File inspection never traverses outside the repository boundary unless explicitly authorized by the caller.
+
+### E. Principle 5: Dual-Driver Storage Resilience
+- **Primary Driver**: `node:sqlite` (`DatabaseSync`) for Node 22+ environments.
+- **Fallback Driver**: Atomic JSON File Store (`sessions.json` with write-and-rename) for environments where native SQLite is restricted or during lightweight testing.
+
+## 15. Open Decisions
 
 - Exact Node LTS, SDK version, schema library, and SQLite binding: choose and pin from current official documentation during M1/M3.
 - Retention and response budgets: validate prototype defaults against real trace sizes and privacy expectations.
@@ -546,7 +596,7 @@ Show a side-by-side recording of the same stuck task: repeated patches versus on
 - License, package scope, domain, and remote repository: decide before publication; none are assumed by this plan.
 - Optional host hooks: prioritize only clients that can reliably supply structured observations with user consent.
 
-## 15. References
+## 16. References
 
 - [MCP documentation](https://modelcontextprotocol.io/docs/getting-started/intro)
 - [MCP specification](https://modelcontextprotocol.io/specification/latest)
