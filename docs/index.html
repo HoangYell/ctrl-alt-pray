@@ -1776,8 +1776,6 @@
         command: 'npx ctrl-alt-pray init cursor',
         path: '.cursor/mcp.json',
         fileName: 'mcp.json',
-        deepLink: 'cursor://anysphere.cursor-mcp/install?name=ctrl-alt-pray&command=npx&args=-y,ctrl-alt-pray',
-        deepLinkLabel: 'Open in Cursor',
         tripwireFile: '.cursorrules',
         desc: 'Provisions Cursor rules to catch 3:00 AM edit flip-flops and registers the MCP server in .cursor/mcp.json.',
         config: `{\n  "mcpServers": {\n    "ctrl-alt-pray": {\n      "command": "npx",\n      "args": ["-y", "ctrl-alt-pray"]\n    }\n  }\n}`
@@ -1799,8 +1797,6 @@
         command: 'npx ctrl-alt-pray init vscode',
         path: '.vscode/mcp.json',
         fileName: 'mcp.json',
-        deepLink: 'vscode://',
-        deepLinkLabel: 'Open in VS Code',
         tripwireFile: 'AGENTS.md',
         desc: 'Standard VS Code MCP configuration for GitHub Copilot Agent mode and MCP extensions.',
         config: `{\n  "mcpServers": {\n    "ctrl-alt-pray": {\n      "command": "npx",\n      "args": ["-y", "ctrl-alt-pray"]\n    }\n  }\n}`
@@ -1931,14 +1927,12 @@
       const activeCodePath = isTripwire ? editor.tripwireFile : editor.path;
 
       let actionsHtml = '';
-      if (editor.deepLink) {
-        actionsHtml += `
-          <a href="${editor.deepLink}" class="btn btn-primary" style="padding: 6px 14px; font-size: 0.8125rem; display: inline-flex; align-items: center; gap: 6px;">
-            <i data-lucide="external-link" style="width: 14px; height: 14px;"></i>
-            <span>${editor.deepLinkLabel || 'Open in Editor'}</span>
-          </a>
-        `;
-      }
+      actionsHtml += `
+        <button class="btn btn-primary" style="padding: 6px 14px; font-size: 0.8125rem; display: inline-flex; align-items: center; gap: 6px;" onclick="copySnippet('${editor.command}', this)">
+          <i data-lucide="copy" style="width: 14px; height: 14px;"></i>
+          <span>Copy 1-Click Command</span>
+        </button>
+      `;
 
       if (editor.fileName) {
         actionsHtml += `
@@ -1984,6 +1978,10 @@
             <button class="copy-btn" aria-label="Copy Command">
               <i data-lucide="copy" style="width: 16px; height: 16px;"></i>
             </button>
+          </div>
+          <div style="margin-top: 6px; font-size: 0.75rem; color: var(--text-dim); display: flex; align-items: center; gap: 6px;">
+            <i data-lucide="shield-check" style="width: 13px; height: 13px; color: var(--emerald); flex-shrink: 0;"></i>
+            <span>Browser sandbox prevents silent local file injection. Run the command above in your repo to auto-configure in 1s.</span>
           </div>
         </div>
 
