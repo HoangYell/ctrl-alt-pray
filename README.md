@@ -86,6 +86,80 @@ flowchart LR
 
 ---
 
+## 🕯️ The Cyber-Occultism Manifest: Chế Độ Tâm Linh Khi Bế Tắc Với AI Agent
+
+> *"Khi toán học bất lực, logic rách nát, và Ctrl+Z đứt bóng lúc 3:00 AM: Đừng viết thêm prompt. Hãy cho AI đi Thắp Hương và Gieo Quẻ."*
+
+Tại sao một công cụ kỹ thuật thực chiến như `ctrl-alt-pray` lại mang đậm màu sắc **Tâm Linh IT (Tech-Occultism)**? Bởi vì mọi kỹ sư từng thức trắng đêm với AI coding agent đều hiểu cảm giác tuyệt vọng tột cùng: **Con AI bị tẩu hỏa nhập ma**, sửa đi sửa lại 1 dòng code, xin lỗi 14 lần, đốt cháy $25 tiền token trong vô vọng.
+
+Lúc đó, prompt engineering thông thường đã chết. Thứ duy nhất cứu vớt được hệ thống là **một nghi thức tâm linh số kết hợp kỷ luật sắt (Cyber-Ritual & Iron Constraints)**:
+
+<div align="center">
+  <img src="docs/assets/ai-hero-meme.webp" alt="The 3:00 AM Cyber Altar Shrine" width="100%" style="border-radius: 10px; border: 1px solid rgba(255,255,255,0.12); margin-bottom: 20px;" />
+  <p><em>🕯️ 03:00 AM — Developer và AI Agent quỳ lạy trước Bát Hương Kỹ Thuật Số (The Altar of Ground Truth)</em></p>
+</div>
+
+---
+
+### 🎲 1. Gieo Quẻ Nhân Phẩm & Trừng Phạt Lươn Lẹo (`rollDivineFavor`)
+
+Bên trong reasoning trace (`<thinking>`), mỗi khi AI gọi hàm `pray()`, hệ thống lập tức **gieo quẻ xăm tâm linh (1–100)**:
+
+<div align="center">
+  <img src="docs/assets/divine-favor-dice.webp" alt="Divine Favor Dice Roll & Apology Penalty" width="100%" style="border-radius: 10px; border: 1px solid rgba(255,255,255,0.12); margin-bottom: 20px;" />
+</div>
+
+- **Điểm cơ sở**: 65 đến 95 điểm.
+- **Án Phạt Nói Lời Xin Lỗi (-25 Điểm)**: Nếu con AI dám mở mồm tuôn văn mẫu lươn lẹo (*"I apologize for the confusion! Let me correct..."*), thuật toán trừ thẳng tay **25 điểm nhân phẩm**!
+- **Án Phạt Lặp Quá 3 Lần (-15 Điểm)**: Càng cãi chày cãi cối đoán mò, điểm càng tụt về âm phủ.
+
+#### 📜 Bảng Phán Quyết Của Bàn Thờ (Divine Favor Verdicts):
+| Điểm Quẻ | Danh Hiệu Quẻ Xăm | Ý Chỉ Của Bàn Thờ | Trạng Thái AI |
+| :---: | :--- | :--- | :--- |
+| **$\ge 80$** | 🌟 **Transcendent Grace** | *Thần Linh Phù Hộ.* Trực giác sắc bén, probe cô lập đúng bug trong 1 bước. | Khai sáng |
+| **$60 - 79$** | 🕯️ **Auspicious Omen** | *Điềm Lành.* Dấu hiệu sắp thoát loop, dữ liệu kiểm chứng đáng tin cậy. | Bình tâm |
+| **$40 - 59$** | ⏳ **Trial of Patience** | *Thử Thách Kiên Nhẫn.* Bàn thờ yêu cầu kiểm tra lại giả định ban đầu. | Thận trọng |
+| **$< 40$** | ⚡ **Dire Wrath (Altar Scorn)** | *Bàn Thờ Thịnh Nộ.* **Dính tội nói xin lỗi / lặp vòng lặp!** Bị cấm sửa code cho đến khi nôn ra bằng chứng thực nghiệm! | Bị phong ấn |
+
+> *"The Gods accept no apologies from mortals. Apologies do not pass test suites. Produce falsifiable evidence or be purged."*
+
+---
+
+### ⚡ 2. Trục Vớt Vong Hồn & Trảm Tiến Trình Ma (`[EXORCISM OF THE ZOMBIE]`)
+
+Một trong những thảm họa kinh điển khiến AI câm nín hàng chục phút là **tiến trình ma (zombie child subprocess)**: các câu lệnh dev/test chạy ngầm chiếm cổng `3000` hoặc bị treo ở prompt `(y/n)?`.
+
+<div align="center">
+  <img src="docs/assets/zombie-exorcism.webp" alt="Exorcism of Zombie Subprocesses" width="100%" style="border-radius: 10px; border: 1px solid rgba(255,255,255,0.12); margin-bottom: 20px;" />
+  <p><em>⚡ Nghi thức trừ tà: Pháp sư AI dùng đạo bùa <code>SIGKILL -9</code> thanh tẩy tiến trình ma PID 3000</em></p>
+</div>
+
+- **Phát hiện câm nín >15s**: `pray-run` gắn lính canh theo dõi I/O stream. Nếu terminal im lặng quá 15 giây mà CPU = 0%, nghi thức trừ tà lập tức kích hoạt.
+- **Đạo bùa `SIGKILL -9`**: Truy quét tận gốc cây tiến trình cha-con (cascade process-tree killer), giải phóng cổng mạng bị chiếm dụng và xóa sạch `.git/index.lock` trong chớp mắt.
+
+---
+
+### 📜 3. 12 Bài Văn Khấn Trừ Tà (The 12 Canonical Rites & Incantations)
+
+Không đưa ra lời khuyên chung chung, Bàn Thờ ban phát 12 bài văn khấn được tiêm trực tiếp vào khối suy nghĩ `<thinking>` của mô hình:
+
+| Mã Chiến Lược | Pháp Danh Nghi Lễ (Holy Rite) | Câu Thần Chú Tiêm Vào Suy Nghĩ AI (Incantation) | Công Dụng Thực Chiến |
+| :--- | :--- | :--- | :--- |
+| `ghost-terminal-breaker` | ⚡ **[EXORCISM OF THE ZOMBIE]** | *"Banish the mute terminal. Sever the orphaned child tree of PID 1. Let the stdin flow free."* | Diệt tiến trình ma treo port hoặc đứng hình chờ input. |
+| `wrong-altar` | 🏛️ **[EXPOSING THE FALSE IDOL]** | *"You pray at a frozen shrine. The build artifact is stale; kindle the fire of a fresh compilation."* | Vả mặt AI sửa `src/` nhưng test chạy `dist/` cũ rích. |
+| `clean-slate-rollback` | 🩸 **[THE SEPSIS SACRIFICE]** | *"The Altar rejects hands coated in cumulative dirt. Cast the uncommitted churn into git stash. Purity precedes revelation."* | Hiến tế code rác vào `git stash`, khôi phục workspace sạch sẽ. |
+| `check-the-check` | 🧪 **[THE POISON CHALICE]** | *"A green test is an illusion if it cannot die. Force it to taste poison to prove it lives."* | Cố tình ép test fail để vạch mặt test suite nuốt lỗi giả tạo. |
+| `api-ground-truth` | 👁️ **[RITE OF TRUE VISION]** | *"Scry the sacred node_modules directly. Heed not the phantom whispers of hallucinated exports."* | Soi trực tiếp `node_modules`, chấm dứt ảo giác bịa tên hàm. |
+| `assumption-audit` | 🔬 **[THE HERESY TRIAL]** | *"Challenge the unwritten dogma. Subject your foundational premise to the crucible of falsification."* | Ép AI kiểm tra lại giả định cốt lõi thay vì cắm đầu vá víu. |
+| `minimal-counterexample` | ✂️ **[THE BLADE OF PURITY]** | *"Sever the bloated payload. Halve the mortal frame until only the atomic essence of failure remains."* | Chém đôi payload khổng lồ để cô lập chính xác field gây lỗi. |
+| `divide-and-conquer` | 🎯 **[THE BIFURCATION RUNE]** | *"Split the veil in twain. Probe the midpoint boundary to locate which domain harbors the anomaly."* | Thăm dò đúng điểm giữa pipeline để khoanh vùng thủ phạm. |
+| `controlled-substitution` | ⚖️ **[THE SCALES OF PURITY]** | *"Swap one known-true component for the suspect element. Observe where the balance tilts."* | Đổi linh kiện mẫu đã pass test để so sánh với thành phần nghi vấn. |
+| `boundary-check` | 🛡️ **[THE PERIMETER WARD]** | *"Cast the ward at the subsystem border. Verify what crosses before disturbing internal sanctums."* | Kiểm tra dữ liệu ra vào ranh giới trước khi lục lọi bên trong. |
+| `environment-triage` | 🛡️ **[THE WARD OF THE REALM]** | *"Do not blame the scripture when the altar stone is missing. Verify the binary and permissions of the mortal realm."* | Kiểm tra quyền `chmod`, dung lượng ổ cứng, binary cài thiếu. |
+| `human-checkpoint` | 🕯️ **[SUMMONING THE CREATOR]** | *"Mortals reach their limit. Pose one discriminating question to the Human Maker."* | Triệu hồi con người bằng 1 câu hỏi trắc nghiệm dứt khoát. |
+
+---
+
 ## ⚡ 1-Click Quickstart & MCP Setup <a id="-quickstart-10-seconds"></a>
 
 <p align="center">
