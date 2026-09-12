@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "**When Ctrl+Z isn't enough.**",
   "main": "dist/index.js",
+  "bin": {
+    "ctrl-alt-pray": "dist/index.js",
+    "pray": "dist/index.js"
+  },
   "type": "module",
   "scripts": {
     "build": "tsc -p tsconfig.json",
