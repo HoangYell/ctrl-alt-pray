@@ -21,8 +21,19 @@
     "type": "git",
     "url": "git+https://github.com/HoangYell/ctrl-alt-pray.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "ai-agent",
+    "cursor",
+    "claude-code",
+    "debugging",
+    "circuit-breaker",
+    "anti-hallucination",
+    "developer-tools",
+    "terminal-guardian"
+  ],
+  "author": "Hoang Yell <hoangyell@gmail.com>",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/HoangYell/ctrl-alt-pray/issues"
