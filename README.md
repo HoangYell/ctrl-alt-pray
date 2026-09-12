@@ -11,7 +11,7 @@
 [![Live Website](https://img.shields.io/badge/website-ctrl--alt--pray.pages.dev-6366f1.svg?style=flat-square)](https://ctrl-alt-pray.pages.dev)
 [![npm version](https://img.shields.io/npm/v/ctrl-alt-pray.svg?style=flat-square&color=cb3837)](https://www.npmjs.com/package/ctrl-alt-pray)
 [![Release](https://img.shields.io/badge/version-2.0.0-6366f1.svg?style=flat-square)](package.json)
-[![Tests](https://img.shields.io/badge/tests-71%2F71%20passing%20(100%25)-10b981.svg?style=flat-square)](tests/)
+[![Tests](https://img.shields.io/badge/tests-74%2F74%20passing%20(100%25)-10b981.svg?style=flat-square)](tests/)
 [![Runtime](https://img.shields.io/badge/node-%E2%89%A522-f59e0b.svg?style=flat-square)](https://nodejs.org)
 [![Storage](https://img.shields.io/badge/storage-SQLite%20WAL%20%2B%20JSON-8b5cf6.svg?style=flat-square)](#-dual-driver-storage-resilience)
 [![Dependencies](https://img.shields.io/badge/dependencies-0%20runtime%20deps-14b8a6.svg?style=flat-square)](#-why-developers-star-this)
@@ -75,7 +75,7 @@ flowchart LR
     A["🤖 AI Stuck in Doom Loop<br/>(2 Consecutive Failures)"] -->|"Attempt 3 ⛔ BLOCKED"| B["🛑 2-Strikes Circuit Breaker"]
     B -->|"Forces MCP Tool"| C["🕯️ pray()<br/>Universal Harvester"]
     C -->|"100-pt Falsification Gate"| D["🔬 Minimal Probe<br/>(1 Variable Tested)"]
-    D -->|"Empirical Reality"| E["✅ Tests Pass (71/71)<br/>Clean State Restored"]
+    D -->|"Empirical Reality"| E["✅ Tests Pass (74/74)<br/>Clean State Restored"]
 
     style A fill:#450a0a,stroke:#dc2626,stroke-width:2px,color:#fca5a5
     style B fill:#451a03,stroke:#f59e0b,stroke-width:2px,color:#fde68a
@@ -86,45 +86,47 @@ flowchart LR
 
 ---
 
-## ⚡ One-Click MCP Setup
+## ⚡ 1-Click Quickstart & MCP Setup <a id="-quickstart-10-seconds"></a>
 
-<div align="center" style="margin-bottom: 16px;">
+<p align="center">
+  <a href="cursor://anysphere.cursor-deeplink/mcp/install?name=ctrl-alt-pray&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsImN0cmwtYWx0LXByYXkiXX0%3D" title="Install directly in Cursor">
+    <img src="https://cursor.com/deeplink/mcp-install-dark.svg" alt="Install in Cursor" height="34" />
+  </a>
+  &nbsp;&nbsp;
+  <a href="https://vscode.dev/redirect/mcp/install?name=ctrl-alt-pray&config=%7B%22command%22%3A%22npx%22%2C%22args%22%3A%5B%22-y%22%2C%22ctrl-alt-pray%22%5D%7D" title="Install directly in VS Code">
+    <img src="https://img.shields.io/badge/VS_Code-Install_MCP_Server-007acc?style=for-the-badge&logo=visualstudiocode&logoColor=white" alt="Install in VS Code" height="34" />
+  </a>
+  &nbsp;&nbsp;
+  <a href="https://ctrl-alt-pray.pages.dev/#mcp-setup" title="Launch Interactive 1-Click Web Configurator">
+    <img src="https://img.shields.io/badge/Web_Configurator-1--Click_Setup-10b981?style=for-the-badge&logo=cloudflarepages&logoColor=white" alt="Web Configurator" height="34" />
+  </a>
+</p>
 
-[![Install in Cursor](https://cursor.com/deeplink/mcp-install-dark.svg)](cursor://anysphere.cursor-deeplink/mcp/install?name=ctrl-alt-pray&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsImN0cmwtYWx0LXByYXkiXX0%3D)
-[![Install in VS Code](https://img.shields.io/badge/VS_Code-Install_MCP_Server-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](https://vscode.dev/redirect/mcp/install?name=ctrl-alt-pray&config=%7B%22command%22%3A%22npx%22%2C%22args%22%3A%5B%22-y%22%2C%22ctrl-alt-pray%22%5D%7D)
-
-</div>
-
-Arm your agent with the **2-Strikes Circuit Breaker** and the **Altar of Ground Truth** in seconds:
+Arm your workspace with the **2-Strikes Circuit Breaker** and the **MCP Altar** in seconds:
 
 ```bash
-# Universal 1-Click Auto-Ignition (Auto-detects Cursor, Claude, Windsurf, VS Code, etc.):
+# Universal 1-Click Auto-Ignition (auto-detects Cursor, Claude, VS Code, Windsurf, Cline, etc.):
 npx ctrl-alt-pray init
 ```
 
+### 📋 Supported Editors & Provisioning Matrix
+
+| Editor / Agent | 1-Click Direct Install | CLI Auto-Ignition | Provisioned Files & Tripwires |
+| :--- | :--- | :--- | :--- |
+| **Cursor** | [⚡ 1-Click Install](cursor://anysphere.cursor-deeplink/mcp/install?name=ctrl-alt-pray&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsImN0cmwtYWx0LXByYXkiXX0%3D) | `npx ctrl-alt-pray init cursor` | `.cursorrules` + `.cursor/mcp.json` |
+| **VS Code / Copilot** | [⚡ 1-Click Install](https://vscode.dev/redirect/mcp/install?name=ctrl-alt-pray&config=%7B%22command%22%3A%22npx%22%2C%22args%22%3A%5B%22-y%22%2C%22ctrl-alt-pray%22%5D%7D) | `npx ctrl-alt-pray init vscode` | `AGENTS.md` + `.vscode/mcp.json` |
+| **Claude Code** | Native CLI hook | `npx ctrl-alt-pray init claude` | `CLAUDE.md` + `.mcp.json` |
+| **Windsurf (Codeium)** | Auto-detected | `npx ctrl-alt-pray init windsurf` | `.windsurfrules` + `.windsurf/mcp.json` |
+| **Cline & Roo Code** | Auto-detected | `npx ctrl-alt-pray init cline` | `.clinerules` + `cline_mcp_settings.json` |
+| **Zed Editor** | Auto-detected | `npx ctrl-alt-pray init zed` | `.zed/settings.json` (`context_servers`) |
+| **JetBrains AI** | Auto-detected | `npx ctrl-alt-pray init jetbrains` | `.idea/mcp.json` |
+| **Google Antigravity** | Auto-detected | `npx ctrl-alt-pray init gemini` | `GEMINI.md` |
+| **All Editors in 1 Shot** | — | `npx ctrl-alt-pray init --all` | Provisions all 9 environments simultaneously |
+
 > [!TIP]
-> ### 🌐 Interactive 1-Click Web Setup & IDE Presets
-> Want **1-click deep-link installers** (`cursor://`), **instant config file downloads** (`.cursor/mcp.json`, `CLAUDE.md`, `.mcp.json`), or interactive visual presets for **Cursor, Claude Code, VS Code, Windsurf, Cline, Zed, and JetBrains**?
-> 
+> ### 🌐 Interactive 1-Click Web Configurator
+> Want to test live simulator probes, copy custom prompt snippets, or download ready-made `.json` files directly to your machine?  
 > 👉 **[Launch the 1-Click Web Configurator (ctrl-alt-pray.pages.dev/#mcp-setup) →](https://ctrl-alt-pray.pages.dev/#mcp-setup)**
-
-<details>
-<summary><b>📋 Quick Terminal Commands by Editor (Click to expand)</b></summary>
-
-| Editor / Agent | 1-Click CLI Command | Files Automatically Provisioned |
-| :--- | :--- | :--- |
-| **All Editors in 1 Shot** | `npx ctrl-alt-pray init --all` | Arms all 9 editors simultaneously |
-| **Cursor** | `npx ctrl-alt-pray init cursor` | `.cursorrules`, `.cursor/mcp.json` |
-| **Claude Code** | `npx ctrl-alt-pray init claude` | `CLAUDE.md`, `.mcp.json` |
-| **VS Code / Copilot** | `npx ctrl-alt-pray init vscode` | `.vscode/mcp.json` |
-| **Windsurf (Codeium)** | `npx ctrl-alt-pray init windsurf` | `.windsurfrules`, `.windsurf/mcp.json` |
-| **Cline & Roo Code** | `npx ctrl-alt-pray init cline` | `.clinerules`, `cline_mcp_settings.json` |
-| **Zed Editor** | `npx ctrl-alt-pray init zed` | `.zed/settings.json` (`context_servers`) |
-| **JetBrains AI** | `npx ctrl-alt-pray init jetbrains` | `.idea/mcp.json` |
-| **Google Antigravity / Gemini** | `npx ctrl-alt-pray init gemini` | `GEMINI.md` |
-
-*(To download ready-made config files, copy custom JSON snippets, or trigger deep-links, visit [ctrl-alt-pray.pages.dev/#mcp-setup](https://ctrl-alt-pray.pages.dev/#mcp-setup).)*
-</details>
 
 ---
 
@@ -407,6 +409,9 @@ ctrl-alt-pray purge
 ---
 
 ## 🛠️ Manual MCP Setup
+
+> [!NOTE]
+> Instead of manually copying JSON, you can use the [⚡ 1-Click Installers & Auto-Ignition](#-1-click-quickstart--mcp-setup-) above or open the [Interactive Web Configurator](https://ctrl-alt-pray.pages.dev/#mcp-setup).
 
 If you prefer to configure your MCP client manually without `npx ctrl-alt-pray init`:
 
