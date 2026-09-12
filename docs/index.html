@@ -1777,7 +1777,7 @@
         path: '.cursor/mcp.json',
         fileName: 'mcp.json',
         tripwireFile: '.cursorrules',
-        cursorMcpDeepLink: `cursor://anysphere.cursor-deeplink/mcp/install?name=ctrl-alt-pray&config=${encodeURIComponent(JSON.stringify({ command: 'npx', args: ['-y', 'ctrl-alt-pray'] }))}`,
+        cursorMcpDeepLink: `cursor://anysphere.cursor-deeplink/mcp/install?name=ctrl-alt-pray&config=${encodeURIComponent(btoa(JSON.stringify({ command: 'npx', args: ['-y', 'ctrl-alt-pray'] })))}`,
         cursorRuleDeepLink: `cursor://anysphere.cursor-deeplink/rule?name=ctrl-alt-pray&text=${encodeURIComponent(TRIPWIRE_CONTENT)}`,
         desc: 'Arms Cursor with the 2-Strikes circuit breaker and registers the MCP server in .cursor/mcp.json.',
         config: `{\n  "mcpServers": {\n    "ctrl-alt-pray": {\n      "command": "npx",\n      "args": ["-y", "ctrl-alt-pray"]\n    }\n  }\n}`
@@ -1800,6 +1800,7 @@
         path: '.vscode/mcp.json',
         fileName: 'mcp.json',
         tripwireFile: 'AGENTS.md',
+        vscodeMcpDeepLink: `https://vscode.dev/redirect/mcp/install?name=ctrl-alt-pray&config=${encodeURIComponent(JSON.stringify({ command: 'npx', args: ['-y', 'ctrl-alt-pray'] }))}`,
         desc: 'Standard VS Code MCP configuration for GitHub Copilot Agent mode and MCP extensions.',
         config: `{\n  "mcpServers": {\n    "ctrl-alt-pray": {\n      "command": "npx",\n      "args": ["-y", "ctrl-alt-pray"]\n    }\n  }\n}`
       },
@@ -1936,10 +1937,18 @@
             <span>${isTripwire ? '1-Click Install Rule in Cursor' : '1-Click Install in Cursor'}</span>
           </a>
         `;
+      } else if (editor.vscodeMcpDeepLink && !isTripwire) {
+        actionsHtml += `
+          <a href="${editor.vscodeMcpDeepLink}" target="_blank" rel="noopener noreferrer" class="btn btn-primary" style="padding: 6px 14px; font-size: 0.8125rem; display: inline-flex; align-items: center; gap: 6px; text-decoration: none;">
+            <i data-lucide="zap" style="width: 14px; height: 14px;"></i>
+            <span>1-Click Install in VS Code</span>
+          </a>
+        `;
       }
 
+      const hasDirectInstall = editor.cursorMcpDeepLink || (editor.vscodeMcpDeepLink && !isTripwire);
       actionsHtml += `
-        <button class="${editor.cursorMcpDeepLink ? 'btn btn-secondary' : 'btn btn-primary'}" style="padding: 6px 14px; font-size: 0.8125rem; display: inline-flex; align-items: center; gap: 6px;" onclick="copySnippet('${editor.command}', this)">
+        <button class="${hasDirectInstall ? 'btn btn-secondary' : 'btn btn-primary'}" style="padding: 6px 14px; font-size: 0.8125rem; display: inline-flex; align-items: center; gap: 6px;" onclick="copySnippet('${editor.command}', this)">
           <i data-lucide="copy" style="width: 14px; height: 14px;"></i>
           <span>Copy CLI Command</span>
         </button>
@@ -1992,7 +2001,7 @@
           </div>
           <div style="margin-top: 6px; font-size: 0.75rem; color: var(--text-dim); display: flex; align-items: center; gap: 6px;">
             <i data-lucide="shield-check" style="width: 13px; height: 13px; color: var(--emerald); flex-shrink: 0;"></i>
-            <span>${editor.cursorMcpDeepLink ? 'Click "1-Click Install in Cursor" to trigger Cursor native MCP setup prompt, or run the command in your repo.' : 'Run the command above in your repo to auto-configure in 1s.'}</span>
+            <span>${editor.cursorMcpDeepLink ? 'Click "1-Click Install in Cursor" to trigger native Cursor MCP prompt, or run the command in your repo.' : (editor.vscodeMcpDeepLink ? 'Click "1-Click Install in VS Code" to open VS Code native MCP prompt, or run the command in your repo.' : 'Run the command above in your repo to auto-configure in 1s.')}</span>
           </div>
         </div>
 
