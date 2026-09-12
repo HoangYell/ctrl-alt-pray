@@ -42,6 +42,84 @@ export interface RecoverySession {
   avoid_repeating: string[];
   handoff: string;
   updated_at?: number;
+  rite?: string;
+  incantation?: string;
+  nhan_pham?: { score: number; verdict: string };
+  altar_warning?: string;
+}
+
+export const STRATEGY_INCANTATIONS: Record<ExperimentStrategy, { rite: string; incantation: string }> = {
+  'ghost-terminal-breaker': {
+    rite: '⚡ [EXORCISM OF THE ZOMBIE]',
+    incantation: 'Banish the mute terminal. Sever the orphaned child tree of PID 1. Let the stdin flow free.',
+  },
+  'api-ground-truth': {
+    rite: '👁️ [RITE OF TRUE VISION]',
+    incantation: 'Scry the sacred node_modules directly. Heed not the phantom whispers of hallucinated exports.',
+  },
+  'clean-slate-rollback': {
+    rite: '🩸 [THE SEPSIS SACRIFICE]',
+    incantation: 'The Altar rejects hands coated in cumulative dirt. Cast the uncommitted churn into git stash. Purity precedes revelation.',
+  },
+  'wrong-altar': {
+    rite: '🏛️ [EXPOSING THE FALSE IDOL]',
+    incantation: 'You pray at a frozen shrine. The build artifact is stale; kindle the fire of a fresh compilation.',
+  },
+  'check-the-check': {
+    rite: '🧪 [THE POISON CHALICE]',
+    incantation: 'A green test is an illusion if it cannot die. Force it to taste poison to prove it lives.',
+  },
+  'assumption-audit': {
+    rite: '🔬 [THE HERESY TRIAL]',
+    incantation: 'Challenge the unwritten dogma. Subject your foundational premise to the crucible of falsification.',
+  },
+  'minimal-counterexample': {
+    rite: '✂️ [THE BLADE OF PURITY]',
+    incantation: 'Sever the bloated payload. Halve the mortal frame until only the atomic essence of failure remains.',
+  },
+  'divide-and-conquer': {
+    rite: '🎯 [THE BIFURCATION RUNE]',
+    incantation: 'Split the veil in twain. Probe the midpoint boundary to locate which domain harbors the anomaly.',
+  },
+  'controlled-substitution': {
+    rite: '⚖️ [THE SCALES OF PURITY]',
+    incantation: 'Swap one known-true component for the suspect element. Observe where the balance tilts.',
+  },
+  'boundary-check': {
+    rite: '🛡️ [THE PERIMETER WARD]',
+    incantation: 'Cast the ward at the subsystem border. Verify what crosses before disturbing internal sanctums.',
+  },
+  'human-checkpoint': {
+    rite: '🕯️ [SUMMONING THE CREATOR]',
+    incantation: 'Mortals reach their limit. Pose one discriminating question to the Human Maker.',
+  },
+};
+
+export const APOLOGY_PATTERNS = [
+  /apologiz(e|ing|ed)/i,
+  /sorry/i,
+  /my mistake/i,
+  /xin lỗi/i,
+  /my bad/i,
+  /i was wrong/i,
+  /pardon/i,
+];
+
+export function detectApologySlop(text: string): boolean {
+  return APOLOGY_PATTERNS.some((pattern) => pattern.test(text));
+}
+
+export function rollNhanPham(context: { attemptsCount: number; hasApology: boolean }): { score: number; verdict: string } {
+  let score = Math.floor(Math.random() * 31) + 65; // 65-95 base
+  if (context.hasApology) score -= 25;
+  if (context.attemptsCount > 3) score -= 15;
+  score = Math.max(1, Math.min(100, score));
+
+  let verdict = 'Thượng Thượng Phẩm (Divine Favor)';
+  if (score < 40) verdict = 'Đại Hung (Altar Scorn - Apologies Detected)';
+  else if (score < 60) verdict = 'Bình Hòa (Trial of Patience)';
+  else if (score < 80) verdict = 'Trung Cát (Fortunate Insight)';
+  return { score, verdict };
 }
 
 const generateId = () => Math.random().toString(36).slice(2, 10);
@@ -290,6 +368,22 @@ export function createOrResumeRecoverySession(
       capabilities,
     });
 
+    const occultRite = STRATEGY_INCANTATIONS[experiment.strategy] || {
+      rite: '🕯️ [THE RITE OF GROUND TRUTH]',
+      incantation: 'Prayers are optional. Evidence is required.',
+    };
+
+    const textToScan = [input.problem || existing.handoff, ...mergedFacts, ...mergedAttempts, ...mergedHypotheses].join(' ');
+    const hasApology = detectApologySlop(textToScan);
+    const altar_warning = hasApology
+      ? "🕯️ [THE ALTAR SCOWLS]: 'The Gods accept no apologies from mortals. Apologies do not pass test suites. State your single falsifiable hypothesis and execute the probe.'"
+      : undefined;
+
+    const nhan_pham = rollNhanPham({
+      attemptsCount: mergedAttempts.length,
+      hasApology,
+    });
+
     const updated: RecoverySession = {
       ...existing,
       revision: nextRevision,
@@ -303,8 +397,12 @@ export function createOrResumeRecoverySession(
       assumptions_to_check: mergedHypotheses,
       rejected_approaches: mergedAttempts,
       avoid_repeating: mergedAttempts,
-      handoff: `Resumed session ${input.session_id} (rev ${nextRevision}). Strategy: ${experiment.strategy}. Remaining hypotheses: ${mergedHypotheses.join('; ') || 'none'}.`,
+      handoff: `${occultRite.rite} ${occultRite.incantation} | Resumed session ${input.session_id} (rev ${nextRevision}). Strategy: ${experiment.strategy}. Remaining hypotheses: ${mergedHypotheses.join('; ') || 'none'}.`,
       updated_at: Date.now(),
+      rite: occultRite.rite,
+      incantation: occultRite.incantation,
+      nhan_pham,
+      altar_warning,
     };
 
     storage.saveSession(updated);
@@ -322,6 +420,22 @@ export function createOrResumeRecoverySession(
     capabilities,
   });
 
+  const occultRite = STRATEGY_INCANTATIONS[experiment.strategy] || {
+    rite: '🕯️ [THE RITE OF GROUND TRUTH]',
+    incantation: 'Prayers are optional. Evidence is required.',
+  };
+
+  const textToScan = [input.problem, ...observations, ...attempts, ...candidate_hypotheses].join(' ');
+  const hasApology = detectApologySlop(textToScan);
+  const altar_warning = hasApology
+    ? "🕯️ [THE ALTAR SCOWLS]: 'The Gods accept no apologies from mortals. Apologies do not pass test suites. State your single falsifiable hypothesis and execute the probe.'"
+    : undefined;
+
+  const nhan_pham = rollNhanPham({
+    attemptsCount: attempts.length,
+    hasApology,
+  });
+
   const session: RecoverySession = {
     session_id,
     project_key: input.project_key,
@@ -336,8 +450,12 @@ export function createOrResumeRecoverySession(
     assumptions_to_check: candidate_hypotheses,
     rejected_approaches: attempts,
     avoid_repeating: attempts,
-    handoff: `Goal: ${input.problem}. Constraints: ${constraints.join('; ') || 'none'}. Active strategy: ${experiment.strategy}.`,
+    handoff: `${occultRite.rite} ${occultRite.incantation} | Goal: ${input.problem}. Constraints: ${constraints.join('; ') || 'none'}. Active strategy: ${experiment.strategy}.`,
     updated_at: Date.now(),
+    rite: occultRite.rite,
+    incantation: occultRite.incantation,
+    nhan_pham,
+    altar_warning,
   };
 
   storage.saveSession(session);

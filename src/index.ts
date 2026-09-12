@@ -9,10 +9,12 @@ import {
   inspectSession,
   listSessions,
 } from './recovery.js';
+import { runInit } from './init.js';
+import { runStats } from './stats.js';
 
 const server = new McpServer({
   name: 'ctrl-alt-pray',
-  version: '0.2.0',
+  version: '1.2.0',
 });
 
 function getRecoveryHint(errorMessage: string): string {
@@ -35,7 +37,7 @@ function getRecoveryHint(errorMessage: string): string {
 server.registerTool(
   'pray',
   {
-    description: 'Start a new recovery session or resume an existing one for a stuck coding agent.',
+    description: 'Summon the Altar of Ground Truth when standard debugging fails or repetitive loops occur. CALL THIS TOOL IMMEDIATELY WHEN: (1) A test or command fails 2+ times with similar errors; (2) An edited code change produced zero difference in output; (3) A terminal command or child process hangs/times out >15s; (4) You are guessing module exports or APIs; (5) You feel the urge to apologize for failed attempts. Returns one bounded, discriminating falsification experiment to break the loop.',
     inputSchema: z.object({
       project_key: z.string().describe('Unique project identifier (e.g. repo name or workspace key)'),
       request_id: z.string().describe('Unique client-generated idempotency key for this request'),
@@ -67,6 +69,10 @@ server.registerTool(
             assumptions_to_check: result.assumptions_to_check,
             rejected_approaches: result.rejected_approaches,
             handoff: result.handoff,
+            rite: result.rite,
+            incantation: result.incantation,
+            nhan_pham: result.nhan_pham,
+            altar_warning: result.altar_warning,
           }, null, 2),
         }],
       };
@@ -272,10 +278,47 @@ What specific output or error signal would prove this assumption false?`,
 );
 
 // ---------------------------------------------------------------------------
-// Server Transport Runner
+// Server & CLI Runner
 // ---------------------------------------------------------------------------
 
 async function main() {
+  const arg = process.argv[2];
+
+  if (arg === 'init') {
+    runInit();
+    return;
+  }
+
+  if (arg === 'stats') {
+    runStats();
+    return;
+  }
+
+  if (arg === '--help' || arg === '-h') {
+    console.log(`
+      🕯️  CTRL ALT PRAY - THE ANTI-DOOM-LOOP ENGINE  🕯️
+           "When Ctrl+Z isn't enough. Pray."
+
+  Usage:
+    ctrl-alt-pray [command]
+
+  Commands:
+    init       Auto-detect agent environments (Cursor, Claude, OpenCode) & inject Tripwires
+    stats      Display telemetry on intercepted loops, recovery rates, and tokens saved
+    (no args)  Start the MCP (Model Context Protocol) stdio server
+
+  Options:
+    -h, --help     Show this divine guidance
+    -v, --version  Show version
+`);
+    return;
+  }
+
+  if (arg === '--version' || arg === '-v') {
+    console.log('ctrl-alt-pray v1.2.0');
+    return;
+  }
+
   const transport = new StdioServerTransport();
   await server.connect(transport);
 }
@@ -284,3 +327,4 @@ main().catch((error) => {
   console.error('Ctrl Alt Pray failed to start:', error);
   process.exit(1);
 });
+
