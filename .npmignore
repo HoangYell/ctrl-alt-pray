@@ -1,0 +1,13 @@
+src/
+tests/
+evals/
+.github/
+.vscode/
+examples/
+tsconfig.json
+vitest.config.ts
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+.ctrl-alt-pray/
+.DS_Store

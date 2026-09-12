@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+import fs from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { McpServer, ResourceTemplate } from '@modelcontextprotocol/server';
 import { StdioServerTransport } from '@modelcontextprotocol/server/stdio';
 import { z } from 'zod';
@@ -450,7 +452,15 @@ async function main() {
 }
 
 // Start if executed directly as main script
-const isMain = process.argv[1]?.endsWith('index.js') || process.argv[1]?.endsWith('index.ts');
+let isMain = false;
+try {
+  const currentFilePath = fileURLToPath(import.meta.url);
+  const executedPath = process.argv[1] ? fs.realpathSync(process.argv[1]) : '';
+  isMain = currentFilePath === executedPath;
+} catch {
+  isMain = Boolean(process.argv[1]?.endsWith('index.js') || process.argv[1]?.endsWith('index.ts') || process.argv[1]?.endsWith('pray') || process.argv[1]?.endsWith('ctrl-alt-pray'));
+}
+
 if (isMain) {
   main().catch((error) => {
     console.error('Ctrl Alt Pray failed to start:', error);
