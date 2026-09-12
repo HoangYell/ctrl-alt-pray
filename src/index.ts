@@ -12,10 +12,11 @@ import {
 import { runInit } from './init.js';
 import { runStats } from './stats.js';
 import { harvestEvidence } from './harvester/index.js';
+import { runGuardian } from './guardian.js';
 
 const server = new McpServer({
   name: 'ctrl-alt-pray',
-  version: '1.2.0',
+  version: '1.3.0',
 });
 
 function getRecoveryHint(errorMessage: string): string {
@@ -320,6 +321,11 @@ async function main() {
     return;
   }
 
+  if (arg === 'run') {
+    const code = await runGuardian(process.argv.slice(3));
+    process.exit(code);
+  }
+
   if (arg === '--help' || arg === '-h') {
     console.log(`
       🕯️  CTRL ALT PRAY - THE ANTI-DOOM-LOOP ENGINE  🕯️
@@ -327,10 +333,12 @@ async function main() {
 
   Usage:
     ctrl-alt-pray [command]
+    pray-run <command>
 
   Commands:
     init       Auto-detect agent environments (Cursor, Claude, OpenCode) & inject Tripwires
     stats      Display telemetry on intercepted loops, recovery rates, and tokens saved
+    run <cmd>  Run a shell command under active freeze (>15s) and failure supervision
     (no args)  Start the MCP (Model Context Protocol) stdio server
 
   Options:
@@ -341,7 +349,7 @@ async function main() {
   }
 
   if (arg === '--version' || arg === '-v') {
-    console.log('ctrl-alt-pray v1.2.0');
+    console.log('ctrl-alt-pray v1.3.0');
     return;
   }
 
