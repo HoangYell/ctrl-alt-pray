@@ -164,4 +164,30 @@ describe('Storage & Session Lifecycle (PLAN.md M3)', () => {
       ),
     ).toThrow(/ATTEMPTS_EXCEEDED/);
   });
+
+  it('supports fallback to atomic JSON file storage driver (PLAN.md Section 14.E)', () => {
+    const jsonStorage = new RecoveryStorage({ inMemory: true, driver: 'json' });
+    expect(jsonStorage.activeDriver).toBe('json');
+
+    const s1 = createOrResumeRecoverySession(
+      {
+        project_key: 'json-proj',
+        request_id: 'json-req-1',
+        problem: 'JSON driver test',
+        observations: ['Tested with in-memory JSON driver'],
+      },
+      jsonStorage,
+    );
+
+    expect(s1.session_id).toBeDefined();
+    expect(s1.revision).toBe(1);
+
+    const retrieved = jsonStorage.getSession('json-proj', s1.session_id);
+    expect(retrieved?.session_id).toBe(s1.session_id);
+    expect(retrieved?.known_facts).toContain('Tested with in-memory JSON driver');
+
+    const purged = jsonStorage.purge('json-proj', s1.session_id);
+    expect(purged.deletedSessions).toBe(1);
+    expect(jsonStorage.getSession('json-proj', s1.session_id)).toBeUndefined();
+  });
 });

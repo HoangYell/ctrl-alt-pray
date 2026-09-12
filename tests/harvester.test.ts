@@ -70,4 +70,16 @@ describe('Universal Harvester', () => {
     expect(session.rite).toBeDefined();
     expect(session.nhan_pham).toBeDefined();
   });
+
+  it('runs pluggable adapters (test archaeology, cursor, claude) with graceful degradation (PLAN.md Section 14.B)', async () => {
+    // Create mock archaeology and client files in tmpDir
+    fs.mkdirSync(path.join(tmpDir, 'test-results'));
+    fs.writeFileSync(path.join(tmpDir, '.cursorrules'), '# cursor rules');
+    fs.writeFileSync(path.join(tmpDir, 'CLAUDE.md'), '# claude commands');
+
+    const evidence = await harvestEvidence(tmpDir);
+    expect(evidence.observations.some((o) => o.includes('test-results'))).toBe(true);
+    expect(evidence.observations.some((o) => o.includes('Cursor'))).toBe(true);
+    expect(evidence.observations.some((o) => o.includes('Claude'))).toBe(true);
+  });
 });

@@ -81,6 +81,28 @@ export interface RecoverySession {
   progress_reason?: string;
   changes?: string[];
   cost?: { duration_ms?: number; tool_calls?: number; tokens?: number };
+  heresy_challenge?: HeresyChallenge;
+  offering?: TheOffering;
+  file_flapping?: FileFlappingStatus;
+}
+
+export interface HeresyChallenge {
+  dogma: string;
+  counter_premise: string;
+  probe: string;
+  rite: string;
+}
+
+export interface TheOffering {
+  type: 'minimal_input' | 'sanitized_trace' | 'known_good_comparison' | 'product_decision';
+  description: string;
+  template: string;
+}
+
+export interface FileFlappingStatus {
+  file: string;
+  revertCount: number;
+  locked: boolean;
 }
 
 export const STRATEGY_INCANTATIONS: Record<ExperimentStrategy, { rite: string; incantation: string }> = {
@@ -360,6 +382,117 @@ export function diagnosePathology(context: {
   return {
     pathology: 'unspecified',
     rationale: 'Execution loop under general debugging conditions.',
+  };
+}
+
+export function detectFileFlapping(context: {
+  attempts: string[];
+  observations: string[];
+}): FileFlappingStatus | undefined {
+  const combined = [...context.attempts, ...context.observations].join(' ');
+  const fileMatches = combined.match(/[a-zA-Z0-9_\-/\\]+\.(?:ts|js|tsx|jsx|py|go|rs|json)/g);
+  if (!fileMatches) return undefined;
+
+  const counts: Record<string, number> = {};
+  for (const f of fileMatches) {
+    const base = f.replace(/^.*[\\/]/, '');
+    counts[base] = (counts[base] || 0) + 1;
+  }
+
+  for (const [file, count] of Object.entries(counts)) {
+    if (count >= 2 && /(revert|re-edit|restore|modified again|oscillation|lật)/i.test(combined)) {
+      return {
+        file,
+        revertCount: count,
+        locked: true,
+      };
+    }
+  }
+
+  return undefined;
+}
+
+export function generateHeresyChallenge(
+  pathology: PathologyType,
+  primaryAssumption?: string,
+): HeresyChallenge {
+  if (pathology === 'altar-clash') {
+    return {
+      dogma: 'The defect is in the source code file you keep editing.',
+      counter_premise: 'The test runner is executing stale compiled output in dist/ or colliding with an existing daemon on the port.',
+      probe: 'Run "pnpm clean && pnpm build" or inject a deliberate syntax error in your source file. If the test still runs, your edits are being ignored.',
+      rite: '🔥 [THE TRIAL OF HERESY: WRONG ALTAR]',
+    };
+  }
+
+  if (pathology === 'phantom') {
+    return {
+      dogma: 'The imported function or export name exists because it sounds plausible.',
+      counter_premise: 'The package author exported a default export, a different method name, or a subpath.',
+      probe: 'Run node -e "import(\'<package>\').then(m => console.log(Object.keys(m)))" to inspect runtime reality directly. Stop guessing names.',
+      rite: '🔥 [THE TRIAL OF HERESY: PHANTOM EXPORT]',
+    };
+  }
+
+  if (pathology === 'false-green') {
+    return {
+      dogma: 'A green test suite means the implementation is correct.',
+      counter_premise: 'The test assertions are swallowed, skipped, or mock the bug away.',
+      probe: 'Inject a deliberate "assert.strictEqual(1, 2)" in the business logic path. If the test still passes, discard the test suite.',
+      rite: '🔥 [THE TRIAL OF HERESY: POISON CHALICE]',
+    };
+  }
+
+  if (pathology === 'ghost') {
+    return {
+      dogma: 'The command is still actively working and will finish if you wait longer.',
+      counter_premise: 'The subprocess is deadlocked, waiting for unhandled stdin (y/n)?, or orphaned by PID 1.',
+      probe: 'Inspect process CPU% and last 3 lines of terminal buffer. If CPU is 0% and log mtime >15s, kill the task immediately.',
+      rite: '🔥 [THE TRIAL OF HERESY: ZOMBIE EXORCISM]',
+    };
+  }
+
+  return {
+    dogma: primaryAssumption || 'The root cause is in the latest component modified.',
+    counter_premise: 'The failure is introduced by unverified caller invariants before data ever reaches this component.',
+    probe: 'Inspect the exact input payload at the entry boundary. Do not modify internal component branches until boundary input is verified.',
+    rite: '🔥 [THE TRIAL OF HERESY: INVARIANT TRIAL]',
+  };
+}
+
+export function generateTheOffering(context: {
+  pathology: PathologyType;
+  strategy: ExperimentStrategy;
+  problem: string;
+}): TheOffering {
+  if (context.strategy === 'human-checkpoint') {
+    return {
+      type: 'product_decision',
+      description: 'An authoritative human product decision is required to resolve ambiguous business logic.',
+      template: `### Decision Offering Needed\nQuestion: Which behavior is required for "${context.problem}"?\nOptions:\n1. (Recommended) Explicit conflict error (HTTP 409)\n2. Silent overwrite (Last-Write-Wins)\n3. Merge changes`,
+    };
+  }
+
+  if (context.strategy === 'minimal-counterexample') {
+    return {
+      type: 'minimal_input',
+      description: 'A minimal self-contained input payload isolating the failure.',
+      template: `### Minimal Input Offering\nInput payload: Strip down to the smallest JSON/CLI input (<5 fields) that reproduces the failure.`,
+    };
+  }
+
+  if (context.strategy === 'controlled-substitution') {
+    return {
+      type: 'known_good_comparison',
+      description: 'A working baseline or known-good request to compare against.',
+      template: `### Known-Good Comparison Offering\nProvide: (1) Exact command of working case; (2) Exact command of failing case; (3) Non-secret credential/config diff.`,
+    };
+  }
+
+  return {
+    type: 'sanitized_trace',
+    description: 'A sanitized exit code, error stack trace, or terminal snippet.',
+    template: `### Sanitized Trace Offering\nProvide the last 10 lines of terminal output including exact exit code and error message.`,
   };
 }
 
@@ -701,6 +834,7 @@ export function createOrResumeRecoverySession(
     capabilities?: string[];
     budget?: number;
     forced_strategy?: ExperimentStrategy;
+    heresy_mode?: boolean;
   },
   storage: RecoveryStorage = getDefaultStorage(),
 ): RecoverySession {
@@ -763,21 +897,42 @@ export function createOrResumeRecoverySession(
 
     const textToScan = [problem || existing.handoff, ...mergedFacts, ...mergedAttempts, ...mergedHypotheses].join(' ');
     const hasApology = detectApologySlop(textToScan);
-    const altar_warning = hasApology
+    let altar_warning = hasApology
       ? "🕯️ [THE ALTAR SCOWLS]: 'The Gods accept no apologies from mortals. Apologies do not pass test suites. State your single falsifiable hypothesis and execute the probe.'"
       : undefined;
+
+    const file_flapping = detectFileFlapping({ attempts: mergedAttempts, observations: mergedFacts });
+    if (file_flapping) {
+      const flapWarn = `🚨 [FLAPPING SENTINEL]: Edit oscillation detected on "${file_flapping.file}". Permissions locked. Reverting to clean baseline.`;
+      altar_warning = altar_warning ? `${altar_warning}\n${flapWarn}` : flapWarn;
+    }
 
     const nhan_pham = rollNhanPham({
       attemptsCount: mergedAttempts.length,
       hasApology,
     });
 
+    const next_action = experiment.strategy === 'human-checkpoint' ? 'ask_user' : 'experiment';
+
+    const heresy_challenge = (input.heresy_mode || mergedAttempts.length >= 3 || nextRevision >= 3)
+      ? generateHeresyChallenge(pathology, mergedHypotheses[0])
+      : existing.heresy_challenge;
+
+    let offering: TheOffering | undefined = undefined;
+    if (next_action === 'ask_user' || experiment.strategy === 'minimal-counterexample' || experiment.strategy === 'controlled-substitution') {
+      offering = generateTheOffering({
+        pathology,
+        strategy: experiment.strategy,
+        problem: problem || existing.handoff,
+      });
+    }
+
     const updated: RecoverySession = {
       ...existing,
       schema_version: input.schema_version || existing.schema_version || 1,
       revision: nextRevision,
       assessment: 'possible_loop',
-      next_action: experiment.strategy === 'human-checkpoint' ? 'ask_user' : 'experiment',
+      next_action,
       decision: 'continue',
       pathology,
       pathology_rationale,
@@ -796,6 +951,9 @@ export function createOrResumeRecoverySession(
       nhan_pham,
       altar_warning,
       verification_status: existing.verification_status || 'not_verified',
+      heresy_challenge,
+      offering,
+      file_flapping: file_flapping || existing.file_flapping,
     };
 
     storage.saveSession(updated);
@@ -821,22 +979,44 @@ export function createOrResumeRecoverySession(
 
   const textToScan = [problem, ...observations, ...attempts, ...candidate_hypotheses].join(' ');
   const hasApology = detectApologySlop(textToScan);
-  const altar_warning = hasApology
+  let altar_warning = hasApology
     ? "🕯️ [THE ALTAR SCOWLS]: 'The Gods accept no apologies from mortals. Apologies do not pass test suites. State your single falsifiable hypothesis and execute the probe.'"
     : undefined;
+
+  const file_flapping = detectFileFlapping({ attempts, observations });
+  if (file_flapping) {
+    const flapWarn = `🚨 [FLAPPING SENTINEL]: Edit oscillation detected on "${file_flapping.file}". Permissions locked. Reverting to clean baseline.`;
+    altar_warning = altar_warning ? `${altar_warning}\n${flapWarn}` : flapWarn;
+  }
 
   const nhan_pham = rollNhanPham({
     attemptsCount: attempts.length,
     hasApology,
   });
 
+  const assessment = attempts.length >= 2 ? 'possible_loop' : 'insufficient_evidence';
+  const next_action = experiment.strategy === 'human-checkpoint' ? 'ask_user' : 'experiment';
+
+  const heresy_challenge = (input.heresy_mode || attempts.length >= 3)
+    ? generateHeresyChallenge(pathology, candidate_hypotheses[0])
+    : undefined;
+
+  let offering: TheOffering | undefined = undefined;
+  if (next_action === 'ask_user' || assessment === 'insufficient_evidence' || experiment.strategy === 'minimal-counterexample' || experiment.strategy === 'controlled-substitution') {
+    offering = generateTheOffering({
+      pathology,
+      strategy: experiment.strategy,
+      problem: problem || 'Execution loop or stall detected in current task.',
+    });
+  }
+
   const session: RecoverySession = {
     schema_version: input.schema_version || 1,
     session_id,
     project_key,
     revision: 1,
-    assessment: attempts.length >= 2 ? 'possible_loop' : 'insufficient_evidence',
-    next_action: experiment.strategy === 'human-checkpoint' ? 'ask_user' : 'experiment',
+    assessment,
+    next_action,
     decision: 'continue',
     pathology,
     pathology_rationale,
@@ -855,6 +1035,9 @@ export function createOrResumeRecoverySession(
     nhan_pham,
     altar_warning,
     verification_status: 'not_verified',
+    heresy_challenge,
+    offering,
+    file_flapping,
   };
 
   storage.saveSession(session);
@@ -968,6 +1151,19 @@ export function reportOutcome(
     });
   }
 
+  let offering: TheOffering | undefined = undefined;
+  if (nextAction === 'ask_user' || nextAction === 'request_evidence' || nextExperiment?.strategy === 'minimal-counterexample' || nextExperiment?.strategy === 'controlled-substitution') {
+    offering = generateTheOffering({
+      pathology: existing.pathology || 'unspecified',
+      strategy: nextExperiment?.strategy || existing.experiment?.strategy || 'boundary-check',
+      problem: existing.handoff,
+    });
+  }
+
+  const heresy_challenge = (nextRevision >= 3 && !existing.heresy_challenge)
+    ? generateHeresyChallenge(existing.pathology || 'unspecified', existing.assumptions_to_check[0])
+    : existing.heresy_challenge;
+
   const updated: RecoverySession = {
     ...existing,
     schema_version: input.schema_version || existing.schema_version || 1,
@@ -993,6 +1189,9 @@ export function reportOutcome(
     cost: input.cost,
     handoff: `Outcome: ${input.outcome}. Checks: ${checks.map((c) => `${c.name}=${c.result}`).join(', ') || 'none'}. Next decision: ${decision}.`,
     updated_at: Date.now(),
+    heresy_challenge,
+    offering: offering || existing.offering,
+    file_flapping: existing.file_flapping,
   };
 
   storage.saveSession(updated);

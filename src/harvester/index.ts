@@ -1,17 +1,39 @@
 import { harvestGitState } from './git.js';
 import { harvestSocketState } from './socket.js';
+import { TestArchaeologyAdapter } from './adapters/archaeology.js';
+import {
+  ClaudeCodeAdapter,
+  CursorAdapter,
+  AiderAdapter,
+  AntigravityAdapter,
+} from './adapters/clients.js';
+import type { TranscriptAdapter } from './adapters/types.js';
 import type { HarvestedEvidence } from './types.js';
 import type { ExperimentStrategy } from '../recovery.js';
 
 export * from './types.js';
 export * from './git.js';
 export * from './socket.js';
+export * from './adapters/types.js';
+export * from './adapters/archaeology.js';
+export * from './adapters/clients.js';
+
+const defaultAdapters: TranscriptAdapter[] = [
+  new TestArchaeologyAdapter(),
+  new ClaudeCodeAdapter(),
+  new CursorAdapter(),
+  new AiderAdapter(),
+  new AntigravityAdapter(),
+];
 
 /**
  * Harvests ground-truth evidence directly from the local workspace and host environment
  * without requiring the agent to handcraft extensive JSON logs.
  */
-export async function harvestEvidence(workspaceDir: string = process.cwd()): Promise<HarvestedEvidence> {
+export async function harvestEvidence(
+  workspaceDir: string = process.cwd(),
+  customAdapters: TranscriptAdapter[] = defaultAdapters,
+): Promise<HarvestedEvidence> {
   const git = harvestGitState(workspaceDir);
   const sockets = await harvestSocketState();
 
@@ -43,7 +65,29 @@ export async function harvestEvidence(workspaceDir: string = process.cwd()): Pro
     }
   }
 
-  // 3. Synthesize Default Problem Description
+  // 3. Pluggable Adapters (Archaeology, Claude, Cursor, Aider, Antigravity)
+  try {
+    const adapterPromises = customAdapters
+      .filter((adapter) => adapter.detect(workspaceDir))
+      .map(async (adapter) => {
+        try {
+          return await adapter.harvest(workspaceDir);
+        } catch {
+          return [];
+        }
+      });
+
+    const results = await Promise.allSettled(adapterPromises);
+    for (const r of results) {
+      if (r.status === 'fulfilled' && r.value.length > 0) {
+        observations.push(...r.value);
+      }
+    }
+  } catch {
+    // Graceful degradation
+  }
+
+  // 4. Synthesize Default Problem Description
   let synthesizedProblem = 'Execution loop detected in active workspace.';
   if (suggestedStrategy === 'clean-slate-rollback') {
     synthesizedProblem = `Codebase sepsis: ${git.dirtyFiles.length} dirty files accumulating uncommitted changes without passing verification.`;

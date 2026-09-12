@@ -16,6 +16,8 @@ import { runPurge } from './purge.js';
 import { harvestEvidence } from './harvester/index.js';
 import { runGuardian } from './guardian.js';
 import { runDashboard } from './dashboard.js';
+import { runResurrect, generateResurrectionPacket } from './resurrection.js';
+import { runPrayerBook } from './recipes.js';
 
 export const server = new McpServer({
   name: 'ctrl-alt-pray',
@@ -66,6 +68,7 @@ server.registerTool(
       candidate_hypotheses: z.array(z.string()).default([]).describe('Plausible explanations of the root cause to test'),
       capabilities: z.array(z.string()).default([]).describe('Host tool capabilities available (e.g. bash, read_file, git)'),
       budget: z.number().int().positive().default(3).describe('Maximum remaining recovery rounds'),
+      heresy_mode: z.boolean().default(false).describe('Explicitly activate Heresy Mode to challenge foundational premises and suggest cheap falsification probes'),
     }),
   },
   async (args) => {
@@ -120,6 +123,9 @@ server.registerTool(
             incantation: result.incantation,
             nhan_pham: result.nhan_pham,
             altar_warning: result.altar_warning,
+            heresy_challenge: result.heresy_challenge,
+            offering: result.offering,
+            file_flapping: result.file_flapping,
           }, null, 2),
         }],
       };
@@ -185,6 +191,8 @@ server.registerTool(
             rejected_approaches: result.rejected_approaches,
             avoid_repeating: result.avoid_repeating,
             handoff: result.handoff,
+            heresy_challenge: result.heresy_challenge,
+            offering: result.offering,
           }, null, 2),
         }],
       };
@@ -282,6 +290,28 @@ server.registerResource(
   },
 );
 
+server.registerResource(
+  'session-resurrection',
+  new ResourceTemplate('session://{session_id}/resurrection', { list: undefined }),
+  {
+    mimeType: 'text/markdown',
+    description: 'Compact resurrection packet for clean-context restarts without failed narrative.',
+  },
+  async (uri, { session_id }) => {
+    const sessions = listSessions();
+    const session = sessions.find((s) => s.session_id === session_id);
+    if (!session) {
+      throw new Error(`Session ${session_id} not found`);
+    }
+    return {
+      contents: [{
+        uri: uri.href,
+        text: generateResurrectionPacket(session),
+      }],
+    };
+  },
+);
+
 // ---------------------------------------------------------------------------
 // 3. MCP Prompts Protocol
 // ---------------------------------------------------------------------------
@@ -368,6 +398,16 @@ async function main() {
     return;
   }
 
+  if (arg === 'resurrect') {
+    runResurrect(process.argv[3]);
+    return;
+  }
+
+  if (arg === 'recipes' || arg === 'book') {
+    runPrayerBook();
+    return;
+  }
+
   if (arg === 'run') {
     const code = await runGuardian(process.argv.slice(3));
     process.exit(code);
@@ -388,6 +428,8 @@ async function main() {
     history [id]     The Confessional: replay the 3-step decision tree of a recovered loop
     purge [proj] [id]Administrative purge of sessions and expired cache (>7 days)
     dashboard        Launch local visual recovery dashboard on http://127.0.0.1:3900
+    resurrect [id]   Export clean-context Resurrection Packet without failed narrative
+    recipes          The Prayer Book: browse the 12 canonical recovery recipes
     run <cmd>        Run a shell command under active freeze (>15s) and failure supervision
     (no args)        Start the MCP (Model Context Protocol) stdio server
 
