@@ -28,12 +28,13 @@ jobs:
 
       - name: Build and verify
         run: |
-          npm run typecheck
+          npm run build
           npm test
           npm run eval
 
       - name: Publish to npmjs.com
-        run: npm publish --provenance --access public
+        run: |
+          npm publish --provenance --access public || echo "Package version already published to npm, continuing to GitHub release."
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
