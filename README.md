@@ -8,6 +8,7 @@
 *Halt circular edits. Terminate zombie terminals. Force your AI to find the ground truth.*
 
 [![GitHub Stars](https://img.shields.io/github/stars/HoangYell/ctrl-alt-pray?style=social)](https://github.com/HoangYell/ctrl-alt-pray)
+[![Live Website](https://img.shields.io/badge/website-ctrl--alt--pray.pages.dev-6366f1.svg?style=flat-square)](https://ctrl-alt-pray.pages.dev)
 [![npm version](https://img.shields.io/npm/v/ctrl-alt-pray.svg?style=flat-square&color=cb3837)](https://www.npmjs.com/package/ctrl-alt-pray)
 [![Release](https://img.shields.io/badge/version-2.0.0-6366f1.svg?style=flat-square)](package.json)
 [![Tests](https://img.shields.io/badge/tests-71%2F71%20passing%20(100%25)-10b981.svg?style=flat-square)](tests/)
@@ -18,8 +19,8 @@
 
 <br/>
 
-<a href="https://github.com/HoangYell/ctrl-alt-pray">
-  <img src="docs/assets/ai-hero-meme.png" alt="Ctrl Alt Pray - Break the 3:00 AM AI Doom Loop" width="100%" style="border-radius: 10px; border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 8px 32px rgba(0,0,0,0.5);" />
+<a href="https://ctrl-alt-pray.pages.dev">
+  <img src="docs/assets/ai-hero-meme.webp" alt="Ctrl Alt Pray - Break the 3:00 AM AI Doom Loop" width="100%" style="border-radius: 10px; border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 8px 32px rgba(0,0,0,0.5);" />
 </a>
 
 ```text
@@ -27,7 +28,7 @@
        [ PRAYERS ARE OPTIONAL. FALSIFIABLE EVIDENCE IS REQUIRED. ]
 ```
 
-**[⭐ Star on GitHub](https://github.com/HoangYell/ctrl-alt-pray) • [Quickstart in 10s](#-quickstart-10-seconds) • [Before vs After](#-the-300-am-agony-before-vs-after) • [Core Superpowers](#-core-superpowers) • [The 12 Canonical Rites](#-the-12-canonical-recovery-recipes) • [CLI Cheat Sheet](#-cli-cheat-sheet)**
+**[🌐 Live Website & Simulator](https://ctrl-alt-pray.pages.dev) • [⭐ Star on GitHub](https://github.com/HoangYell/ctrl-alt-pray) • [Quickstart in 10s](#-quickstart-10-seconds) • [Before vs After](#-the-300-am-agony-before-vs-after) • [Core Superpowers](#-core-superpowers) • [The 12 Canonical Rites](#-the-12-canonical-recovery-recipes) • [CLI Cheat Sheet](#-cli-cheat-sheet)**
 
 </div>
 
