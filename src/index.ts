@@ -13,10 +13,11 @@ import { runInit } from './init.js';
 import { runStats } from './stats.js';
 import { harvestEvidence } from './harvester/index.js';
 import { runGuardian } from './guardian.js';
+import { runDashboard } from './dashboard.js';
 
 const server = new McpServer({
   name: 'ctrl-alt-pray',
-  version: '1.3.0',
+  version: '2.0.0',
 });
 
 function getRecoveryHint(errorMessage: string): string {
@@ -321,6 +322,11 @@ async function main() {
     return;
   }
 
+  if (arg === 'dashboard') {
+    runDashboard();
+    return;
+  }
+
   if (arg === 'run') {
     const code = await runGuardian(process.argv.slice(3));
     process.exit(code);
@@ -338,6 +344,7 @@ async function main() {
   Commands:
     init       Auto-detect agent environments (Cursor, Claude, OpenCode) & inject Tripwires
     stats      Display telemetry on intercepted loops, recovery rates, and tokens saved
+    dashboard  Launch local visual recovery dashboard on http://127.0.0.1:3900
     run <cmd>  Run a shell command under active freeze (>15s) and failure supervision
     (no args)  Start the MCP (Model Context Protocol) stdio server
 
@@ -349,7 +356,7 @@ async function main() {
   }
 
   if (arg === '--version' || arg === '-v') {
-    console.log('ctrl-alt-pray v1.3.0');
+    console.log('ctrl-alt-pray v2.0.0');
     return;
   }
 

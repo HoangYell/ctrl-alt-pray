@@ -30,6 +30,9 @@ export class RecoveryStorage {
 
   private init(): void {
     this.db.exec(`
+      PRAGMA journal_mode = WAL;
+      PRAGMA busy_timeout = 5000;
+
       CREATE TABLE IF NOT EXISTS sessions (
         key TEXT PRIMARY KEY,
         project_key TEXT NOT NULL,
