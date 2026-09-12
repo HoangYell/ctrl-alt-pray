@@ -11,6 +11,7 @@ export type ExperimentStrategy =
   | 'ghost-terminal-breaker'
   | 'api-ground-truth'
   | 'clean-slate-rollback'
+  | 'environment-triage'
   | 'assumption-audit'
   | 'minimal-counterexample'
   | 'divide-and-conquer'
@@ -52,6 +53,10 @@ export const STRATEGY_INCANTATIONS: Record<ExperimentStrategy, { rite: string; i
   'ghost-terminal-breaker': {
     rite: '⚡ [EXORCISM OF THE ZOMBIE]',
     incantation: 'Banish the mute terminal. Sever the orphaned child tree of PID 1. Let the stdin flow free.',
+  },
+  'environment-triage': {
+    rite: '🛡️ [THE WARD OF THE REALM]',
+    incantation: 'Do not blame the scripture when the altar stone is missing. Verify the binary and permissions of the mortal realm.',
   },
   'api-ground-truth': {
     rite: '👁️ [RITE OF TRUE VISION]',
@@ -122,6 +127,17 @@ export function rollNhanPham(context: { attemptsCount: number; hasApology: boole
   return { score, verdict };
 }
 
+export function redactSecrets(text: string): string {
+  if (!text || typeof text !== 'string') return text;
+  let sanitized = text;
+  sanitized = sanitized.replace(/ghp_[a-zA-Z0-9]{36,}/g, 'ghp_REDACTED');
+  sanitized = sanitized.replace(/github_pat_[a-zA-Z0-9_]{50,}/g, 'github_pat_REDACTED');
+  sanitized = sanitized.replace(/sk-[a-zA-Z0-9_\-]{20,}/g, 'sk-REDACTED');
+  sanitized = sanitized.replace(/Bearer\s+[a-zA-Z0-9_\-\.]{20,}/gi, 'Bearer REDACTED');
+  sanitized = sanitized.replace(/AKIA[0-9A-Z]{16}/g, 'AKIA_REDACTED');
+  return sanitized;
+}
+
 const generateId = () => Math.random().toString(36).slice(2, 10);
 
 /**
@@ -166,7 +182,29 @@ export function selectStrategy(context: {
     };
   }
 
-  // 0.1 API Ground Truth: Hallucinated functions, exports, or missing methods
+  // 0.1 Environment Triage: Missing binary, permission denied, disk full, or environment prerequisite
+  const envTriageTriggers = [
+    'command not found',
+    'permission denied',
+    'eacces',
+    'enospc',
+    'no space left on device',
+    'executable file not found',
+    'not recognized as an internal or external command',
+    'spawn enoent',
+    '/bin/sh: line',
+  ];
+  if (envTriageTriggers.some((t) => allText.includes(t))) {
+    return {
+      strategy: 'environment-triage',
+      question: 'Is the failure caused by a missing system dependency, incorrect executable path, or filesystem permissions rather than repository code logic?',
+      expected_outcome: 'Verifying executable path, user permissions, or disk quota isolates the environment prerequisite before modifying source code.',
+      risk: 'Low: read-only environment inspection; no application code changes.',
+      probe: '1) Verify executable existence with command -v <binary> or which; 2) Check target permissions via ls -la; 3) Verify available disk space via df -h.',
+    };
+  }
+
+  // 0.2 API Ground Truth: Hallucinated functions, exports, or missing methods
   const apiHallucinationTriggers = [
     'is not a function',
     'has no exported member',
@@ -338,10 +376,11 @@ export function createOrResumeRecoverySession(
     return cached;
   }
 
-  const constraints = input.constraints || [];
-  const observations = input.observations || [];
-  const attempts = input.attempts || [];
-  const candidate_hypotheses = input.candidate_hypotheses || [];
+  const problem = redactSecrets(input.problem || '');
+  const constraints = (input.constraints || []).map(redactSecrets);
+  const observations = (input.observations || []).map(redactSecrets);
+  const attempts = (input.attempts || []).map(redactSecrets);
+  const candidate_hypotheses = (input.candidate_hypotheses || []).map(redactSecrets);
   const capabilities = input.capabilities || [];
 
   // Case A: Resume an existing session
@@ -361,7 +400,7 @@ export function createOrResumeRecoverySession(
     const mergedHypotheses = Array.from(new Set([...existing.assumptions_to_check, ...candidate_hypotheses]));
 
     const experiment = selectStrategy({
-      problem: input.problem || existing.handoff,
+      problem: problem || existing.handoff,
       observations: mergedFacts,
       attempts: mergedAttempts,
       candidate_hypotheses: mergedHypotheses,
@@ -373,7 +412,7 @@ export function createOrResumeRecoverySession(
       incantation: 'Prayers are optional. Evidence is required.',
     };
 
-    const textToScan = [input.problem || existing.handoff, ...mergedFacts, ...mergedAttempts, ...mergedHypotheses].join(' ');
+    const textToScan = [problem || existing.handoff, ...mergedFacts, ...mergedAttempts, ...mergedHypotheses].join(' ');
     const hasApology = detectApologySlop(textToScan);
     const altar_warning = hasApology
       ? "🕯️ [THE ALTAR SCOWLS]: 'The Gods accept no apologies from mortals. Apologies do not pass test suites. State your single falsifiable hypothesis and execute the probe.'"
@@ -413,7 +452,7 @@ export function createOrResumeRecoverySession(
   // Case B: Create brand new session
   const session_id = generateId();
   const experiment = selectStrategy({
-    problem: input.problem,
+    problem,
     observations,
     attempts,
     candidate_hypotheses,
@@ -425,7 +464,7 @@ export function createOrResumeRecoverySession(
     incantation: 'Prayers are optional. Evidence is required.',
   };
 
-  const textToScan = [input.problem, ...observations, ...attempts, ...candidate_hypotheses].join(' ');
+  const textToScan = [problem, ...observations, ...attempts, ...candidate_hypotheses].join(' ');
   const hasApology = detectApologySlop(textToScan);
   const altar_warning = hasApology
     ? "🕯️ [THE ALTAR SCOWLS]: 'The Gods accept no apologies from mortals. Apologies do not pass test suites. State your single falsifiable hypothesis and execute the probe.'"
@@ -450,7 +489,7 @@ export function createOrResumeRecoverySession(
     assumptions_to_check: candidate_hypotheses,
     rejected_approaches: attempts,
     avoid_repeating: attempts,
-    handoff: `${occultRite.rite} ${occultRite.incantation} | Goal: ${input.problem}. Constraints: ${constraints.join('; ') || 'none'}. Active strategy: ${experiment.strategy}.`,
+    handoff: `${occultRite.rite} ${occultRite.incantation} | Goal: ${problem}. Constraints: ${constraints.join('; ') || 'none'}. Active strategy: ${experiment.strategy}.`,
     updated_at: Date.now(),
     rite: occultRite.rite,
     incantation: occultRite.incantation,

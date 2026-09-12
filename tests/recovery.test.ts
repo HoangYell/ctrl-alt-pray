@@ -297,4 +297,38 @@ describe('Ctrl Alt Pray recovery flow', () => {
     expect(session.altar_warning).toContain('THE ALTAR SCOWLS');
     expect(session.altar_warning).toContain('The Gods accept no apologies from mortals');
   });
+
+  it('selects environment-triage strategy when host commands or permissions fail', () => {
+    const session = createOrResumeRecoverySession({
+      project_key: 'env-test',
+      request_id: 'req-env-1',
+      problem: 'Build fails with /bin/sh: line 1: pnpm: command not found',
+      observations: ['spawn enoent', 'permission denied when accessing /usr/local/bin'],
+    });
+
+    expect(session.experiment?.strategy).toBe('environment-triage');
+    expect(session.rite).toContain('THE WARD OF THE REALM');
+    expect(session.experiment?.question).toContain('missing system dependency');
+  });
+
+  it('redacts sensitive API tokens, GitHub tokens, and Bearer headers from session records', () => {
+    const mockGhp = ['gh', 'p_', '123456789012345678901234567890123456'].join('');
+    const mockSk = ['s', 'k-', 'abcdef1234567890abcdef1234567890'].join('');
+    const session = createOrResumeRecoverySession({
+      project_key: 'redact-test',
+      request_id: 'req-redact-1',
+      problem: `Failed request with token ${mockGhp}`,
+      observations: [
+        'Authorization: Bearer mySecretTokenString1234567890',
+        `OpenAI client initialized with key ${mockSk}`,
+      ],
+    });
+
+    expect(session.handoff).not.toContain(mockGhp);
+    expect(session.handoff).toContain(['gh', 'p_REDACTED'].join(''));
+    expect(session.known_facts[0]).toContain('Bearer REDACTED');
+    expect(session.known_facts[0]).not.toContain('mySecretTokenString');
+    expect(session.known_facts[1]).toContain(['s', 'k-REDACTED'].join(''));
+    expect(session.known_facts[1]).not.toContain(mockSk);
+  });
 });
