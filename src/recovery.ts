@@ -9,6 +9,8 @@ export type ExperimentStrategy =
   | 'wrong-altar'
   | 'check-the-check'
   | 'ghost-terminal-breaker'
+  | 'api-ground-truth'
+  | 'clean-slate-rollback'
   | 'assumption-audit'
   | 'minimal-counterexample'
   | 'divide-and-conquer'
@@ -33,9 +35,11 @@ export interface RecoverySession {
   decision: RecoveryDecision;
   experiment_id?: string;
   experiment?: Experiment;
+  constraints: string[];
   known_facts: string[];
   assumptions_to_check: string[];
   rejected_approaches: string[];
+  avoid_repeating: string[];
   handoff: string;
   updated_at?: number;
 }
@@ -81,6 +85,47 @@ export function selectStrategy(context: {
       expected_outcome: 'Inspecting process liveness, terminal tail, and log mtime reveals whether the task is a finished ghost, an interactive prompt trap, or a watch-mode daemon.',
       risk: 'Low: read-only process and log inspection; kill task only if confirmed idle.',
       probe: '1) Verify if PID exists and CPU% > 0; 2) Scan last 3 lines of terminal buffer for unhandled prompts ((y/n)?, password, select, press enter); 3) If log file mtime is unchanged for >15s with 0% CPU, terminate the stalled task and read the captured log directly.',
+    };
+  }
+
+  // 0.1 API Ground Truth: Hallucinated functions, exports, or missing methods
+  const apiHallucinationTriggers = [
+    'is not a function',
+    'has no exported member',
+    'cannot find module',
+    'module has no default export',
+    'undefined is not a function',
+    'export not found',
+    'typeerror: ',
+  ];
+  if (apiHallucinationTriggers.some((t) => allText.includes(t))) {
+    return {
+      strategy: 'api-ground-truth',
+      question: 'Does the installed dependency or imported module actually export the expected symbol at runtime?',
+      expected_outcome: 'Inspecting the installed module declaration file (.d.ts) or running a one-line node repl inspection verifies the actual exported API instead of guessing alternate function names.',
+      risk: 'Low: read-only type or runtime print.',
+      probe: 'Run a one-line runtime export probe (e.g. node -e "console.log(Object.keys(await import(\'<module>\')))") or inspect the installed package .d.ts directly. Do not guess alternate names.',
+    };
+  }
+
+  // 0.2 Clean Slate Rollback: Too many dirty files or stacked debugging edits polluting the signal
+  const cleanSlateTriggers = [
+    'dirty working tree',
+    'too many modified files',
+    'stacked changes',
+    'revert noise',
+    'messy diff',
+    'uncommitted edits',
+    'multiple files broken',
+    'abandoned attempts',
+  ];
+  if (cleanSlateTriggers.some((t) => allText.includes(t)) || context.attempts.length >= 4) {
+    return {
+      strategy: 'clean-slate-rollback',
+      question: 'Are uncommitted abandoned debug edits from prior failed attempts polluting the current failure signal?',
+      expected_outcome: 'Reverting speculative scratch edits back to a clean git baseline eliminates secondary bugs introduced during debugging.',
+      risk: 'Low: only discards failed scratch edits; preserves user work.',
+      probe: 'Run "git status -s" and "git diff" to review uncommitted churn; discard failed speculative edits with "git checkout -- <file>" before testing another probe.',
     };
   }
 
@@ -253,9 +298,11 @@ export function createOrResumeRecoverySession(
       decision: 'continue',
       experiment_id: `exp-${generateId()}`,
       experiment,
+      constraints: Array.from(new Set([...(existing.constraints || []), ...constraints])),
       known_facts: mergedFacts,
       assumptions_to_check: mergedHypotheses,
       rejected_approaches: mergedAttempts,
+      avoid_repeating: mergedAttempts,
       handoff: `Resumed session ${input.session_id} (rev ${nextRevision}). Strategy: ${experiment.strategy}. Remaining hypotheses: ${mergedHypotheses.join('; ') || 'none'}.`,
       updated_at: Date.now(),
     };
@@ -284,9 +331,11 @@ export function createOrResumeRecoverySession(
     decision: 'continue',
     experiment_id: `exp-${generateId()}`,
     experiment,
+    constraints,
     known_facts: [...observations],
     assumptions_to_check: candidate_hypotheses,
     rejected_approaches: attempts,
+    avoid_repeating: attempts,
     handoff: `Goal: ${input.problem}. Constraints: ${constraints.join('; ') || 'none'}. Active strategy: ${experiment.strategy}.`,
     updated_at: Date.now(),
   };
@@ -375,8 +424,10 @@ export function reportOutcome(
     next_action: nextAction,
     experiment_id: nextExperiment ? `exp-${generateId()}` : undefined,
     experiment: nextExperiment,
+    constraints: existing.constraints || [],
     known_facts: mergedFacts,
     rejected_approaches: mergedRejected,
+    avoid_repeating: mergedRejected,
     handoff: `Outcome: ${input.outcome}. Checks: ${checks.map((c) => `${c.name}=${c.result}`).join(', ') || 'none'}. Next decision: ${decision}.`,
     updated_at: Date.now(),
   };

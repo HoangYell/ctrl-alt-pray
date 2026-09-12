@@ -181,6 +181,58 @@ describe('Ctrl Alt Pray recovery flow', () => {
     expect(experiment.probe).toContain('mtime is unchanged');
   });
 
+  it('dynamically selects api-ground-truth strategy when hallucinating exported members', () => {
+    const experiment = selectStrategy({
+      problem: 'Compilation error in auth pipeline',
+      observations: ['TypeError: verifyToken is not a function', 'Module has no exported member verifyToken'],
+      attempts: ['Tried importing verifyToken', 'Tried importing tokenVerifier'],
+      candidate_hypotheses: [],
+      capabilities: ['node'],
+    });
+
+    expect(experiment.strategy).toBe('api-ground-truth');
+    expect(experiment.question).toContain('actually export the expected symbol');
+    expect(experiment.probe).toContain('Do not guess alternate names');
+  });
+
+  it('dynamically selects clean-slate-rollback when too many dirty edits pollute the failure', () => {
+    const experiment = selectStrategy({
+      problem: 'Multiple broken tests after experimental patches',
+      observations: ['git status shows messy diff across 6 files with dirty working tree'],
+      attempts: ['Patch 1', 'Patch 2', 'Patch 3', 'Patch 4'],
+      candidate_hypotheses: [],
+      capabilities: ['git'],
+    });
+
+    expect(experiment.strategy).toBe('clean-slate-rollback');
+    expect(experiment.question).toContain('Are uncommitted abandoned debug edits');
+    expect(experiment.probe).toContain('git status -s');
+  });
+
+  it('preserves immutable constraints across session resumption and outcome reporting', () => {
+    const initial = createOrResumeRecoverySession({
+      project_key: 'constraint-test',
+      request_id: 'req-c1',
+      problem: 'Fix slow query without schema migration',
+      constraints: ['DO_NOT_ALTER_SCHEMA', 'NO_EXTERNAL_DEPS'],
+    });
+
+    expect(initial.constraints).toContain('DO_NOT_ALTER_SCHEMA');
+    expect(initial.constraints).toContain('NO_EXTERNAL_DEPS');
+
+    const updated = reportOutcome({
+      project_key: 'constraint-test',
+      session_id: initial.session_id,
+      expected_revision: 1,
+      request_id: 'req-c2',
+      outcome: 'contradicts',
+      observations: ['Index scan still takes 3s'],
+    });
+
+    expect(updated.constraints).toContain('DO_NOT_ALTER_SCHEMA');
+    expect(updated.avoid_repeating.length).toBeGreaterThan(0);
+  });
+
   it('inspects session ledger without mutating revision', () => {
     const initial = createOrResumeRecoverySession({
       project_key: 'inspect-project',
