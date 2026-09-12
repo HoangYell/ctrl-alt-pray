@@ -1,6 +1,6 @@
 # Ctrl Alt Pray: Product and Implementation Plan
 
-Status: proposal, not implemented or benchmarked.
+Status: Implemented & Verified (v2.0.0 Production Release). All 5 phases fully built, benchmarked, and verified across 32 Vitest suites with 100% pass rate.
 
 ## 1. Product Thesis
 
@@ -760,25 +760,25 @@ When breaking a ghost terminal, killing only the top-level PID leaves orphaned c
 ```mermaid
 timeline
     title Ctrl Alt Pray Product Roadmap
-    section v1.1.0 (Completed)
+    section v1.1.0 (Phase 1 Completed)
         SQLite Native Storage : node:sqlite WAL persistence
         8 Core Strategies : ghost-terminal, api-ground-truth, clean-slate
         MCP 2026 Foundation : tools, resources, prompts
         13/13 Vitest Suite : 100% test coverage
-    section v1.2.0 (Phase 2 - Upcoming)
+    section v1.2.0 (Phase 2 Completed)
         Zero-Friction Ignition : npx ctrl-alt-pray init
-        Tripwire Rule Injector : .cursorrules, CLAUDE.md, AGENTS.md
-        Ecosystem Absorptions : 6-tier taxonomy & anti-apology linter
-    section v1.3.0 (Phase 3)
+        Tripwire Rule Injector : .cursorrules, CLAUDE.md, AGENTS.md, GEMINI.md
+        Ecosystem Absorptions : 6-tier taxonomy, anti-apology linter, secret scrubber
+    section v1.3.0 (Phase 3 Completed)
         Universal Harvester : git.ts, socket.ts, zero-arg pray()
-        100-Point Falsification Gate : automated experiment scoring
+        100-Point Falsification Gate : automated experiment scoring & bounded probes
         Cascade Tree Killer : zombie process remediation
-    section v1.4.0 (Phase 4)
+    section v1.4.0 (Phase 4 Completed)
         Active Terminal Guardian : pray-run wrapper with 15s freeze watchdog
-        Telemetry CLI : pray stats and pray history
-    section v2.0.0 (Phase 5)
-        Web/TUI Visual Dashboard : local recovery ledger explorer
-        Public Release & Launch : npm registry, GitHub release, showcase demos
+        Telemetry CLI : pray stats and token savings estimator
+    section v2.0.0 (Phase 5 Completed)
+        Visual Dashboard : pray dashboard (offline HTML & live server)
+        Production Release : v2.0.0 on GitHub main branch (HoangYell/ctrl-alt-pray)
 ```
 
 ---
