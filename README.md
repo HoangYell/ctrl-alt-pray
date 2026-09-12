@@ -8,12 +8,19 @@
 *Halt circular edits. Terminate zombie terminals. Force your AI to find the ground truth.*
 
 [![GitHub Stars](https://img.shields.io/github/stars/HoangYell/ctrl-alt-pray?style=social)](https://github.com/HoangYell/ctrl-alt-pray)
+[![npm version](https://img.shields.io/npm/v/ctrl-alt-pray.svg?style=flat-square&color=cb3837)](https://www.npmjs.com/package/ctrl-alt-pray)
 [![Release](https://img.shields.io/badge/version-2.0.0-6366f1.svg?style=flat-square)](package.json)
-[![Tests](https://img.shields.io/badge/tests-61%2F61%20passing%20(100%25)-10b981.svg?style=flat-square)](tests/)
+[![Tests](https://img.shields.io/badge/tests-71%2F71%20passing%20(100%25)-10b981.svg?style=flat-square)](tests/)
 [![Runtime](https://img.shields.io/badge/node-%E2%89%A522-f59e0b.svg?style=flat-square)](https://nodejs.org)
 [![Storage](https://img.shields.io/badge/storage-SQLite%20WAL%20%2B%20JSON-8b5cf6.svg?style=flat-square)](#-dual-driver-storage-resilience)
 [![Dependencies](https://img.shields.io/badge/dependencies-0%20runtime%20deps-14b8a6.svg?style=flat-square)](#-why-developers-star-this)
 [![License](https://img.shields.io/badge/license-ISC-0ea5e9.svg?style=flat-square)](LICENSE)
+
+<br/>
+
+<a href="https://github.com/HoangYell/ctrl-alt-pray">
+  <img src="docs/assets/ai-hero-meme.png" alt="Ctrl Alt Pray - Break the 3:00 AM AI Doom Loop" width="100%" style="border-radius: 10px; border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 8px 32px rgba(0,0,0,0.5);" />
+</a>
 
 ```text
        🕯️  THE ALTAR OF GROUND TRUTH HAS BEEN SUMMONED  🕯️
@@ -42,6 +49,20 @@ Every software engineer working with autonomous coding agents knows this viscera
 
 > **The Empirical Law of AI Coding Loops:**  
 > If an AI agent fails twice consecutively on the same defect, **attempting a third speculative patch with the same assumptions has a <4% success rate**. Without an external circuit breaker, it will apologize profusely, hallucinate alternate APIs, and burn your context window.
+
+```mermaid
+flowchart LR
+    A["🤖 AI Stuck in Doom Loop<br/>(2 Consecutive Failures)"] -->|"Attempt 3 ⛔ BLOCKED"| B["🛑 2-Strikes Circuit Breaker"]
+    B -->|"Forces MCP Tool"| C["🕯️ pray()<br/>Universal Harvester"]
+    C -->|"100-pt Falsification Gate"| D["🔬 Minimal Probe<br/>(1 Variable Tested)"]
+    D -->|"Empirical Reality"| E["✅ Tests Pass (71/71)<br/>Clean State Restored"]
+
+    style A fill:#450a0a,stroke:#dc2626,stroke-width:2px,color:#fca5a5
+    style B fill:#451a03,stroke:#f59e0b,stroke-width:2px,color:#fde68a
+    style C fill:#1e1b4b,stroke:#6366f1,stroke-width:2px,color:#c7d2fe
+    style D fill:#0c4a6e,stroke:#0284c7,stroke-width:2px,color:#bae6fd
+    style E fill:#064e3b,stroke:#10b981,stroke-width:2px,color:#a7f3d0
+```
 
 ---
 
@@ -223,6 +244,14 @@ Launch the Apple/Linear minimalist recovery ledger with one command:
 ```bash
 ctrl-alt-pray dashboard
 ```
+
+<br/>
+
+<a href="https://github.com/HoangYell/ctrl-alt-pray">
+  <img src="docs/assets/dashboard-preview.png" alt="Ctrl Alt Pray Visual Telemetry Dashboard" width="100%" style="border-radius: 10px; border: 1px solid rgba(255,255,255,0.12); box-shadow: 0 8px 32px rgba(0,0,0,0.5);" />
+</a>
+
+<br/>
 
 - **Live UI**: Dark slate palette (`#090d16`), 100% SVG vector iconography, zero bloat.
 - **Offline HTML Report**: Automatically exports a standalone, portable report to `~/.ctrl-alt-pray/dashboard.html`.
