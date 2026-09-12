@@ -714,7 +714,48 @@ Running `pray stats` (or `npx ctrl-alt-pray stats`) outputs clean, modern develo
 
 ---
 
-## 18. Master Execution Roadmap & Milestones
+## 18. Ecosystem Absorptions & Hardened Gates (HoangYell Craftsmanship Standard)
+
+By distilling battle-tested patterns from the local ecosystem (`hoangyell-com`, `ya-agent`, and `yell-radar`), `ctrl-alt-pray` assimilates five production-grade capabilities to harden agent discipline:
+
+### A. The 6-Tier Agent Pathology Taxonomy (Adapted from `yell-radar` Mineral Engine)
+Just as `yell-radar` classifies content into 6 mineral tiers, `ctrl-alt-pray` formalizes stuck states into 6 concrete pathologies:
+1. 🪨 **Ghost (Zombie/Deadlock)**: Subprocess hung, waiting for stdin `(y/n)`, unhandled pipe EOF, watcher mode forgotten.
+2. 👻 **Phantom (API Hallucination)**: Guessing exported functions, phantom npm packages, or nonexistent method signatures.
+3. 🏛️ **Altar Clash (Target Misalignment)**: Editing source while testing stale `dist/`, wrong port collision, caching layer masking changes.
+4. 🧪 **False Green (Negative Control Bypass)**: Passing test suite caused by swallowed exceptions, skipped assertions, or empty test blocks.
+5. 🧹 **Code Sepsis (Cumulative Churn)**: Spreading edits across $\ge 4$ files without verification, piling speculative edits on top of failures.
+6. 🔁 **Doom Flip (Oscillation / Lật Bánh Tráng)**: Flipping a boolean or branch back and forth between two known-failed states.
+
+### B. Anti-Apology & Agent Slop Linter (Adapted from `score-article.mjs` Slop Purge)
+When an agent enters cognitive panic, its transcript degenerates into predictable placation filler (*"I apologize for the oversight..."*, *"You are completely right, let me fix that..."*).
+- **Symptom Detection**: Scans incoming context and attempts for placation signatures (`SLOP_PATTERNS`).
+- **Slop Penalty & Circuit Breaker**: If $\ge 2$ apology patterns are detected without a new discriminating test assertion, `ctrl-alt-pray` penalizes cognitive clarity and injects a crisp reality-check:
+  ```text
+  [CIRCUIT_BREAKER]: Stop apologizing. Apologies do not pass test suites.
+  State your single falsifiable hypothesis and run the bounded probe immediately.
+  ```
+
+### C. 100-Point Falsification Rubric (Adapted from 50-Point Post Quality Gate)
+Rather than executing low-quality, spray-and-pray recovery attempts, every proposed experiment must pass a 100-point falsification rubric before approval:
+- **Discriminative Power (30 pts)**: Must strictly eliminate at least one candidate hypothesis regardless of outcome.
+- **Scope Minimality (30 pts)**: Must alter or observe at most ONE variable/line at a time.
+- **Negative Control (20 pts)**: Must verify that the test can fail for the intended reason before attempting a fix.
+- **Clean Rollback (20 pts)**: Must provide an atomic rollback or `git stash` path leaving zero residual debris.
+- **Threshold**: Experiments scoring $< 60$ points are rejected, and the engine synthesizes a narrower probe.
+
+### D. Process-Tree Cascade Executioner (Adapted from `ya-agent` Watchdog)
+When breaking a ghost terminal, killing only the top-level PID leaves orphaned child processes (`node`, `vitest`, `vite`, `python`) adopted by PID 1.
+- **Recursive Tree Termination**: Employs a process-tree traversal (`pkill -P` / tree traversal) to recursively SIGKILL all descendant PIDs before terminating the parent.
+- **Resource Reclaim**: Ensures dev ports (`EADDRINUSE`) and git locks (`.git/index.lock`) are immediately released.
+
+### E. Flapping & Oscillation Circuit Breaker (Adapted from PM2 Flapping Sentinel)
+- **File Flapping**: Tracks edit frequency per file within a session. If the same file range is reverted and re-edited $\ge 2$ times, locks edit permissions on that file.
+- **Exit Code Flapping**: If the same command produces identical failing exit codes 3 times consecutively, trips the breaker and forces a `clean-slate-rollback`.
+
+---
+
+## 19. Master Execution Roadmap & Milestones
 
 ```mermaid
 timeline
@@ -727,10 +768,11 @@ timeline
     section v1.2.0 (Phase 2 - Upcoming)
         Zero-Friction Ignition : npx ctrl-alt-pray init
         Tripwire Rule Injector : .cursorrules, CLAUDE.md, AGENTS.md
-        High-Attention Tool Schemas : symptom-based descriptions
+        Ecosystem Absorptions : 6-tier taxonomy & anti-apology linter
     section v1.3.0 (Phase 3)
         Universal Harvester : git.ts, socket.ts, zero-arg pray()
-        Secret Redaction Pipeline : token & key sanitization
+        100-Point Falsification Gate : automated experiment scoring
+        Cascade Tree Killer : zombie process remediation
     section v1.4.0 (Phase 4)
         Active Terminal Guardian : pray-run wrapper with 15s freeze watchdog
         Telemetry CLI : pray stats and pray history
@@ -741,7 +783,7 @@ timeline
 
 ---
 
-## 19. Open Decisions & Technical Trade-offs
+## 20. Open Decisions & Technical Trade-offs
 
 - **Zero-Arg Harvester Depth**: Keep git diff inspections capped at 200 lines to avoid blowing context windows in lightweight models.
 - **Guardian Process Overhead**: Ensure `pray-run` uses sub-millisecond process spawning via native `child_process.spawn` without adding latency to fast test suites.
@@ -749,10 +791,11 @@ timeline
 
 ---
 
-## 20. References
+## 21. References
 
 - [Model Context Protocol Specification (2026)](https://modelcontextprotocol.io/specification/latest)
 - [Official MCP TypeScript SDK](https://github.com/modelcontextprotocol/typescript-sdk)
 - [VS Code Terminal Subprocess Issue #254447](https://github.com/microsoft/vscode/issues/254447)
 - [Node.js 22 Native SQLite Documentation](https://nodejs.org/api/sqlite.html)
+
 
