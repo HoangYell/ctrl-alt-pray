@@ -95,6 +95,7 @@ export function printConsecutiveFailureBanner(failures: number, command: string)
 export interface GuardianOptions {
   timeoutMs?: number;
   maxConsecutiveFailures?: number;
+  dryRun?: boolean;
 }
 
 /**
@@ -107,7 +108,7 @@ export function runGuardian(
 ): Promise<number> {
   return new Promise((resolve) => {
     if (args.length === 0) {
-      console.error('Usage: pray-run <command> [args...]');
+      console.error('Usage: pray-run [--dry-run] <command> [args...]');
       console.error('Example: pray-run pnpm test');
       resolve(1);
       return;
@@ -116,6 +117,16 @@ export function runGuardian(
     const commandStr = args.join(' ');
     const timeoutMs = options.timeoutMs ?? (Number(process.env.PRAY_TIMEOUT_MS) || 15000);
     const maxFailures = options.maxConsecutiveFailures ?? 3;
+
+    if (options.dryRun) {
+      const existing = getRunsState()[commandStr];
+      console.error(`[CTRL-ALT-PRAY GUARDIAN] --dry-run: would supervise "${commandStr}"`);
+      console.error(`  freeze watchdog:      terminate & cascade-kill after ${timeoutMs}ms of silence`);
+      console.error(`  circuit breaker:      warn after ${maxFailures} consecutive non-zero exits`);
+      console.error(`  consecutive failures so far: ${existing?.consecutiveFailures ?? 0}`);
+      resolve(0);
+      return;
+    }
 
     const [cmd, ...cmdArgs] = args;
     const child = spawn(cmd, cmdArgs, {
@@ -201,8 +212,10 @@ try {
   const currentFilePath = fileURLToPath(import.meta.url);
   const executedPath = process.argv[1] ? fs.realpathSync(process.argv[1]) : '';
   if (currentFilePath === executedPath) {
-    const args = process.argv.slice(2);
-    runGuardian(args).then((code) => {
+    const rawArgs = process.argv.slice(2);
+    const dryRun = rawArgs.includes('--dry-run');
+    const args = rawArgs.filter((a) => a !== '--dry-run');
+    runGuardian(args, { dryRun }).then((code) => {
       process.exit(code);
     });
   }

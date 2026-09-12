@@ -68,7 +68,7 @@ Every software engineer working with autonomous coding agents knows this viscera
 | **Result:** $28 in API tokens burned. Dirty git working tree. 2 hours lost. Bug still broken. | **Result:** Subsystem isolated in 30 seconds. Baseline restored. **$0.02 spent.** |
 
 > **The Empirical Law of AI Coding Loops:**  
-> If an AI agent fails twice consecutively on the same defect, **attempting a third speculative patch with the same assumptions has a <4% success rate**. Without an external circuit breaker, it will apologize profusely, hallucinate alternate APIs, and burn your context window.
+> If an AI agent fails twice consecutively on the same defect, attempting a third speculative patch with the same assumptions rarely succeeds — the agent is guessing, not gathering evidence. Without an external circuit breaker, it will apologize profusely, hallucinate alternate APIs, and burn your context window.
 
 ```mermaid
 flowchart LR
