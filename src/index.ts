@@ -23,6 +23,7 @@ import { runGuardian } from './guardian.js';
 import { runDashboard } from './dashboard.js';
 import { runResurrect, generateResurrectionPacket } from './resurrection.js';
 import { runPrayerBook } from './recipes.js';
+import { runHomepage } from './site.js';
 
 export const server = new McpServer({
   name: 'ctrl-alt-pray',
@@ -420,6 +421,11 @@ async function main() {
     return;
   }
 
+  if (arg === 'homepage' || arg === 'site') {
+    runHomepage();
+    return;
+  }
+
   if (arg === 'run') {
     const code = await runGuardian(process.argv.slice(3));
     process.exit(code);
@@ -440,6 +446,7 @@ async function main() {
     history [id]     The Confessional: replay the 3-step decision tree of a recovered loop
     purge [proj] [id]Administrative purge of sessions and expired cache (>7 days)
     dashboard        Launch local visual recovery dashboard on http://127.0.0.1:3900
+    homepage, site   Launch marketing landing page & simulator on http://127.0.0.1:3901
     resurrect [id]   Export clean-context Resurrection Packet without failed narrative
     recipes          The Prayer Book: browse the 12 canonical recovery recipes
     run <cmd>        Run a shell command under active freeze (>15s) and failure supervision
