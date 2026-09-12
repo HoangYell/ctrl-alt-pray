@@ -588,19 +588,171 @@ Inspecting logs or transcripts carries the risk of absorbing credentials:
 - **Primary Driver**: `node:sqlite` (`DatabaseSync`) for Node 22+ environments.
 - **Fallback Driver**: Atomic JSON File Store (`sessions.json` with write-and-rename) for environments where native SQLite is restricted or during lightweight testing.
 
-## 15. Open Decisions
+## 15. Multi-Tier Trigger Architecture & Zero-Friction Onboarding (`init`)
 
-- Exact Node LTS, SDK version, schema library, and SQLite binding: choose and pin from current official documentation during M1/M3.
-- Retention and response budgets: validate prototype defaults against real trace sizes and privacy expectations.
-- Numerical product gate: set before held-out evaluation, based on user priorities and measurable cost.
-- License, package scope, domain, and remote repository: decide before publication; none are assumed by this plan.
-- Optional host hooks: prioritize only clients that can reliably supply structured observations with user consent.
+The fatal flaw of AI agent tooling is the **Tunnel Vision Paradox**: an agent trapped in a doom loop does not possess the meta-cognition to spontaneously declare *"I am failing repeatedly, let me seek help"*. Instead, it doubles down, apologies profusely, and repeats the same failed edits.
 
-## 16. References
+To make `ctrl-alt-pray` universally effective across public environments, activation must not rely solely on the agent's voluntary initiative. It operates via a **4-Tier Trigger Hierarchy**:
 
-- [MCP documentation](https://modelcontextprotocol.io/docs/getting-started/intro)
-- [MCP specification](https://modelcontextprotocol.io/specification/latest)
+```text
+┌─────────────────────────────────────────────────────────────────────────┐
+│                    4-TIER TRIGGER ARCHITECTURE                          │
+├─────────────────────────────────────────────────────────────────────────┤
+│ Tier 1: Passive Schema Reflex    │ Tool description enumerates exact    │
+│ (Zero-Config Attention Bias)     │ symptoms (fail >= 2, freeze > 15s)   │
+├──────────────────────────────────┼──────────────────────────────────────┤
+│ Tier 2: In-Context Tripwires     │ npx ctrl-alt-pray init generates     │
+│ (System Prompt Enforcers)        │ 2-strikes circuit breaker rules      │
+├──────────────────────────────────┼──────────────────────────────────────┤
+│ Tier 3: Active Terminal Guardian │ pray-run wrapper detects freezes and │
+│ (Synthetic Output Injection)     │ prints unmissable trigger banners    │
+├──────────────────────────────────┼──────────────────────────────────────┤
+│ Tier 4: Swarm Supervisor / Watch │ Background daemons (ops-watchdog, au)│
+│ (Out-of-Band Intervention)       │ inject high-priority recovery prompt │
+└──────────────────────────────────┴──────────────────────────────────────┘
+```
+
+### A. One-Command Universal Ignition: `npx ctrl-alt-pray init`
+Developers should never have to manually edit five config files. Running `npx ctrl-alt-pray init` (or `pray init`) in any repository will:
+1. **Environment Detection**: Inspect the workspace for:
+   - Cursor (`.cursorrules` or `.cursor/`)
+   - Claude Code (`CLAUDE.md` and `~/.claude.json`)
+   - OpenCode (`opencode.jsonc` or `opencode.json`)
+   - VS Code / Cline / Roo Code (`.vscode/mcp.json`, `.clinerules`)
+   - Google Antigravity / Gemini CLI (`mcp_config.json`, `GEMINI.md`)
+   - Aider (`.aider.conf.yml`)
+2. **MCP Registration**: Automatically register `ctrl-alt-pray` in the appropriate MCP configuration file.
+3. **Tripwire Rule Injection**: Append the non-negotiable **2-Strikes Circuit Breaker Rule** into the agent's instruction file:
+
+```markdown
+<!-- START CTRL-ALT-PRAY TRIPWIRE -->
+### 🛑 Anti-Doom-Loop Circuit Breaker (ctrl-alt-pray)
+- **Strict 2-Failure Limit**: If ANY test, build, or command fails twice with the same or related error, STOP editing immediately.
+- **No Blind Guessing**: DO NOT modify files a third time without new discriminating evidence.
+- **Mandatory Action**: Call the MCP tool `pray` immediately. It will analyze your recent failure, provide an immutable falsification experiment, and reset your hypothesis space.
+- **Terminal Freeze**: If a terminal command hangs or outputs nothing for >15s, cancel it immediately and call `pray` with strategy="ghost-terminal-breaker".
+<!-- END CTRL-ALT-PRAY TRIPWIRE -->
+```
+
+### B. Active Terminal Guardian: `pray-run`
+For command-line workflows, `ctrl-alt-pray` provides an optional wrapper command:
+```bash
+pray-run <command>
+# Example: pray-run pnpm test
+```
+- **Freeze Detection**: If stdout/stderr is silent for >15s without an exit code, `pray-run` terminates the process, kills orphan child processes, and outputs:
+  ```text
+  ╔═══════════════════════════════════════════════════════════════════════╗
+  ║ [CTRL-ALT-PRAY GUARDIAN] TERMINAL HANG DETECTED (>15s silent)         ║
+  ║ Process exited with SIGTERM. Interactive prompt or pipe deadlock.     ║
+  ║ ACTION: Invoke MCP tool 'pray' with strategy='ghost-terminal-breaker'  ║
+  ╚═══════════════════════════════════════════════════════════════════════╝
+  ```
+- **Loop Interception**: Tracks consecutive non-zero exit codes in `.ctrl-alt-pray/runs.json`. On the 3rd consecutive failure, it outputs the unmissable circuit breaker banner directly into the agent's terminal stream.
+
+---
+
+## 16. Zero-Argument Self-Sensing Harvester (`pray()`)
+
+When an agent is caught in a loop, requiring it to construct a 50-line JSON payload with `candidate_hypotheses`, `observations`, and `constraints` creates friction and secondary hallucination errors.
+
+### A. The Zero-Arg Flow
+The `pray` tool schema will support fully optional fields:
+```json
+{
+  "auto_harvest": true
+}
+```
+If called with empty arguments (`{}`), the **Universal Harvester** automatically extracts the ground truth:
+
+1. **Git Sepsis Inspection**:
+   - Runs `git status --porcelain` to count dirty files. If $>4$ files are modified without commits, flags `clean-slate-rollback`.
+   - Runs `git diff -U1` to identify modified lines and syntax churn.
+   - Checks `.git/index.lock` to catch locked git processes.
+2. **Ghost Socket Inspection**:
+   - Uses Node native `node:net` to probe common development ports (`3000`, `4321`, `5173`, `8080`, `9222`).
+   - If a dev server is running on the port while the agent thinks the build failed, flags `wrong-altar`.
+3. **Log & Test Archaeology**:
+   - Checks recent test artifacts (`.vitest/`, `.pytest_cache/`, `test-results/`).
+   - If test output is missing or empty despite claims of failure, flags `check-the-check`.
+4. **Automated Strategy Assignment**:
+   - Synthesizes the harvested evidence into an automated recovery card without demanding extensive user input.
+
+---
+
+## 17. Developer Experience, TUI Altar & Token Telemetry
+
+An open-source developer tool in 2026 must be delightful, transparent, and provably valuable.
+
+### A. The CLI Telemetry Engine: `pray stats`
+Running `pray stats` (or `npx ctrl-alt-pray stats`) outputs clean, modern developer metrics:
+
+```text
+  ┌──────────────────────────────────────────────────────────┐
+  │                   CTRL ALT PRAY TELEMETRY                │
+  │            "When Ctrl+Z isn't enough. Pray."             │
+  └──────────────────────────────────────────────────────────┘
+
+  Active Sessions:       3
+  Recovered Loops:       42
+  Loop Prevention Rate:  88.1%
+  Estimated Tokens Saved: ~385,000 tokens (~$7.70)
+
+  TOP FAILURE MODES INTERCEPTED:
+  • Ghost Terminal Deadlocks:   35%  ████████████
+  • API / Import Hallucinations: 28%  ██████████
+  • Codebase Sepsis (Dirty Churn): 22%  ███████
+  • Wrong Altar (Stale Artifacts): 15%  █████
+
+  Storage: SQLite WAL (~/.ctrl-alt-pray/sessions.sqlite)
+```
+
+### B. The Altar Aesthetic & Easter Eggs
+- **Header**: Subtle, minimalist ASCII altar banner when run interactively in a TTY.
+- **The Confessional**: `pray history` replays the exact decision tree that broke an agent's 20-minute loop into a 3-step timeline.
+- **Zero-Dependency Core**: Zero external runtime heavy-weight dependencies; relies exclusively on Node 22+ native modules (`node:sqlite`, `node:net`, `node:fs`, `node:child_process`).
+
+---
+
+## 18. Master Execution Roadmap & Milestones
+
+```mermaid
+timeline
+    title Ctrl Alt Pray Product Roadmap
+    section v1.1.0 (Completed)
+        SQLite Native Storage : node:sqlite WAL persistence
+        8 Core Strategies : ghost-terminal, api-ground-truth, clean-slate
+        MCP 2026 Foundation : tools, resources, prompts
+        13/13 Vitest Suite : 100% test coverage
+    section v1.2.0 (Phase 2 - Upcoming)
+        Zero-Friction Ignition : npx ctrl-alt-pray init
+        Tripwire Rule Injector : .cursorrules, CLAUDE.md, AGENTS.md
+        High-Attention Tool Schemas : symptom-based descriptions
+    section v1.3.0 (Phase 3)
+        Universal Harvester : git.ts, socket.ts, zero-arg pray()
+        Secret Redaction Pipeline : token & key sanitization
+    section v1.4.0 (Phase 4)
+        Active Terminal Guardian : pray-run wrapper with 15s freeze watchdog
+        Telemetry CLI : pray stats and pray history
+    section v2.0.0 (Phase 5)
+        Web/TUI Visual Dashboard : local recovery ledger explorer
+        Public Release & Launch : npm registry, GitHub release, showcase demos
+```
+
+---
+
+## 19. Open Decisions & Technical Trade-offs
+
+- **Zero-Arg Harvester Depth**: Keep git diff inspections capped at 200 lines to avoid blowing context windows in lightweight models.
+- **Guardian Process Overhead**: Ensure `pray-run` uses sub-millisecond process spawning via native `child_process.spawn` without adding latency to fast test suites.
+- **Cross-Platform Pathing**: Normalize all file paths using POSIX forward-slashes even on Windows hosts (`path.posix.normalize`).
+
+---
+
+## 20. References
+
+- [Model Context Protocol Specification (2026)](https://modelcontextprotocol.io/specification/latest)
 - [Official MCP TypeScript SDK](https://github.com/modelcontextprotocol/typescript-sdk)
-- [MCP Inspector](https://github.com/modelcontextprotocol/inspector)
+- [VS Code Terminal Subprocess Issue #254447](https://github.com/microsoft/vscode/issues/254447)
+- [Node.js 22 Native SQLite Documentation](https://nodejs.org/api/sqlite.html)
 
-Re-check the current SDK and client documentation when implementing transport, structured outputs, error handling, or optional sampling. This plan is not a substitute for a version-pinned implementation contract.
