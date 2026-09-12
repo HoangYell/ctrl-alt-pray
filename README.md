@@ -4,14 +4,15 @@
 
 ### *When Ctrl+Z isn't enough. Pray.*
 
-**The anti-doom-loop circuit breaker for Cursor, Claude Code, and autonomous AI agents.**  
-*Stops circular edits. Kills frozen terminals. Forces your AI to find the real bug.*
+**The open-source anti-doom-loop circuit breaker & epistemic supervisor for Cursor, Claude Code, Cline, and autonomous AI agents.**  
+*Halt circular edits. Terminate zombie terminals. Force your AI to find the ground truth.*
 
 [![GitHub Stars](https://img.shields.io/github/stars/HoangYell/ctrl-alt-pray?style=social)](https://github.com/HoangYell/ctrl-alt-pray)
 [![Release](https://img.shields.io/badge/version-2.0.0-6366f1.svg?style=flat-square)](package.json)
-[![Tests](https://img.shields.io/badge/tests-32%2F32%20passing-10b981.svg?style=flat-square)](tests/)
+[![Tests](https://img.shields.io/badge/tests-61%2F61%20passing%20(100%25)-10b981.svg?style=flat-square)](tests/)
 [![Runtime](https://img.shields.io/badge/node-%E2%89%A522-f59e0b.svg?style=flat-square)](https://nodejs.org)
-[![Zero External Runtime Deps](https://img.shields.io/badge/dependencies-0%20runtime-14b8a6.svg?style=flat-square)](#-why-developers-star-this)
+[![Storage](https://img.shields.io/badge/storage-SQLite%20WAL%20%2B%20JSON-8b5cf6.svg?style=flat-square)](#-dual-driver-storage-resilience)
+[![Dependencies](https://img.shields.io/badge/dependencies-0%20runtime%20deps-14b8a6.svg?style=flat-square)](#-why-developers-star-this)
 [![License](https://img.shields.io/badge/license-ISC-0ea5e9.svg?style=flat-square)](LICENSE)
 
 ```text
@@ -19,7 +20,7 @@
        [ PRAYERS ARE OPTIONAL. FALSIFIABLE EVIDENCE IS REQUIRED. ]
 ```
 
-**[⭐ Star on GitHub](https://github.com/HoangYell/ctrl-alt-pray) • [Quickstart in 10s](#-quickstart-10-seconds) • [Before vs After](#-the-300-am-agony-before-vs-after) • [How It Works](#-how-it-works) • [Commands](#-cli-cheat-sheet)**
+**[⭐ Star on GitHub](https://github.com/HoangYell/ctrl-alt-pray) • [Quickstart in 10s](#-quickstart-10-seconds) • [Before vs After](#-the-300-am-agony-before-vs-after) • [Core Superpowers](#-core-superpowers) • [The 12 Canonical Rites](#-the-12-canonical-recovery-recipes) • [CLI Cheat Sheet](#-cli-cheat-sheet)**
 
 </div>
 
@@ -27,111 +28,202 @@
 
 ## 💀 The 3:00 AM Agony: Before vs After
 
-You know this exact pain:
+Every software engineer working with autonomous coding agents knows this visceral frustration:
 
 | ❌ Without `ctrl-alt-pray` | ✅ With `ctrl-alt-pray` |
 | :--- | :--- |
 | **Attempt 1:** AI edits line 42. Test fails. | **Attempt 1:** AI edits line 42. Test fails. |
-| **Attempt 2:** *"I apologize for the confusion! Let me fix that!"* Edits line 42 again. Test fails. | **Attempt 2:** AI tries again and fails. **CABLE TRIPS.** |
-| **Attempt 3:** AI edits line 43. Still fails. | **🚨 Circuit Breaker activates**: AI is forbidden from making further edits. |
-| **Attempt 5:** Terminal hangs for 15 minutes because a background watcher swallowed EOF. | **🛡️ Guardian kills frozen process**: Recursively slays zombie child processes. |
-| **Attempt 8:** 14 dirty files churned. Context window poisoned. | **🌾 Universal Harvester**: Checks git & ports, tells AI: *"You edited `src/` but tests are running against stale `dist/`."* |
-| **Result:** $28 in API tokens burned. Bug still broken. | **Result:** Bug resolved in 30 seconds. **$0.02 spent.** |
+| **Attempt 2:** *"I apologize for the confusion! Let me fix that!"* AI edits line 42 again. Test fails. | **Attempt 2:** AI tries again and fails. **CIRCUIT BREAKER TRIPS.** |
+| **Attempt 3:** AI edits line 43. Reverts line 42. Still fails. | **🛑 In-Context Tripwire**: AI is strictly forbidden from writing code without new discriminating evidence. |
+| **Attempt 5:** Terminal hangs for 20 minutes because a dev command was waiting on an unhandled `(y/n)?` prompt. | **⚡ Active Guardian (`pray-run`)**: Detects silence >15s, executes **Cascade Tree Kill** on orphaned child processes, and frees occupied dev ports. |
+| **Attempt 8:** 14 dirty files churned. Hallucinated function exports stacked. Context window saturated. | **🌾 Universal Harvester**: Checks git & ports automatically: *"You edited `src/` but tests execute stale `dist/`."* |
+| **Attempt 14:** AI apologizes for the 10th time, burns another 50k tokens re-explaining the same false premise. | **🔥 Heresy Mode**: Slaps the AI with an iconoclastic falsification probe, resetting hypothesis space to ground reality. |
+| **Result:** $28 in API tokens burned. Dirty git working tree. 2 hours lost. Bug still broken. | **Result:** Subsystem isolated in 30 seconds. Baseline restored. **$0.02 spent.** |
 
-> **The Hard Law of Coding Agents:**  
-> If an AI fails twice on the same bug, **trying a third time with the same assumptions has a <4% success rate**. It will just apologize, hallucinate, and burn your money.
+> **The Empirical Law of AI Coding Loops:**  
+> If an AI agent fails twice consecutively on the same defect, **attempting a third speculative patch with the same assumptions has a <4% success rate**. Without an external circuit breaker, it will apologize profusely, hallucinate alternate APIs, and burn your context window.
 
 ---
 
 ## ⚡ Quickstart (10 Seconds)
 
-### Step 1: Arm your project
+### Step 1: Arm any repository
 
-Run this once in the root of any repository:
+Run this single ignition command in the root of your project:
 
 ```bash
 npx ctrl-alt-pray init
 ```
 
-That's it. It automatically detects your workspace and injects the **2-Strikes Circuit Breaker**:
-- **Cursor**: Injects tripwire into `.cursorrules` and generates `.vscode/mcp.json`.
+`ctrl-alt-pray` automatically detects your active development environment and equips it with the non-negotiable **2-Strikes Circuit Breaker**:
+- **Cursor**: Injects tripwire into `.cursorrules` and provisions `.vscode/mcp.json`.
 - **Claude Code**: Injects into `CLAUDE.md`.
-- **Antigravity / Gemini**: Injects into `GEMINI.md`.
+- **Google Antigravity / Gemini CLI**: Injects into `GEMINI.md`.
 - **Cline / Roo Code**: Injects into `.clinerules`.
-- **OpenCode**: Configures `opencode.jsonc`.
+- **OpenCode**: Registers MCP in `opencode.jsonc`.
+- **Universal Fallback**: Creates standard `AGENTS.md` recognized by modern coding agents.
 
-### Step 2: Code as usual
+### Step 2: Code with peace of mind
 
-Your AI will code normally. But the moment it fails twice in a row, the tripwire forces it to summon the **Altar of Ground Truth (`pray`)** instead of guessing.
+Work as you always do. But the instant your AI fails twice on the same check, the tripwire forces it to summon the **Altar of Ground Truth (`pray`)** instead of guessing.
 
 ---
 
-## 🛑 The Injected Tripwire (The Magic Rule)
+## 🏛️ The 4-Tier Trigger Architecture
 
-Here is the exact rule `npx ctrl-alt-pray init` gives your AI agent:
+Autonomous agents trapped in doom loops suffer from cognitive tunnel vision—they lack the meta-cognition to declare *"I am stuck"*. `ctrl-alt-pray` operates an active 4-tier hierarchy to intercept failures:
+
+```text
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                    4-TIER ANTI-DOOM-LOOP ARCHITECTURE                       │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ Tier 1: Passive Schema Reflex    │ Tool schema enumerates exact symptoms    │
+│ (Zero-Config Attention Bias)     │ (consecutive fails >= 2, freeze > 15s)   │
+├──────────────────────────────────┼──────────────────────────────────────────┤
+│ Tier 2: In-Context Tripwires     │ npx ctrl-alt-pray init generates         │
+│ (System Prompt Enforcers)        │ mandatory 2-strikes circuit breaker rule │
+├──────────────────────────────────┼──────────────────────────────────────────┤
+│ Tier 3: Active Terminal Guardian │ pray-run wrapper detects silent freezes  │
+│ (Synthetic Stream Injection)     │ & terminates zombie child process trees  │
+├──────────────────────────────────┼──────────────────────────────────────────┤
+│ Tier 4: The Altar & Harvester    │ Universal harvester reads git, ports,    │
+│ (Autonomous Ground-Truth Engine) │ & test archaeology to prescribe probes   │
+└──────────────────────────────────┴──────────────────────────────────────────┘
+```
+
+---
+
+## 🚀 Core Superpowers
+
+### 1. 🛑 The Injected Tripwire (The 2-Strikes Rule)
+When `npx ctrl-alt-pray init` runs, it embeds an ironclad behavioral contract:
 
 ```markdown
 <!-- START CTRL-ALT-PRAY TRIPWIRE -->
 ### 🛑 Anti-Doom-Loop Circuit Breaker (ctrl-alt-pray)
-1. STRICT 2-FAILURE LIMIT: If ANY test or command fails twice with the same error, STOP editing immediately.
+1. STRICT 2-FAILURE LIMIT: If ANY test, build, or command fails twice with the same error, STOP editing immediately.
 2. NO BLIND GUESSING: Do not touch application code a 3rd time without verified new evidence.
-3. MANDATORY ACTION: Invoke MCP tool 'pray'. It will freeze your speculative edits and provide ONE atomic negative-control experiment.
+3. MANDATORY ACTION: Invoke MCP tool 'pray'. It will freeze speculative edits and prescribe ONE bounded falsification experiment.
 4. TERMINAL FREEZE: If a command hangs >15s with zero output, kill it and invoke 'pray' (strategy="ghost-terminal-breaker").
-5. ZERO APOLOGIES: Do not apologize. State your single testable hypothesis and run the probe.
+5. ZERO APOLOGIES: Do not apologize. State your single testable hypothesis and execute the probe.
 <!-- END CTRL-ALT-PRAY TRIPWIRE -->
 ```
 
----
+### 2. ⚡ Active Terminal Guardian (`pray-run`)
+Tired of watching your AI run `npm test` or `vite` and freeze for 20 minutes because a process is waiting on an invisible `(y/n)?` prompt, background watcher, or locked database?
 
-## 🛡️ Active Terminal Guardian (`pray-run`)
-
-Tired of your AI launching `npm test` or `vite` and hanging for 20 minutes because it forgot `-w=false` or hit an unhandled `(y/n)?` prompt?
-
-Run any command with `pray-run`:
+Prefix your commands with `pray-run`:
 
 ```bash
-pray-run npm test
+pray-run pnpm test
 # or
-pray-run pnpm test:visual
+pray-run npm run build
 ```
 
-### What Guardian does:
-- **15s Freeze Watchdog**: If a command emits zero output for 15s, Guardian terminates it immediately.
-- **Cascade Process-Tree Killer**: Slay not just the parent PID, but **all orphaned child processes** (`node`, `vitest`, `esbuild`) so ports like `:3000` or `:5173` never get stuck with `EADDRINUSE`.
-- **Flapping Circuit Breaker**: If a command fails 3 times consecutively with the same exit code, Guardian blocks further runs and shows an unmissable banner demanding the AI invoke `pray`.
+```text
+╔═════════════════════════════════════════════════════════════════════════════════╗
+║          [CTRL-ALT-PRAY GUARDIAN] TERMINAL HANG DETECTED (>15s silent)          ║
+╠═════════════════════════════════════════════════════════════════════════════════╣
+║ Process and all descendant child processes terminated via Cascade Killer.       ║
+║ Probable cause: Subprocess pipe deadlock, forgotten watcher, or prompt (y/n)?   ║
+║                                                                                 ║
+║ ACTION REQUIRED: Invoke MCP tool 'pray' with strategy='ghost-terminal-breaker'  ║
+╚═════════════════════════════════════════════════════════════════════════════════╝
+```
 
----
+- **15-Second Freeze Watchdog**: Spawns child commands under real-time stdout/stderr supervision.
+- **Cascade Process-Tree Killer**: Recursively terminates the entire process subtree (orphaned `node`, `vitest`, `esbuild` workers adopted by PID 1), guaranteeing dev ports (`:3000`, `:5173`) and `.git/index.lock` are released.
+- **Flapping Exit Code Breaker**: Tracks consecutive failures across runs in `.ctrl-alt-pray/runs.json`. If identical non-zero exit codes repeat 3 times, Guardian displays an unmissable terminal circuit breaker.
 
-## 🌾 Universal Harvester (Zero-Argument Calling)
+### 3. 🌾 Universal Zero-Argument Harvester (`pray()`)
+When an agent is panicking, demanding that it construct a 60-line JSON payload with `candidate_hypotheses`, `observations`, and `constraints` only induces secondary hallucinations.
 
-When your AI is having a panic attack, it doesn't even need to construct a complicated JSON payload. It can call `pray` with **zero arguments**:
+With `ctrl-alt-pray`, the AI can call `pray` with **zero arguments**:
 
 ```json
-// The AI simply calls:
 {}
 ```
 
-The **Universal Harvester** automatically inspects reality:
-1. **Git Churn**: Detects dirty uncommitted files and `.git/index.lock` collisions.
-2. **Socket Probe**: Checks dev ports (`3000`, `4321`, `5173`, `8080`, `9222`) for orphaned zombie servers holding ports hostage.
-3. **Root-Cause Isolation**: Identifies whether the bug is code, caching, build artifacts, or port collisions.
+The **Universal Harvester** automatically inspects runtime reality:
+1. **Git Sepsis & Flapping**: Scans `git status --porcelain` and diffs. If $\ge 4$ files are dirty, flags `clean-slate-rollback`. If a file is repeatedly edited and reverted, locks edit permissions.
+2. **Socket Contention**: Uses native `node:net` to probe standard dev ports (`3000`, `4321`, `5173`, `8080`, `9222`) across macOS, Linux, and Windows for stale background daemons.
+3. **Pluggable AI Archaeology**: Reads test artifacts (`.vitest/`, `.pytest_cache/`, `test-results/`) and local client configs (`.cursor/`, `CLAUDE.md`, `GEMINI.md`, `.aider.chat.history.md`).
+
+### 4. 🔥 Heresy Mode & The Offering
+When an agent fixates on a false premise (*"The database query must be wrong!"* when the server is actually executing a stale build artifact):
+- **Heresy Mode (`heresy_mode: true`)**: Tripped automatically on attempt 3. Challenges the foundational premise and provides a cheap, decisive falsification check:
+  - *Wrong Altar*: Inject an intentional syntax error in source. If tests still pass, your source file is not being compiled.
+  - *Phantom Module*: Run `node -e "import('<mod>').then(m => console.log(Object.keys(m)))"` to inspect true runtime exports instead of guessing method names.
+  - *Poison Chalice*: Inject `assert.strictEqual(1, 2)` into the business logic. If tests stay green, your test suite is swallowing errors.
+- **The Offering (`session.offering`)**: When the problem cannot be resolved by more code, the Altar demands missing evidence:
+  - `minimal_input`: A stripped-down JSON payload with $<5$ fields isolating the bug.
+  - `product_decision`: A multiple-choice business rule decision for the human owner.
+  - `known_good_comparison`: A side-by-side trace of working vs broken environments.
+
+### 5. ⚰️ Clean-Context Resurrection (`pray resurrect`)
+When an agent's context window is poisoned with 30 turns of failed speculative reasoning, continuing in the same session is a waste of money.
+
+Run:
+```bash
+ctrl-alt-pray resurrect [session_id]
+```
+
+Or query MCP resource `session://{session_id}/resurrection`:
+
+The engine outputs a **compact Markdown Resurrection Packet**:
+1. **The Core Goal & Constraints**: Inviolable boundaries.
+2. **Verified Ground Truth**: Hard facts proven by command exit codes and passing assertions.
+3. **Ruled-Out Hypotheses (DO NOT RECYCLE)**: Approaches already attempted that failed—forbids the fresh agent from repeating them.
+4. **Active Bounded Probe**: Exactly ONE isolated check with clean rollback.
+5. **Zero Speculative Narratives**: Wipes away the prior agent's excuses and hallucinations.
+
+### 6. 📜 The Prayer Book: 12 Canonical Rites (`pray recipes`)
+Need to browse battle-tested recovery patterns? Run:
+
+```bash
+ctrl-alt-pray recipes
+# or
+ctrl-alt-pray book
+```
+
+All 12 canonical recipes are version-controlled with applicability triggers, probes, outcome branches, and safety guarantees.
 
 ---
 
-## 📊 Apple-Grade Visual Dashboard
+## 🏛️ The 12 Canonical Recovery Recipes
 
-Track all recovered loops, intercepted hallucinations, and token savings:
+| # | Strategy | Trigger Symptom | Prescribed Ground-Truth Probe | Safety Guarantee |
+| :-: | :--- | :--- | :--- | :--- |
+| **01** | `wrong-altar` | Code edits produce zero change in output; same error | Inject unique runtime marker (`RUNNING_CHECK_<UUID>`); check stdout | Harmless print; zero mutation |
+| **02** | `check-the-check` | Tests stay green despite reported bug; missing logs | Introduce deliberate failing assertion (`assert(1 === 2)`) | Temporary negative control |
+| **03** | `ghost-terminal-breaker` | Command hung >15s; pipe EOF deadlock; unhandled prompt | Inspect CPU% & terminal tail; cascade kill if 0% CPU with frozen log | Read-only inspection; cascade kill |
+| **04** | `api-ground-truth` | `TypeError: is not a function`; hallucinating method names | Run 1-line script: `node -e "console.log(Object.keys(import('...')))"` | Read-only runtime reflection |
+| **05** | `clean-slate-rollback` | $\ge 4$ uncommitted files; stacked messy diffs | `git stash push -u -m "checkpoint"`; rerun minimal test | Safely stashes uncommitted work |
+| **06** | `environment-triage` | `command not found`, `EACCES`, `ENOSPC`, missing binary | Verify binary path (`which`), permissions (`ls -la`), disk space (`df -h`) | Read-only host environment triage |
+| **07** | `assumption-audit` | Candidate hypothesis treated as fact without proof | Execute a single diagnostic probe designed strictly to *disprove* it | Low-risk assertion or query |
+| **08** | `minimal-counterexample` | Huge 10MB payload; 200 fields; noisy repro | Halve input payload repeatedly until atomic failure invariant remains | Isolated local test fixture |
+| **09** | `divide-and-conquer` | Regression between commits or multi-step pipeline break | Inspect and log payload state exactly midway between entry and failure | Read-only intermediate logging |
+| **10** | `controlled-substitution` | Two plausible causes separated by known-good input | Hold all variables constant and swap suspect component with verified twin | Local temporary swap |
+| **11** | `boundary-check` | Subsystem boundary unclear; ambiguous stack trace | Compare inputs and outputs across component boundary before editing code | Zero mutation boundary check |
+| **12** | `human-checkpoint` | Ambiguous product requirement; conflicting business spec | Formulate one concrete multiple-choice question to the human maker | Zero speculative guessing |
+
+---
+
+## 📊 Visual Ledger & Telemetry Dashboard
+
+### Live Web Dashboard (`http://127.0.0.1:3900`)
+Launch the Apple/Linear minimalist recovery ledger with one command:
 
 ```bash
 ctrl-alt-pray dashboard
 ```
 
-- **Live UI**: Opens at `http://127.0.0.1:3900`.
-- **Offline HTML Export**: Also saves a single, self-contained offline report to `~/.ctrl-alt-pray/dashboard.html`.
-- **Linear/Apple Clean**: Slate palette (`#090d16`), 100% SVG vector icons, zero gaudy gradients.
-- **Session Inspector**: Click any session to inspect exact handoff notes and disproven hypotheses.
+- **Live UI**: Dark slate palette (`#090d16`), 100% SVG vector iconography, zero bloat.
+- **Offline HTML Report**: Automatically exports a standalone, portable report to `~/.ctrl-alt-pray/dashboard.html`.
+- **Session Inspector Modal**: Click any session to inspect exact handoff notes, verified observations, and rejected hypotheses.
 
-Want a quick terminal summary instead?
+### CLI Telemetry (`pray stats`)
+For a quick terminal audit of intercepted loops and saved tokens:
 
 ```bash
 pray stats
@@ -143,72 +235,71 @@ pray stats
   │            "When Ctrl+Z isn't enough. Pray."             │
   └──────────────────────────────────────────────────────────┘
 
-  Active Sessions Recorded:  18
-  Loops Intercepted:         16
-  Loop Recovery Rate:        88.9%
-  Estimated Tokens Saved:    ~153,000 tokens (~$2.29)
+  Active Sessions Recorded:  23
+  Loops Intercepted:         20
+  Loop Recovery Rate:        87.0%
+  Estimated Tokens Saved:    ~195,500 tokens (~$2.93)
 
-  TOP STRATEGIES DISPENSED:
-  • ghost-terminal-breaker  : 7 (44%) ████
-  • api-ground-truth        : 4 (25%) ███
-  • wrong-altar             : 3 (19%) ██
+  TOP FAILURE MODES INTERCEPTED:
+  • Ghost Terminal Deadlocks:    38%  ████████████
+  • API / Symbol Hallucinations: 26%  ████████
+  • Code Sepsis (Dirty Churn):   21%  ███████
+  • Wrong Altar (Stale Builds):  15%  █████
+
+  Storage: SQLite WAL (~/.ctrl-alt-pray/sessions.sqlite)
+```
+
+### The Confessional (`pray history`)
+Replay the exact 3-step decision tree that resolved an agent's stuck state:
+
+```bash
+pray history [session_id]
 ```
 
 ---
 
-## 🏛️ The 10 Recovery Strategies
+## 🧙‍♂️ Occult Easter Eggs: "The Altar Scowls"
 
-When `pray` is invoked, it selects the single best strategy to break the impasse:
-
-| Strategy | When it Triggers | The Prescribed Action |
-| :--- | :--- | :--- |
-| **`ghost-terminal-breaker`** | Mute terminal >15s or hung pipes | Kill child process tree, clean `.git/index.lock`, free ports. |
-| **`wrong-altar`** | Edits `src/` while test runs old `dist/` | Purge build caches, verify timestamps before editing code. |
-| **`api-ground-truth`** | Hallucinated imports or guessed exports | Run 1-line script to print `Object.keys()` of real module. |
-| **`clean-slate-rollback`** | $\ge 4$ files modified without passing | `git stash` to clean baseline; test one isolated line. |
-| **`environment-triage`** | Missing binaries, `EACCES`, `ENOSPC` | Check system `PATH`, node version, and disk space. |
-| **`check-the-check`** | Tests passing despite broken behavior | Inject intentional failing assert to prove test actually runs. |
-| **`assumption-audit`** | Fixating on unproven hypothesis | Run minimal probe specifically designed to *disprove* it. |
-| **`minimal-counterexample`** | Massive failing payloads / noisy logs | Halve test input repeatedly until minimal repro remains. |
-| **`divide-and-conquer`** | Multi-stage pipeline regression | Log data at pipeline midpoint to isolate the broken half. |
-| **`boundary-check`** | Edge-case or off-by-one errors | Probe exact boundary conditions (`null`, empty, `0`, `-1`). |
-
----
-
-## 🧙‍♂️ Occult Easter Eggs & The Anti-Apology Scowl
-
-We built this with high-performance engineering, but we gave it personality. When your AI calls `pray`, check its hidden `<thinking>` trace:
+Behind the candles and Latin rites lies uncompromising engineering discipline:
 
 ### 1. The Anti-Apology Scowl
-If your AI starts groveling (*"I deeply apologize for the confusion! Let me correct..."*), the Altar slaps it:
+When an agent enters cognitive panic, its output degenerates into placating filler (*"I apologize for the confusion! Let me correct..."*).
+
+The Altar slaps it back to reality:
 
 ```text
-[THE ALTAR SCOWLS]
-Stop apologizing. Groveling does not pass test suites.
-The Altar demands falsifiable evidence. State your thesis and execute the probe.
+🕯️ [THE ALTAR SCOWLS]
+The Gods accept no apologies from mortals. Apologies do not pass test suites.
+State your single falsifiable hypothesis and execute the probe.
 ```
 
-### 2. The Divine Favor (Karma RNG) Roll
-The AI receives a karma roll (1–100) inside its reasoning context:
+### 2. Divine Favor (Karma RNG Roll)
+Inside the AI's hidden reasoning context, it receives an epistemic karma roll (1–100):
+- `< 40`: `Dire Wrath (Altar Scorn - Apologies Detected)`
+- `< 60`: `Trial of Patience (Temperate Grace)`
+- `< 80`: `Auspicious Omen (Fortunate Insight)`
+- $\ge 80$: `Transcendent Grace (Divine Favor)`
 
 ```text
-Thinking Process:
+<thinking>
 - Test failed twice on stale import. Tripping circuit breaker...
 - Calling MCP tool 'pray'...
 - Received Rite: 🏛️ [EXPOSING THE FALSE IDOL]
 - Divine Favor Roll: 96/100 (Transcendent Grace — Divine Favor).
-- "The artifact is dead, yet you worship its ghost. Purge dist/ and re-verify."
-- Purging dist/ before touching any application code.
+- Handoff: "The build artifact is stale; kindle the fire of fresh compilation."
+- Action: Purging dist/ and rebuilding before modifying source code.
+</thinking>
 ```
 
 ---
 
 ## 💎 Why Developers Star This
 
-- **Zero External Runtime Dependencies**: Built entirely on standard Node.js modules and native `node:sqlite` in WAL mode. No C++ bindings, no `node-gyp`, no bloat.
-- **Zero Remote Telemetry**: 100% local. Your code, stack traces, and prompts never leave your machine.
-- **Automatic Secret Redaction**: Strips `ghp_`, `github_pat_`, `sk-`, and `Bearer` tokens before writing anything to disk.
-- **Ultra-Lightweight**: Boots in <10ms.
+- **Zero External Runtime Dependencies**: Built strictly using Node 22+ native standard modules (`node:sqlite`, `node:net`, `node:fs`, `node:child_process`) and `@modelcontextprotocol/server`. No native C++ bindings, no `node-gyp`, no bundle bloat.
+- **Dual-Driver Storage Resilience**: Primary persistence runs on high-performance native `node:sqlite` in WAL mode (`~/.ctrl-alt-pray/sessions.sqlite`). Automatically falls back to atomic JSON file storage (`sessions.json` via write-and-rename) if SQLite is restricted.
+- **Zero Remote Telemetry**: 100% local. Your code, diffs, stack traces, and prompts never leave your local machine.
+- **Automatic Secret Scrubbing**: Regex-scrubs GitHub tokens (`ghp_`), OpenAI/Anthropic keys (`sk-`), AWS credentials (`AKIA`), and `Bearer` headers before persisting any record.
+- **Sub-10ms Cold Start**: Instant ignition across CLI and MCP stdio transports.
 
 ---
 
@@ -218,21 +309,33 @@ Thinking Process:
 # 1. Arm any repository with the 2-Strikes circuit breaker
 npx ctrl-alt-pray init
 
-# 2. Run commands with freeze protection (>15s) and zombie cleanup
+# 2. Run test/build commands with 15s freeze watchdog & zombie cleanup
 pray-run npm test
 
-# 3. View saved tokens and recovery rate
+# 3. View telemetry on intercepted loops and saved tokens
 pray stats
 
-# 4. Open local visual dashboard
+# 4. Browse the 12 canonical recovery recipes
+ctrl-alt-pray recipes
+
+# 5. Export clean resurrection packet for fresh context restart
+ctrl-alt-pray resurrect [session_id]
+
+# 6. Replay the recovery timeline of a session
+ctrl-alt-pray history [session_id]
+
+# 7. Launch local visual dashboard
 ctrl-alt-pray dashboard
+
+# 8. Administrative purge of old sessions (>7 days)
+ctrl-alt-pray purge
 ```
 
 ---
 
 ## 🛠️ Manual MCP Setup
 
-If you prefer to configure your editor manually:
+If you prefer to configure your MCP client manually without `npx ctrl-alt-pray init`:
 
 ### Cursor (`.cursor/mcp.json` or `.vscode/mcp.json`)
 ```json
@@ -258,15 +361,28 @@ If you prefer to configure your editor manually:
 }
 ```
 
+### Google Antigravity / Gemini CLI (`mcp_config.json`)
+```json
+{
+  "mcpServers": {
+    "ctrl-alt-pray": {
+      "command": "npx",
+      "args": ["-y", "ctrl-alt-pray"]
+    }
+  }
+}
+```
+
 ---
 
-## 🤝 Community & Support
+## 🤝 Contributing
 
-If **Ctrl Alt Pray** saved you even **one** 3:00 AM debugging headache or $10 in wasted tokens:
-
-⭐ **[Star this repository on GitHub](https://github.com/HoangYell/ctrl-alt-pray)** — it helps other tired developers find it!
-
-Report bugs or suggest new recovery rites on [GitHub Issues](https://github.com/HoangYell/ctrl-alt-pray/issues).
+Contributions are welcome! Whether you are adding a new canonical recovery rite, expanding harvester client adapters, or improving freeze detection heuristics:
+1. Clone the repo: `git clone https://github.com/HoangYell/ctrl-alt-pray.git`
+2. Install dependencies: `pnpm install`
+3. Run tests: `pnpm test` (100% pass required)
+4. Run evaluation benchmark: `pnpm eval`
+5. Open a Pull Request!
 
 ---
 
