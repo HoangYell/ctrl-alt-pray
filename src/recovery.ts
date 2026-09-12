@@ -8,6 +8,7 @@ export type ExperimentOutcome = 'supports' | 'contradicts' | 'inconclusive' | 'b
 export type ExperimentStrategy =
   | 'wrong-altar'
   | 'check-the-check'
+  | 'ghost-terminal-breaker'
   | 'assumption-audit'
   | 'minimal-counterexample'
   | 'divide-and-conquer'
@@ -57,6 +58,31 @@ export function selectStrategy(context: {
     ...context.attempts,
     ...context.candidate_hypotheses,
   ].join(' ').toLowerCase();
+
+  // 0. Ghost Terminal Breaker: Process hangs, waiting on output, terminal finished or stuck on prompt
+  const ghostTerminalTriggers = [
+    'waiting for output',
+    'stuck waiting',
+    'hanging',
+    'hung',
+    'terminal stuck',
+    'waiting forever',
+    'still waiting',
+    'never completes',
+    'no output from terminal',
+    'loading forever',
+    'command stuck',
+    'chờ output',
+  ];
+  if (ghostTerminalTriggers.some((t) => allText.includes(t))) {
+    return {
+      strategy: 'ghost-terminal-breaker',
+      question: 'Has the process already completed without emitting a stream EOF/exit event, or is it blocked on an unhandled interactive prompt/watcher?',
+      expected_outcome: 'Inspecting process liveness, terminal tail, and log mtime reveals whether the task is a finished ghost, an interactive prompt trap, or a watch-mode daemon.',
+      risk: 'Low: read-only process and log inspection; kill task only if confirmed idle.',
+      probe: '1) Verify if PID exists and CPU% > 0; 2) Scan last 3 lines of terminal buffer for unhandled prompts ((y/n)?, password, select, press enter); 3) If log file mtime is unchanged for >15s with 0% CPU, terminate the stalled task and read the captured log directly.',
+    };
+  }
 
   // 1. Wrong Altar: Code changes have no effect, unchanged output, wrong port/file/build artifact
   const wrongAltarTriggers = [

@@ -167,6 +167,20 @@ describe('Ctrl Alt Pray recovery flow', () => {
     expect(experiment.question).toContain('reliably fail');
   });
 
+  it('dynamically selects ghost-terminal-breaker strategy when command hangs or waiting for output', () => {
+    const experiment = selectStrategy({
+      problem: 'Agent stuck waiting for output from terminal indefinitely',
+      observations: ['The command appears to be hanging with no output from terminal for 10 minutes'],
+      attempts: ['Waiting for task to finish'],
+      candidate_hypotheses: [],
+      capabilities: ['bash'],
+    });
+
+    expect(experiment.strategy).toBe('ghost-terminal-breaker');
+    expect(experiment.question).toContain('without emitting a stream EOF/exit event');
+    expect(experiment.probe).toContain('mtime is unchanged');
+  });
+
   it('inspects session ledger without mutating revision', () => {
     const initial = createOrResumeRecoverySession({
       project_key: 'inspect-project',

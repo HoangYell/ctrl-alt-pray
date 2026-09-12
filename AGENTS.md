@@ -107,22 +107,25 @@ Read-only inspection of a session's entire audit trail without mutating state.
 
 The recovery engine automatically selects one focused strategy based on observed symptoms:
 
-1. **`wrong-altar` (Verify Running Target)**:
+1. **`ghost-terminal-breaker` (Stale / Hanging Execution Breaker)**:
+   - *Trigger*: Agent stuck waiting for output from terminal, task hangs indefinitely, command already finished but never emitted EOF/exit event, or blocked on unhandled interactive prompt/watcher.
+   - *Probe*: Checks PID liveness & CPU%, scans terminal tail for interactive prompts (`(y/n)?`, `password`, `select`), verifies if log `mtime` is stale (>15s) to safely terminate the stalled task and harvest captured logs directly.
+2. **`wrong-altar` (Verify Running Target)**:
    - *Trigger*: Code edits have zero observed effect, unchanged error, cache suspected.
    - *Probe*: Injects runtime marker or prints build hash to prove code is actually executing.
-2. **`check-the-check` (Validate Measurement)**:
+3. **`check-the-check` (Validate Measurement)**:
    - *Trigger*: Test passes while bug persists, or logs/coverage are missing.
    - *Probe*: Injects deliberate negative fault to confirm test harness actually runs.
-3. **`assumption-audit` (Audit Hypotheses)**:
+4. **`assumption-audit` (Audit Hypotheses)**:
    - *Trigger*: Candidate hypotheses treated as fact without empirical verification.
    - *Probe*: Direct diagnostic query that attempts to DISPROVE the primary assumption.
-4. **`minimal-counterexample`**:
+5. **`minimal-counterexample`**:
    - *Trigger*: Complex multi-step repro, large payload, flaky pipeline.
    - *Probe*: Reduces input or mocks dependencies to find minimal failing case.
-5. **`divide-and-conquer`**:
+6. **`divide-and-conquer`**:
    - *Trigger*: Data transformation chains, regression histories.
    - *Probe*: Inspects state at the midpoint boundary.
-6. **`boundary-check`**:
+7. **`boundary-check`**:
    - *Trigger*: Default subsystem isolation check.
 
 ---
