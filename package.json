@@ -6,7 +6,10 @@
   "type": "module",
   "scripts": {
     "build": "tsc -p tsconfig.json",
+    "clean": "rm -rf dist",
+    "typecheck": "tsc --noEmit",
     "test": "vitest run",
+    "test:watch": "vitest",
     "start": "node dist/index.js"
   },
   "repository": {
