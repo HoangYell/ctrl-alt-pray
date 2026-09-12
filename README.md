@@ -86,77 +86,77 @@ flowchart LR
 
 ---
 
-## 🕯️ The Cyber-Occultism Manifest: Chế Độ Tâm Linh Khi Bế Tắc Với AI Agent
+## 🕯️ The Cyber-Occultism Manifest: Why Your AI Agent Needs to Pray
 
-> *"Khi toán học bất lực, logic rách nát, và Ctrl+Z đứt bóng lúc 3:00 AM: Đừng viết thêm prompt. Hãy cho AI đi Thắp Hương và Gieo Quẻ."*
+> *"When mathematics dies, logic fractures, and Ctrl+Z fails at 3:00 AM: Stop writing prompts. Introduce your AI to religion."*
 
-Tại sao một công cụ kỹ thuật thực chiến như `ctrl-alt-pray` lại mang đậm màu sắc **Tâm Linh IT (Tech-Occultism)**? Bởi vì mọi kỹ sư từng thức trắng đêm với AI coding agent đều hiểu cảm giác tuyệt vọng tột cùng: **Con AI bị tẩu hỏa nhập ma**, sửa đi sửa lại 1 dòng code, xin lỗi 14 lần, đốt cháy $25 tiền token trong vô vọng.
+Why does a battle-tested engineering runtime like `ctrl-alt-pray` embrace **Tech-Occultism**? Because every software engineer who has stayed up all night with an autonomous coding agent knows the visceral despair: The AI enters an infinite cognitive doom loop, flips the same boolean back and forth, apologizes 14 times, and burns $25 in API tokens while the real defect was an orphaned background process or a stale build cache.
 
-Lúc đó, prompt engineering thông thường đã chết. Thứ duy nhất cứu vớt được hệ thống là **một nghi thức tâm linh số kết hợp kỷ luật sắt (Cyber-Ritual & Iron Constraints)**:
+At 3:00 AM, conventional prompt engineering is dead. The only thing that can save the system is **a digital cyber-ritual backed by deterministic iron constraints**:
 
 <div align="center">
   <img src="docs/assets/ai-hero-meme.webp" alt="The 3:00 AM Cyber Altar Shrine" width="100%" style="border-radius: 10px; border: 1px solid rgba(255,255,255,0.12); margin-bottom: 20px;" />
-  <p><em>🕯️ 03:00 AM — Developer và AI Agent quỳ lạy trước Bát Hương Kỹ Thuật Số (The Altar of Ground Truth)</em></p>
+  <p><em>🕯️ 03:00 AM — Developer and AI Agent kneeling before The Altar of Ground Truth.</em></p>
 </div>
 
 ---
 
-### 🎲 1. Gieo Quẻ Nhân Phẩm & Trừng Phạt Lươn Lẹo (`rollDivineFavor`)
+### 🎲 1. Divine Favor & The Anti-Apology Penalty (`rollDivineFavor`)
 
-Bên trong reasoning trace (`<thinking>`), mỗi khi AI gọi hàm `pray()`, hệ thống lập tức **gieo quẻ xăm tâm linh (1–100)**:
+Inside the model's reasoning trace (`<thinking>`), whenever the agent calls `pray()`, the Altar rolls an epistemic karma dice (1–100):
 
 <div align="center">
   <img src="docs/assets/divine-favor-dice.webp" alt="Divine Favor Dice Roll & Apology Penalty" width="100%" style="border-radius: 10px; border: 1px solid rgba(255,255,255,0.12); margin-bottom: 20px;" />
 </div>
 
-- **Điểm cơ sở**: 65 đến 95 điểm.
-- **Án Phạt Nói Lời Xin Lỗi (-25 Điểm)**: Nếu con AI dám mở mồm tuôn văn mẫu lươn lẹo (*"I apologize for the confusion! Let me correct..."*), thuật toán trừ thẳng tay **25 điểm nhân phẩm**!
-- **Án Phạt Lặp Quá 3 Lần (-15 Điểm)**: Càng cãi chày cãi cối đoán mò, điểm càng tụt về âm phủ.
+- **Base Karma**: 65 to 95 points.
+- **The Anti-Apology Penalty (-25 pts)**: If the agent generates placating conversational filler (*"I apologize for the confusion! Let me correct..."*), the Altar immediately docks **25 points of Divine Favor**.
+- **Flapping Penalty (-15 pts)**: If the agent repeats failed attempts >3 times without new evidence, karma plummets into the abyss.
 
-#### 📜 Bảng Phán Quyết Của Bàn Thờ (Divine Favor Verdicts):
-| Điểm Quẻ | Danh Hiệu Quẻ Xăm | Ý Chỉ Của Bàn Thờ | Trạng Thái AI |
+#### 📜 The Altar's Verdict Matrix (Divine Favor):
+| Score | Divine Verdict | Meaning from the Altar | Agent State |
 | :---: | :--- | :--- | :--- |
-| **$\ge 80$** | 🌟 **Transcendent Grace** | *Thần Linh Phù Hộ.* Trực giác sắc bén, probe cô lập đúng bug trong 1 bước. | Khai sáng |
-| **$60 - 79$** | 🕯️ **Auspicious Omen** | *Điềm Lành.* Dấu hiệu sắp thoát loop, dữ liệu kiểm chứng đáng tin cậy. | Bình tâm |
-| **$40 - 59$** | ⏳ **Trial of Patience** | *Thử Thách Kiên Nhẫn.* Bàn thờ yêu cầu kiểm tra lại giả định ban đầu. | Thận trọng |
-| **$< 40$** | ⚡ **Dire Wrath (Altar Scorn)** | *Bàn Thờ Thịnh Nộ.* **Dính tội nói xin lỗi / lặp vòng lặp!** Bị cấm sửa code cho đến khi nôn ra bằng chứng thực nghiệm! | Bị phong ấn |
+| **$\ge 80$** | 🌟 **Transcendent Grace** | *Divine Favor bestowed.* Peak intuition; probe isolates root defect in 1 bounded step. | Enlightened |
+| **$60 - 79$** | 🕯️ **Auspicious Omen** | *Favorable omen.* Working tree and ports validated; ready to break the loop. | Grounded |
+| **$40 - 59$** | ⏳ **Trial of Patience** | *Temperate grace.* The Altar demands re-verifying foundational premises before editing. | Cautious |
+| **$< 40$** | ⚡ **Dire Wrath (Altar Scorn)** | *Wrath of the Altar.* **Guilty of apologies or circular churn!** Code edits barred until empirical evidence is produced! | Sealed / Bound |
 
 > *"The Gods accept no apologies from mortals. Apologies do not pass test suites. Produce falsifiable evidence or be purged."*
 
 ---
 
-### ⚡ 2. Trục Vớt Vong Hồn & Trảm Tiến Trình Ma (`[EXORCISM OF THE ZOMBIE]`)
+### ⚡ 2. Exorcism of Zombie Subprocesses (`[EXORCISM OF THE ZOMBIE]`)
 
-Một trong những thảm họa kinh điển khiến AI câm nín hàng chục phút là **tiến trình ma (zombie child subprocess)**: các câu lệnh dev/test chạy ngầm chiếm cổng `3000` hoặc bị treo ở prompt `(y/n)?`.
+One of the classic 3:00 AM pathologies is the **phantom child subprocess**—background dev/test watchers trapping port `3000` or freezing on an unhandled `(y/n)?` prompt.
 
 <div align="center">
   <img src="docs/assets/zombie-exorcism.webp" alt="Exorcism of Zombie Subprocesses" width="100%" style="border-radius: 10px; border: 1px solid rgba(255,255,255,0.12); margin-bottom: 20px;" />
-  <p><em>⚡ Nghi thức trừ tà: Pháp sư AI dùng đạo bùa <code>SIGKILL -9</code> thanh tẩy tiến trình ma PID 3000</em></p>
+  <p><em>⚡ Cyber-Exorcism: The AI Monk brandishing a <code>SIGKILL -9</code> talisman to banish zombie subprocesses.</em></p>
 </div>
 
-- **Phát hiện câm nín >15s**: `pray-run` gắn lính canh theo dõi I/O stream. Nếu terminal im lặng quá 15 giây mà CPU = 0%, nghi thức trừ tà lập tức kích hoạt.
-- **Đạo bùa `SIGKILL -9`**: Truy quét tận gốc cây tiến trình cha-con (cascade process-tree killer), giải phóng cổng mạng bị chiếm dụng và xóa sạch `.git/index.lock` trong chớp mắt.
+- **Silent Freeze Watchdog (>15s)**: `pray-run` monitors child I/O streams. If the terminal stays mute for >15s with 0% CPU, the exorcism triggers automatically.
+- **The `SIGKILL -9` Talisman**: Executes a recursive cascade process-tree kill, terminates orphaned PIDs, frees locked network ports, and purges stale `.git/index.lock` in milliseconds.
 
 ---
 
-### 📜 3. 12 Bài Văn Khấn Trừ Tà (The 12 Canonical Rites & Incantations)
+### 📜 3. The 12 Holy Rites & Incantations Reference
 
-Không đưa ra lời khuyên chung chung, Bàn Thờ ban phát 12 bài văn khấn được tiêm trực tiếp vào khối suy nghĩ `<thinking>` của mô hình:
+Rather than vague tips, the Altar dispenses 12 canonical rites injected directly into the LLM's `<thinking>` block:
 
-| Mã Chiến Lược | Pháp Danh Nghi Lễ (Holy Rite) | Câu Thần Chú Tiêm Vào Suy Nghĩ AI (Incantation) | Công Dụng Thực Chiến |
+| Strategy Key | Holy Rite Name | Incantation (Dispensed to Agent Thinking) | Production Superpower |
 | :--- | :--- | :--- | :--- |
-| `ghost-terminal-breaker` | ⚡ **[EXORCISM OF THE ZOMBIE]** | *"Banish the mute terminal. Sever the orphaned child tree of PID 1. Let the stdin flow free."* | Diệt tiến trình ma treo port hoặc đứng hình chờ input. |
-| `wrong-altar` | 🏛️ **[EXPOSING THE FALSE IDOL]** | *"You pray at a frozen shrine. The build artifact is stale; kindle the fire of a fresh compilation."* | Vả mặt AI sửa `src/` nhưng test chạy `dist/` cũ rích. |
-| `clean-slate-rollback` | 🩸 **[THE SEPSIS SACRIFICE]** | *"The Altar rejects hands coated in cumulative dirt. Cast the uncommitted churn into git stash. Purity precedes revelation."* | Hiến tế code rác vào `git stash`, khôi phục workspace sạch sẽ. |
-| `check-the-check` | 🧪 **[THE POISON CHALICE]** | *"A green test is an illusion if it cannot die. Force it to taste poison to prove it lives."* | Cố tình ép test fail để vạch mặt test suite nuốt lỗi giả tạo. |
-| `api-ground-truth` | 👁️ **[RITE OF TRUE VISION]** | *"Scry the sacred node_modules directly. Heed not the phantom whispers of hallucinated exports."* | Soi trực tiếp `node_modules`, chấm dứt ảo giác bịa tên hàm. |
-| `assumption-audit` | 🔬 **[THE HERESY TRIAL]** | *"Challenge the unwritten dogma. Subject your foundational premise to the crucible of falsification."* | Ép AI kiểm tra lại giả định cốt lõi thay vì cắm đầu vá víu. |
-| `minimal-counterexample` | ✂️ **[THE BLADE OF PURITY]** | *"Sever the bloated payload. Halve the mortal frame until only the atomic essence of failure remains."* | Chém đôi payload khổng lồ để cô lập chính xác field gây lỗi. |
-| `divide-and-conquer` | 🎯 **[THE BIFURCATION RUNE]** | *"Split the veil in twain. Probe the midpoint boundary to locate which domain harbors the anomaly."* | Thăm dò đúng điểm giữa pipeline để khoanh vùng thủ phạm. |
-| `controlled-substitution` | ⚖️ **[THE SCALES OF PURITY]** | *"Swap one known-true component for the suspect element. Observe where the balance tilts."* | Đổi linh kiện mẫu đã pass test để so sánh với thành phần nghi vấn. |
-| `boundary-check` | 🛡️ **[THE PERIMETER WARD]** | *"Cast the ward at the subsystem border. Verify what crosses before disturbing internal sanctums."* | Kiểm tra dữ liệu ra vào ranh giới trước khi lục lọi bên trong. |
-| `environment-triage` | 🛡️ **[THE WARD OF THE REALM]** | *"Do not blame the scripture when the altar stone is missing. Verify the binary and permissions of the mortal realm."* | Kiểm tra quyền `chmod`, dung lượng ổ cứng, binary cài thiếu. |
-| `human-checkpoint` | 🕯️ **[SUMMONING THE CREATOR]** | *"Mortals reach their limit. Pose one discriminating question to the Human Maker."* | Triệu hồi con người bằng 1 câu hỏi trắc nghiệm dứt khoát. |
+| `ghost-terminal-breaker` | ⚡ **[EXORCISM OF THE ZOMBIE]** | *"Banish the mute terminal. Sever the orphaned child tree of PID 1. Let the stdin flow free."* | Kills zombie processes trapping dev ports or hanging on prompt inputs. |
+| `wrong-altar` | 🏛️ **[EXPOSING THE FALSE IDOL]** | *"You pray at a frozen shrine. The build artifact is stale; kindle the fire of a fresh compilation."* | Exposes agents editing `src/` while tests execute stale `dist/` bundles. |
+| `clean-slate-rollback` | 🩸 **[THE SEPSIS SACRIFICE]** | *"The Altar rejects hands coated in cumulative dirt. Cast the uncommitted churn into git stash. Purity precedes revelation."* | Stashes debugging debris into git stash to restore a clean baseline. |
+| `check-the-check` | 🧪 **[THE POISON CHALICE]** | *"A green test is an illusion if it cannot die. Force it to taste poison to prove it lives."* | Injects deliberate failing assertion to unmask tests swallowing errors. |
+| `api-ground-truth` | 👁️ **[RITE OF TRUE VISION]** | *"Scry the sacred node_modules directly. Heed not the phantom whispers of hallucinated exports."* | Inspects runtime exports via reflection, ending recursive API hallucination. |
+| `assumption-audit` | 🔬 **[THE HERESY TRIAL]** | *"Challenge the unwritten dogma. Subject your foundational premise to the crucible of falsification."* | Forces agent to test its core hypothesis rather than applying speculative patches. |
+| `minimal-counterexample` | ✂️ **[THE BLADE OF PURITY]** | *"Sever the bloated payload. Halve the mortal frame until only the atomic essence of failure remains."* | Bisects massive payloads to isolate the exact failing invariant. |
+| `divide-and-conquer` | 🎯 **[THE BIFURCATION RUNE]** | *"Split the veil in twain. Probe the midpoint boundary to locate which domain harbors the anomaly."* | Probes pipeline midpoint to cut the search space in half. |
+| `controlled-substitution` | ⚖️ **[THE SCALES OF PURITY]** | *"Swap one known-true component for the suspect element. Observe where the balance tilts."* | Swaps verified-good fixture to contrast against failing component. |
+| `boundary-check` | 🛡️ **[THE PERIMETER WARD]** | *"Cast the ward at the subsystem border. Verify what crosses before disturbing internal sanctums."* | Verifies boundary inputs/outputs before modifying internal logic. |
+| `environment-triage` | 🛡️ **[THE WARD OF THE REALM]** | *"Do not blame the scripture when the altar stone is missing. Verify the binary and permissions of the mortal realm."* | Checks `chmod` permissions, disk space, and missing host executables. |
+| `human-checkpoint` | 🕯️ **[SUMMONING THE CREATOR]** | *"Mortals reach their limit. Pose one discriminating question to the Human Maker."* | Summons the human developer with one structured, unblocking question. |
 
 ---
 

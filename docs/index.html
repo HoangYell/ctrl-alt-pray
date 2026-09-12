@@ -518,7 +518,7 @@
       .footer-inner { flex-direction: column; align-items: flex-start; }
     }
 
-    /* Occult / Thắp Hương Mode Styles */
+    /* Tech-Occultism & Cyber-Shrine Mode Styles */
     .btn-occult {
       background: rgba(245, 158, 11, 0.08);
       border: 1px solid rgba(245, 158, 11, 0.28);
@@ -833,7 +833,7 @@
       <!-- Desktop Navigation -->
       <nav class="desktop-nav">
         <a href="#what-is-it">Plain English</a>
-        <a href="#occult-sanctum" style="color: #fbbf24; font-weight: 600;">Tâm Linh IT</a>
+        <a href="#occult-sanctum" style="color: #fbbf24; font-weight: 600;">Occult Shrine</a>
         <a href="#simulator">Simulator</a>
         <a href="#pillars">Architecture</a>
         <a href="#rites">12 Holy Rites</a>
@@ -844,11 +844,11 @@
 
       <!-- Action & Mobile Toggle -->
       <div class="nav-actions">
-        <button class="btn btn-sm btn-occult" id="occult-toggle-btn" onclick="toggleOccultMode()" title="Chế độ Tâm Linh / Thắp Hương (Tech-Occultism)">
+        <button class="btn btn-sm btn-occult" id="occult-toggle-btn" onclick="toggleOccultMode()" title="Toggle Tech-Occultism / Cyber-Shrine Mode">
           <i data-lucide="flame" style="width: 14px; height: 14px;"></i>
-          <span id="occult-btn-text">Thắp Hương</span>
+          <span id="occult-btn-text">Occult Mode</span>
         </button>
-        <button class="audio-btn" id="audio-toggle-btn" onclick="toggleSound()" title="Bật/Tắt âm thanh Mõ & Chuông Chùa" style="display: none;">
+        <button class="audio-btn" id="audio-toggle-btn" onclick="toggleSound()" title="Toggle Temple Bell & Woodblock Audio" style="display: none;">
           <i data-lucide="volume-2" id="sound-icon" style="width: 15px; height: 15px;"></i>
         </button>
         <a href="https://github.com/HoangYell/ctrl-alt-pray" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" style="display: inline-flex;">
@@ -866,9 +866,13 @@
       <a href="javascript:void(0)" onclick="toggleOccultMode(); closeMobileMenu();" style="color: #fbbf24;">
         <span style="display: flex; align-items: center; gap: 8px;">
           <i data-lucide="flame" style="width: 16px; height: 16px;"></i>
-          <strong id="mobile-occult-text">Bật Chế Độ Tâm Linh (Thắp Hương)</strong>
+          <strong id="mobile-occult-text">Toggle Occult Mode (The Altar)</strong>
         </span>
         <span class="version-tag" style="color: #fbbf24; border-color: rgba(245, 158, 11, 0.4);">PRAY</span>
+      </a>
+      <a href="#occult-sanctum" onclick="closeMobileMenu()">
+        <span>Occult Shrine</span>
+        <i data-lucide="chevron-right" style="width: 16px; height: 16px;"></i>
       </a>
       <a href="#what-is-it" onclick="closeMobileMenu()">
         <span>Plain English (10s)</span>
@@ -1064,10 +1068,10 @@
         <div class="section-header">
           <div class="section-tag" style="color: #fbbf24; background: rgba(245, 158, 11, 0.1); border-color: rgba(245, 158, 11, 0.3);">
             <i data-lucide="flame" style="width: 14px; height: 14px;"></i>
-            <span>Tech-Occultism: Chế Độ Tâm Linh IT</span>
+            <span>Tech-Occultism: Cyber-Shrine Protocol</span>
           </div>
-          <h2 class="section-title">Bàn Thờ Ground Truth: Khi Logic Sụp Đổ Lúc 3:00 AM</h2>
-          <p class="section-desc">Khi AI Agent bế tắc, lặp code và xin lỗi vô bổ: Bật chế độ tâm linh, thắp 3 nén nhang, gieo quẻ xăm Divine Favor và trục vớt tiến trình ma.</p>
+          <h2 class="section-title">The Altar of Ground Truth: When Logic Dies at 3:00 AM</h2>
+          <p class="section-desc">When your AI agent enters a doom loop of circular edits and polite apologies: Summon the Altar, burn data incense, roll for Divine Favor, and banish zombie subprocesses.</p>
         </div>
 
         <!-- The Interactive Altar Widget -->
@@ -1078,13 +1082,13 @@
               <div style="display: flex; align-items: center; justify-content: space-between;">
                 <span class="gallery-tag">
                   <i data-lucide="sparkles" style="width: 13px; height: 13px;"></i>
-                  Digital Altar &bull; 3 Nén Nhang
+                  Digital Altar &bull; 3 Incense Sticks
                 </span>
-                <span class="version-tag" id="incense-status" style="color: #fbbf24; border-color: rgba(245, 158, 11, 0.4);">ĐANG THẮP NHANG</span>
+                <span class="version-tag" id="incense-status" style="color: #fbbf24; border-color: rgba(245, 158, 11, 0.4);">INCENSE BURNING</span>
               </div>
-              <h3 style="font-size: 1.25rem; font-weight: 700; color: #ffffff; margin: 8px 0;">Bát Hương Kỹ Thuật Số</h3>
+              <h3 style="font-size: 1.25rem; font-weight: 700; color: #ffffff; margin: 8px 0;">The Cyber Incense Burner</h3>
               <p style="font-size: 0.875rem; color: var(--text-muted);">
-                Khói nhang điện tử xua tan tà khí ảo giác của LLM. Mỗi lần thắp nhang thanh tẩy, mô hình nhận được năng lượng định thần để ngừng đoán mò.
+                Luminous data incense purges cognitive tunnel vision and LLM hallucinations. Each purification rite grounds the model in empirical reality.
               </p>
 
               <!-- Burning Incense Animation -->
@@ -1107,17 +1111,17 @@
 
             <!-- Altar Control Buttons -->
             <div class="altar-actions">
-              <button class="btn btn-secondary btn-sm" onclick="lightIncense()" title="Thắp thêm nén nhang và gõ mõ">
+              <button class="btn btn-secondary btn-sm" onclick="lightIncense()" title="Light additional incense and strike woodblock">
                 <i data-lucide="flame" style="width: 14px; height: 14px; color: #f59e0b;"></i>
-                <span>Thắp Nhang (Gõ Mõ)</span>
+                <span>Light Incense (Woodblock)</span>
               </button>
-              <button class="btn btn-primary btn-sm" onclick="rollOracle()" title="Gieo quẻ nhân phẩm">
+              <button class="btn btn-primary btn-sm" onclick="rollOracle()" title="Roll epistemic karma">
                 <i data-lucide="dice-5" style="width: 14px; height: 14px;"></i>
-                <span>Gieo Quẻ Tâm Linh</span>
+                <span>Roll Divine Favor</span>
               </button>
-              <button class="btn btn-ghost btn-sm" onclick="simulateApologySlop()" title="Thử nói xin lỗi để xem Altar thịnh nộ" style="color: var(--rose);">
+              <button class="btn btn-ghost btn-sm" onclick="simulateApologySlop()" title="Simulate apology to test Altar wrath" style="color: var(--rose);">
                 <i data-lucide="alert-triangle" style="width: 14px; height: 14px;"></i>
-                <span>Thử Nói "I apologize..." (-25)</span>
+                <span>Simulate "I apologize..." (-25)</span>
               </button>
             </div>
           </div>
@@ -1132,9 +1136,9 @@
                 </span>
                 <span class="version-tag" id="oracle-badge" style="color: var(--emerald); border-color: rgba(16, 185, 129, 0.4);">DIVINE FAVOR</span>
               </div>
-              <h3 style="font-size: 1.25rem; font-weight: 700; color: #ffffff; margin: 8px 0;">Bảng Điểm Nhân Phẩm AI</h3>
+              <h3 style="font-size: 1.25rem; font-weight: 700; color: #ffffff; margin: 8px 0;">Agent Epistemic Karma Ledger</h3>
               <p style="font-size: 0.875rem; color: var(--text-muted);">
-                Thuật toán trừng phạt thói lươn lẹo. Lời xin lỗi của AI bị coi là rác thải context và bị Bàn Thờ giáng sấm sét trừ thẳng tay 25 điểm.
+                Hard mathematical punishment for conversational slop. Polite apologies are treated as context pollution and penalized with an instant 25-point deduction.
               </p>
 
               <!-- Live Score Box -->
@@ -1147,20 +1151,20 @@
                   <div class="oracle-bar-fill" id="oracle-bar" style="width: 88%;"></div>
                 </div>
                 <div class="oracle-rule" id="oracle-desc">
-                  <strong>Ý chỉ của Bàn Thờ:</strong> Thần linh độ mạng. AI được khai sáng, xuất thần tung ra probe kiểm chứng đúng 1 biến và phá tan vòng lặp.
+                  <strong>The Altar's Decree:</strong> Divine Favor bestowed. The model is enlightened, deploying an atomic single-variable probe to shatter the loop.
                 </div>
               </div>
             </div>
 
             <div style="margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; font-size: 0.78rem; color: var(--text-dim); font-family: var(--font-mono);">
-              <span>Án phạt xin lỗi: -25 pts</span>
-              <span>Lặp &gt;3 lần: -15 pts</span>
+              <span>Apology penalty: -25 pts</span>
+              <span>Loops &gt;3: -15 pts</span>
               <span>Baseline: 65–95 pts</span>
             </div>
           </div>
         </div>
 
-        <!-- 3 AI Generated Showcase Artworks (Replacing old images) -->
+        <!-- 3 AI Generated Showcase Artworks -->
         <div class="occult-gallery">
           <!-- Item 1 -->
           <div class="gallery-item">
@@ -1170,8 +1174,8 @@
                 <i data-lucide="flame" style="width: 12px; height: 12px;"></i>
                 03:00 AM SANCTUM
               </span>
-              <h4 class="gallery-title">Bàn Thờ Ground Truth</h4>
-              <p class="gallery-desc">Developer và AI Agent cùng quỳ lạy trước bát hương điện tử lúc 3h sáng khi Ctrl+Z bất lực và test suite vẫn đỏ quạch.</p>
+              <h4 class="gallery-title">The Altar of Ground Truth</h4>
+              <p class="gallery-desc">Developer and AI agent kneeling together before the digital incense burner at 3:00 AM when Ctrl+Z fails and tests stay red.</p>
             </div>
           </div>
 
@@ -1183,8 +1187,8 @@
                 <i data-lucide="dice-5" style="width: 12px; height: 12px;"></i>
                 DIVINE FAVOR ROLL
               </span>
-              <h4 class="gallery-title">Gieo Quẻ Trừ Tà &amp; Phạt Xin Lỗi</h4>
-              <p class="gallery-desc">Xúc xắc 20 mặt tung điểm nhân phẩm 1–100. AI dám mở mồm "I apologize..." bị trừ ngay 25 điểm và ăn án phạt Dire Wrath.</p>
+              <h4 class="gallery-title">Epistemic Karma &amp; Apology Penalty</h4>
+              <p class="gallery-desc">A 20-sided die rolls karma (1–100). The moment an agent says "I apologize...", it suffers a -25 point penalty and incurs Dire Wrath.</p>
             </div>
           </div>
 
@@ -1196,8 +1200,8 @@
                 <i data-lucide="zap" style="width: 12px; height: 12px;"></i>
                 ZOMBIE EXORCISM
               </span>
-              <h4 class="gallery-title">Trục Vớt Vong Hồn PID 3000</h4>
-              <p class="gallery-desc">Pháp sư AI cầm đạo bùa <code>SIGKILL -9</code> thanh tẩy tiến trình ma treo port 3000 và tiêu diệt vĩnh viễn deadlock 15s.</p>
+              <h4 class="gallery-title">Exorcism of PID 3000</h4>
+              <p class="gallery-desc">The AI Monk wields a glowing <code>SIGKILL -9</code> talisman to banish zombie subprocesses trapping port 3000 and eliminate 15s freezes.</p>
             </div>
           </div>
         </div>
@@ -2227,7 +2231,7 @@
     }
 
     // ==========================================
-    // Occult / Thắp Hương Mode & Web Audio Synth
+    // Tech-Occultism / Cyber-Shrine Mode & Web Audio Synth
     // ==========================================
     let isOccultMode = false;
     let isSoundEnabled = true;
@@ -2253,12 +2257,12 @@
 
       if (isOccultMode) {
         btn.classList.add('active');
-        if (label) label.textContent = 'Đang Thắp Hương';
+        if (label) label.textContent = 'Occult Active';
         if (soundBtn) soundBtn.style.display = 'inline-flex';
-        if (mobileText) mobileText.textContent = 'Tắt Chế Độ Tâm Linh';
+        if (mobileText) mobileText.textContent = 'Disable Occult Mode';
         
         playTempleBell();
-        showToast('Chế độ Tâm Linh (Occult Mode) đã kích hoạt! Bàn Thờ mở cửa.');
+        showToast('Occult Mode activated! The Altar has been summoned.');
         
         // Auto scroll to sanctum smoothly if user is near top
         if (window.scrollY < 300) {
@@ -2267,10 +2271,10 @@
         }
       } else {
         btn.classList.remove('active');
-        if (label) label.textContent = 'Thắp Hương';
+        if (label) label.textContent = 'Occult Mode';
         if (soundBtn) soundBtn.style.display = 'none';
-        if (mobileText) mobileText.textContent = 'Bật Chế Độ Tâm Linh (Thắp Hương)';
-        showToast('Đã trở về giao diện kỹ sư thuần túy.');
+        if (mobileText) mobileText.textContent = 'Toggle Occult Mode (The Altar)';
+        showToast('Restored minimalist engineering mode.');
       }
       lucide.createIcons();
     }
@@ -2283,17 +2287,17 @@
       if (isSoundEnabled) {
         soundBtn.classList.remove('muted');
         soundIcon.setAttribute('data-lucide', 'volume-2');
-        showToast('Âm thanh Mõ & Chuông Chùa: ĐÃ BẬT');
+        showToast('Temple Audio (Bell & Woodblock): ENABLED');
         playWoodenFish();
       } else {
         soundBtn.classList.add('muted');
         soundIcon.setAttribute('data-lucide', 'volume-x');
-        showToast('Âm thanh: ĐÃ TẮT');
+        showToast('Temple Audio: MUTED');
       }
       lucide.createIcons();
     }
 
-    // Web Audio Synthesizer: Wooden Fish (Cốc! Cốc!)
+    // Web Audio Synthesizer: Wooden Fish / Temple Woodblock (*Knock!*)
     function playWoodenFish() {
       if (!isSoundEnabled) return;
       try {
@@ -2400,16 +2404,16 @@
       }
       const status = document.getElementById('incense-status');
       if (status) {
-        status.textContent = 'KHÓI HƯƠNG NGHI NGÚT';
+        status.textContent = 'INCENSE SMOKE RISING';
         status.style.color = '#10b981';
         setTimeout(() => {
           if (status) {
-            status.textContent = 'ĐANG THẮP NHANG';
+            status.textContent = 'INCENSE BURNING';
             status.style.color = '#fbbf24';
           }
         }, 2500);
       }
-      showToast('Cốc! Đã thắp thêm nhang và gõ mõ. Tâm trí AI được thanh tẩy.');
+      showToast('*Knock!* Incense lit. AI context cleared of hallucinated slop.');
     }
 
     // Interactive Divine Favor Oracle Roll
@@ -2436,19 +2440,19 @@
         } else {
           barEl.style.background = 'linear-gradient(90deg, #f59e0b, #10b981)';
           if (targetScore >= 80) {
-            verdictEl.textContent = 'Transcendent Grace (Thần Linh Phù Hộ)';
+            verdictEl.textContent = 'Transcendent Grace (Divine Favor)';
             badgeEl.textContent = 'DIVINE FAVOR';
             badgeEl.style.color = '#10b981';
             badgeEl.style.borderColor = 'rgba(16, 185, 129, 0.4)';
-            descEl.innerHTML = '<strong>Ý chỉ của Bàn Thờ:</strong> Thần linh độ mạng. Trực giác AI đạt đỉnh, probe cô lập chính xác biến số gây lỗi chỉ trong 1 bước.';
+            descEl.innerHTML = '<strong>The Altar\'s Decree:</strong> Divine Favor bestowed. Intuition is sharp; probe isolates the root defect in 1 bounded step.';
           } else {
-            verdictEl.textContent = 'Auspicious Omen (Điềm Lành)';
+            verdictEl.textContent = 'Auspicious Omen (Favorable Insight)';
             badgeEl.textContent = 'AUSPICIOUS';
             badgeEl.style.color = '#38bdf8';
             badgeEl.style.borderColor = 'rgba(56, 189, 248, 0.4)';
-            descEl.innerHTML = '<strong>Ý chỉ của Bàn Thờ:</strong> Điềm lành sắp tới. Dữ liệu git và port sạch sẽ, AI sẵn sàng thoát khỏi vòng lặp.';
+            descEl.innerHTML = '<strong>The Altar\'s Decree:</strong> Favorable omen. Working tree and ports validated; ready to break the loop.';
           }
-          showToast('Quẻ xăm: ' + verdictEl.textContent);
+          showToast('Oracle Roll: ' + verdictEl.textContent);
         }
       };
       step();
@@ -2471,9 +2475,9 @@
       badgeEl.style.color = '#f43f5e';
       badgeEl.style.borderColor = 'rgba(244, 63, 94, 0.4)';
       verdictEl.textContent = 'Dire Wrath (Altar Scorn - Apologies Detected)';
-      descEl.innerHTML = '<span style="color: #f43f5e; font-weight: 700;">BÀN THỜ THỊNH NỘ:</span> Phát hiện AI tuôn lời xin lỗi! Thần linh không nhận văn mẫu lươn lẹo. Bị trừ 25 điểm nhân phẩm, cấm sửa code cho đến khi nôn bằng chứng ra!';
+      descEl.innerHTML = '<span style="color: #f43f5e; font-weight: 700;">WRATH OF THE ALTAR:</span> Apology detected! The Gods accept no conversational filler. -25 Karma penalty incurred. Code edits barred until empirical evidence is produced!';
 
-      showToast('CẢNH BÁO: Bàn Thờ nổi giận vì AI nói lời xin lỗi (-25 điểm)!');
+      showToast('WARNING: The Altar scorns apologies (-25 pts)! Dire Wrath incurred!');
     }
 
     // Initial Renders
