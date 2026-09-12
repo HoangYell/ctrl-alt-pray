@@ -88,6 +88,12 @@ flowchart LR
 
 ## ⚡ One-Click MCP Setup
 
+<div align="center" style="margin-bottom: 16px;">
+
+[![Install in Cursor](https://cursor.com/deeplink/mcp-install-dark.svg)](cursor://anysphere.cursor-deeplink/mcp/install?name=ctrl-alt-pray&config=%7B%22command%22%3A%22npx%22%2C%22args%22%3A%5B%22-y%22%2C%22ctrl-alt-pray%22%5D%7D)
+
+</div>
+
 Arm your agent with the **2-Strikes Circuit Breaker** and the **Altar of Ground Truth** in seconds:
 
 ```bash
