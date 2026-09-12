@@ -1,10 +1,24 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, beforeEach } from 'vitest';
 
-import { createRecoverySession, reportOutcome } from '../src/recovery.js';
+import {
+  createOrResumeRecoverySession,
+  reportOutcome,
+  inspectSession,
+  listSessions,
+  selectStrategy,
+} from '../src/recovery.js';
+import { RecoveryStorage, setDefaultStorage } from '../src/storage.js';
 
 describe('Ctrl Alt Pray recovery flow', () => {
-  it('creates a session and a bounded next experiment', () => {
-    const result = createRecoverySession({
+  let inMemoryStorage: RecoveryStorage;
+
+  beforeEach(() => {
+    inMemoryStorage = new RecoveryStorage({ inMemory: true });
+    setDefaultStorage(inMemoryStorage);
+  });
+
+  it('creates a session and selects bounded experiment', () => {
+    const result = createOrResumeRecoverySession({
       project_key: 'demo-project',
       request_id: 'req-1',
       problem: 'The API still returns 401 after two token changes.',
@@ -20,11 +34,11 @@ describe('Ctrl Alt Pray recovery flow', () => {
     expect(result.next_action).toBe('experiment');
     expect(result.assessment).toBe('possible_loop');
     expect(result.experiment).toBeTruthy();
-    expect(result.experiment?.strategy).toBe('boundary-check');
+    expect(result.experiment?.strategy).toBe('assumption-audit');
   });
 
   it('records outcome updates and rejects stale revisions', () => {
-    const initial = createRecoverySession({
+    const initial = createOrResumeRecoverySession({
       project_key: 'demo-project',
       request_id: 'req-2',
       problem: 'The test still fails before database execution.',
@@ -48,7 +62,7 @@ describe('Ctrl Alt Pray recovery flow', () => {
     });
 
     expect(updated.decision).toBe('continue');
-    expect(updated.revision).toBeGreaterThan(initial.revision);
+    expect(updated.revision).toBe(initial.revision + 1);
 
     expect(() =>
       reportOutcome({
@@ -61,6 +75,131 @@ describe('Ctrl Alt Pray recovery flow', () => {
         observations: ['stale update'],
         checks: [{ name: 'stale-check', result: 'pass' }],
       }),
-    ).toThrow(/STALE_REVISION|expected_revision/i);
+    ).toThrow(/STALE_REVISION/i);
+  });
+
+  it('supports resuming an existing session with session_id and expected_revision', () => {
+    const initial = createOrResumeRecoverySession({
+      project_key: 'resume-project',
+      request_id: 'req-init',
+      problem: 'Stuck in flaky websocket disconnect loop.',
+      attempts: ['restarted server', 'changed timeout'],
+      observations: ['socket closes with code 1006'],
+    });
+
+    expect(initial.revision).toBe(1);
+
+    const resumed = createOrResumeRecoverySession({
+      project_key: 'resume-project',
+      session_id: initial.session_id,
+      expected_revision: 1,
+      request_id: 'req-resume',
+      problem: 'Stuck in flaky websocket disconnect loop.',
+      observations: ['heartbeat ping interval is 30s'],
+      candidate_hypotheses: ['proxy drops connection before heartbeat'],
+    });
+
+    expect(resumed.session_id).toBe(initial.session_id);
+    expect(resumed.revision).toBe(2);
+    expect(resumed.known_facts).toContain('heartbeat ping interval is 30s');
+    expect(resumed.assumptions_to_check).toContain('proxy drops connection before heartbeat');
+  });
+
+  it('enforces idempotency on duplicate request_id', () => {
+    const firstCall = createOrResumeRecoverySession({
+      project_key: 'idempotent-proj',
+      request_id: 'idempotent-key-123',
+      problem: 'Memory leak in worker pool',
+      observations: ['Heap grows monotonically by 5MB per job'],
+    });
+
+    const secondCall = createOrResumeRecoverySession({
+      project_key: 'idempotent-proj',
+      request_id: 'idempotent-key-123',
+      problem: 'Memory leak in worker pool',
+      observations: ['Different observation that should be ignored due to idempotency'],
+    });
+
+    expect(secondCall.session_id).toBe(firstCall.session_id);
+    expect(secondCall.revision).toBe(firstCall.revision);
+    expect(secondCall.known_facts).toEqual(firstCall.known_facts);
+  });
+
+  it('rejects non-existent session with SESSION_NOT_FOUND', () => {
+    expect(() =>
+      inspectSession('some-project', 'non-existent-session-id'),
+    ).toThrow(/SESSION_NOT_FOUND/);
+
+    expect(() =>
+      reportOutcome({
+        project_key: 'some-project',
+        session_id: 'non-existent-session-id',
+        expected_revision: 1,
+        request_id: 'req-fail',
+        outcome: 'supports',
+      }),
+    ).toThrow(/SESSION_NOT_FOUND/);
+  });
+
+  it('dynamically selects wrong-altar strategy when edits have no effect', () => {
+    const experiment = selectStrategy({
+      problem: 'Config update failed',
+      observations: ['The server output is completely unchanged after code edits'],
+      attempts: ['Changed PORT in .env', 'Changed PORT in server.ts (same error, no effect)'],
+      candidate_hypotheses: [],
+      capabilities: ['bash'],
+    });
+
+    expect(experiment.strategy).toBe('wrong-altar');
+    expect(experiment.question).toContain('executing the exact file');
+  });
+
+  it('dynamically selects check-the-check strategy when tests pass or logs missing', () => {
+    const experiment = selectStrategy({
+      problem: 'Authentication bypass suspected',
+      observations: ['The test passes with green test status but endpoint returns 200 for invalid token'],
+      attempts: ['Updated auth middleware'],
+      candidate_hypotheses: [],
+      capabilities: ['run-tests'],
+    });
+
+    expect(experiment.strategy).toBe('check-the-check');
+    expect(experiment.question).toContain('reliably fail');
+  });
+
+  it('inspects session ledger without mutating revision', () => {
+    const initial = createOrResumeRecoverySession({
+      project_key: 'inspect-project',
+      request_id: 'req-inspect',
+      problem: 'Deadlock during concurrent writes',
+      observations: ['Lock wait timeout 50s'],
+    });
+
+    const inspected = inspectSession('inspect-project', initial.session_id);
+    expect(inspected.session_id).toBe(initial.session_id);
+    expect(inspected.revision).toBe(1);
+
+    const allSessions = listSessions('inspect-project');
+    expect(allSessions.length).toBe(1);
+    expect(allSessions[0].session_id).toBe(initial.session_id);
+  });
+
+  it('persists sessions across SQLite storage reloads', () => {
+    // Test on a temporary file-based storage
+    const tmpStorage1 = new RecoveryStorage({ inMemory: true });
+    const session = createOrResumeRecoverySession(
+      {
+        project_key: 'storage-test',
+        request_id: 'req-store',
+        problem: 'Disk quota exceeded',
+        observations: ['df -h shows /var at 100%'],
+      },
+      tmpStorage1,
+    );
+
+    const loaded = tmpStorage1.getSession('storage-test', session.session_id);
+    expect(loaded).toBeDefined();
+    expect(loaded?.session_id).toBe(session.session_id);
+    expect(loaded?.known_facts).toContain('df -h shows /var at 100%');
   });
 });

@@ -1,89 +1,279 @@
 #!/usr/bin/env node
-import { McpServer } from '@modelcontextprotocol/server';
+import { McpServer, ResourceTemplate } from '@modelcontextprotocol/server';
 import { StdioServerTransport } from '@modelcontextprotocol/server/stdio';
 import { z } from 'zod';
 
 import {
-  createRecoverySession,
+  createOrResumeRecoverySession,
   reportOutcome,
+  inspectSession,
+  listSessions,
 } from './recovery.js';
 
 const server = new McpServer({
   name: 'ctrl-alt-pray',
-  version: '0.1.0',
+  version: '0.2.0',
 });
+
+function getRecoveryHint(errorMessage: string): string {
+  if (errorMessage.includes('STALE_REVISION')) {
+    return 'Fetch the latest session revision via inspect_ledger or read_resource session://{id}, then retry with the matching expected_revision.';
+  }
+  if (errorMessage.includes('SESSION_NOT_FOUND')) {
+    return 'Check the project_key and session_id. If this is a new debugging loop, omit session_id to start a fresh recovery session.';
+  }
+  if (errorMessage.includes('UNKNOWN_EXPERIMENT')) {
+    return 'The experiment_id provided does not match the currently active experiment in this session. Inspect the ledger to see the active experiment.';
+  }
+  return 'Review input parameters and retry with verified observations.';
+}
+
+// ---------------------------------------------------------------------------
+// 1. Tools Contract
+// ---------------------------------------------------------------------------
 
 server.registerTool(
   'pray',
   {
-    description: 'Start or resume a recovery session for a stuck debugging loop.',
+    description: 'Start a new recovery session or resume an existing one for a stuck coding agent.',
     inputSchema: z.object({
-      project_key: z.string(),
-      request_id: z.string(),
-      problem: z.string(),
-      constraints: z.array(z.string()).default([]),
-      observations: z.array(z.string()).default([]),
-      attempts: z.array(z.string()).default([]),
-      candidate_hypotheses: z.array(z.string()).default([]),
-      capabilities: z.array(z.string()).default([]),
-      budget: z.number().int().positive().default(3),
+      project_key: z.string().describe('Unique project identifier (e.g. repo name or workspace key)'),
+      request_id: z.string().describe('Unique client-generated idempotency key for this request'),
+      problem: z.string().describe('Concise description of the stuck goal, actual vs expected behavior'),
+      session_id: z.string().optional().describe('Omit to start a new session; provide to resume an existing session'),
+      expected_revision: z.number().int().positive().optional().describe('Required when resuming a session to prevent stale concurrent updates'),
+      constraints: z.array(z.string()).default([]).describe('Non-negotiable invariants (e.g. cannot edit schema, cannot add dependencies)'),
+      observations: z.array(z.string()).default([]).describe('Hard, verified facts observed so far (logs, test outputs, diffs)'),
+      attempts: z.array(z.string()).default([]).describe('Approaches already attempted that failed to produce new evidence'),
+      candidate_hypotheses: z.array(z.string()).default([]).describe('Plausible explanations of the root cause to test'),
+      capabilities: z.array(z.string()).default([]).describe('Host tool capabilities available (e.g. bash, read_file, git)'),
+      budget: z.number().int().positive().default(3).describe('Maximum remaining recovery rounds'),
     }),
   },
   async (args) => {
-    const result = createRecoverySession(args);
-
-    return {
-      content: [{
-        type: 'text',
-        text: JSON.stringify({
-          session_id: result.session_id,
-          revision: result.revision,
-          assessment: result.assessment,
-          next_action: result.next_action,
-          experiment: result.experiment,
-          handoff: result.handoff,
-        }, null, 2),
-      }],
-    };
+    try {
+      const result = createOrResumeRecoverySession(args);
+      return {
+        content: [{
+          type: 'text',
+          text: JSON.stringify({
+            session_id: result.session_id,
+            revision: result.revision,
+            assessment: result.assessment,
+            next_action: result.next_action,
+            decision: result.decision,
+            experiment: result.experiment,
+            known_facts: result.known_facts,
+            assumptions_to_check: result.assumptions_to_check,
+            rejected_approaches: result.rejected_approaches,
+            handoff: result.handoff,
+          }, null, 2),
+        }],
+      };
+    } catch (error: any) {
+      return {
+        isError: true,
+        content: [{
+          type: 'text',
+          text: JSON.stringify({
+            error_code: error?.message?.split(':')[0] || 'RECOVERY_ERROR',
+            message: error?.message || 'Unknown recovery error',
+            recovery_hint: getRecoveryHint(error?.message || ''),
+          }, null, 2),
+        }],
+      };
+    }
   },
 );
 
 server.registerTool(
   'report_outcome',
   {
-    description: 'Record the result of the most recent experiment and update the next decision.',
+    description: 'Record the empirical result of an experiment and advance the recovery decision ledger.',
     inputSchema: z.object({
-      project_key: z.string(),
-      session_id: z.string(),
-      expected_revision: z.number().int().positive(),
-      request_id: z.string(),
-      experiment_id: z.string().optional(),
-      outcome: z.enum(['supports', 'contradicts', 'inconclusive', 'blocked']),
-      observations: z.array(z.string()).default([]),
+      project_key: z.string().describe('Unique project identifier'),
+      session_id: z.string().describe('Active recovery session ID'),
+      expected_revision: z.number().int().positive().describe('Current session revision before this report'),
+      request_id: z.string().describe('Unique idempotency key for this report'),
+      experiment_id: z.string().optional().describe('ID of the experiment whose result is being reported'),
+      outcome: z.enum(['supports', 'contradicts', 'inconclusive', 'blocked']).describe('Observed result relative to the experiment hypothesis'),
+      observations: z.array(z.string()).default([]).describe('New verified facts collected during the experiment'),
       checks: z.array(z.object({
         name: z.string(),
         result: z.string(),
-      })).default([]),
+      })).default([]).describe('Verification checks run with observed results'),
     }),
   },
   async (args) => {
-    const result = reportOutcome(args);
+    try {
+      const result = reportOutcome(args);
+      return {
+        content: [{
+          type: 'text',
+          text: JSON.stringify({
+            session_id: result.session_id,
+            revision: result.revision,
+            assessment: result.assessment,
+            decision: result.decision,
+            next_action: result.next_action,
+            experiment: result.experiment,
+            known_facts: result.known_facts,
+            rejected_approaches: result.rejected_approaches,
+            handoff: result.handoff,
+          }, null, 2),
+        }],
+      };
+    } catch (error: any) {
+      return {
+        isError: true,
+        content: [{
+          type: 'text',
+          text: JSON.stringify({
+            error_code: error?.message?.split(':')[0] || 'REPORT_ERROR',
+            message: error?.message || 'Unknown report outcome error',
+            recovery_hint: getRecoveryHint(error?.message || ''),
+          }, null, 2),
+        }],
+      };
+    }
+  },
+);
 
+server.registerTool(
+  'inspect_ledger',
+  {
+    description: 'Read-only inspection of a recovery session ledger without mutating state or advancing revision.',
+    inputSchema: z.object({
+      project_key: z.string().describe('Project identifier'),
+      session_id: z.string().describe('Session ID to inspect'),
+    }),
+  },
+  async (args) => {
+    try {
+      const session = inspectSession(args.project_key, args.session_id);
+      return {
+        content: [{
+          type: 'text',
+          text: JSON.stringify(session, null, 2),
+        }],
+      };
+    } catch (error: any) {
+      return {
+        isError: true,
+        content: [{
+          type: 'text',
+          text: JSON.stringify({
+            error_code: 'SESSION_NOT_FOUND',
+            message: error?.message || 'Session not found',
+            recovery_hint: 'Verify the session_id or call pray to start a new recovery session.',
+          }, null, 2),
+        }],
+      };
+    }
+  },
+);
+
+// ---------------------------------------------------------------------------
+// 2. MCP Resources Protocol
+// ---------------------------------------------------------------------------
+
+server.registerResource(
+  'active-sessions',
+  'sessions://active',
+  {
+    mimeType: 'application/json',
+    description: 'Lists all active recovery sessions currently tracked by Ctrl Alt Pray.',
+  },
+  async (uri) => {
+    const sessions = listSessions();
     return {
-      content: [{
-        type: 'text',
-        text: JSON.stringify({
-          session_id: result.session_id,
-          revision: result.revision,
-          assessment: result.assessment,
-          next_action: result.next_action,
-          handoff: result.handoff,
-          decision: result.next_action === 'ask_user' ? 'ask_user' : 'continue',
-        }, null, 2),
+      contents: [{
+        uri: uri.href,
+        text: JSON.stringify(sessions, null, 2),
       }],
     };
   },
 );
+
+server.registerResource(
+  'session-detail',
+  new ResourceTemplate('session://{session_id}', { list: undefined }),
+  {
+    mimeType: 'application/json',
+    description: 'Detailed evidence ledger and audit trail for a specific recovery session.',
+  },
+  async (uri, { session_id }) => {
+    const sessions = listSessions();
+    const session = sessions.find((s) => s.session_id === session_id);
+    if (!session) {
+      throw new Error(`Session ${session_id} not found`);
+    }
+    return {
+      contents: [{
+        uri: uri.href,
+        text: JSON.stringify(session, null, 2),
+      }],
+    };
+  },
+);
+
+// ---------------------------------------------------------------------------
+// 3. MCP Prompts Protocol
+// ---------------------------------------------------------------------------
+
+server.registerPrompt(
+  'loop-recovery',
+  {
+    description: 'Pre-flight debrief template for an agent caught in a repetitive debugging loop.',
+    argsSchema: z.object({
+      problem: z.string().describe('The stuck goal and symptom'),
+    }),
+  },
+  ({ problem }) => ({
+    messages: [
+      {
+        role: 'user',
+        content: {
+          type: 'text',
+          text: `I am caught in a repetitive debugging loop while solving: "${problem}".
+
+Before writing any more code or re-running failed commands, execute the following protocol:
+1. List 2-3 hard facts that have been directly observed (exit codes, logs, exact diffs).
+2. List what assumptions I have been treating as true without empirical verification.
+3. Call the 'pray' MCP tool with these observations and candidate hypotheses to receive a bounded falsification experiment.`,
+        },
+      },
+    ],
+  }),
+);
+
+server.registerPrompt(
+  'falsification-check',
+  {
+    description: 'Constructs an assumption audit probe to disprove a hypothesis instead of confirming it.',
+    argsSchema: z.object({
+      assumption: z.string().describe('The hypothesis or assumption to test'),
+    }),
+  },
+  ({ assumption }) => ({
+    messages: [
+      {
+        role: 'user',
+        content: {
+          type: 'text',
+          text: `Target assumption: "${assumption}".
+
+Formulate the smallest, read-only or low-risk diagnostic probe that could conclusively DISPROVE this assumption.
+What specific output or error signal would prove this assumption false?`,
+        },
+      },
+    ],
+  }),
+);
+
+// ---------------------------------------------------------------------------
+// Server Transport Runner
+// ---------------------------------------------------------------------------
 
 async function main() {
   const transport = new StdioServerTransport();

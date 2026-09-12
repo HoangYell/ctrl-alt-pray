@@ -30,8 +30,9 @@ When a coding agent attempts repeated patches against the same failure, reads th
 | **Runtime** | Node.js | `>= 22.x` | Modern ESM (`"type": "module"`) |
 | **Language** | TypeScript | `^7.0.2` | `NodeNext` module resolution, strict mode |
 | **Protocol** | `@modelcontextprotocol/server` | `^2.0.0` | Official MCP TypeScript SDK (stdio transport) |
+| **Persistence** | `node:sqlite` (`DatabaseSync`) | Built-in | WAL mode, zero external native binaries |
 | **Schema Validation** | `zod` | `^4.6.2` | Input schema definitions for MCP tools |
-| **Testing** | `vitest` | `^5.0.0` | Fast contract & state transition tests |
+| **Testing** | `vitest` | `^5.0.0` | Fast contract, strategy & state transition tests |
 | **Security Gate** | `cleanroom-guard` | Global | Enforced via `.git/hooks/pre-commit` |
 
 ---
@@ -42,86 +43,102 @@ When a coding agent attempts repeated patches against the same failure, reads th
 # 1. Install dependencies
 npm ci
 
-# 2. Compile TypeScript
-npm run build
+# 2. Clean and compile TypeScript
+npm run clean && npm run build
 
-# 3. Run test suite
+# 3. Typecheck
+npm run typecheck
+
+# 4. Run test suite
 npm test
 
-# 4. Start stdio MCP server
+# 5. Start stdio MCP server
 npm start
+# Or via global CLI binary
+pray
 ```
 
 ---
 
-## 4. MCP Tools Contract
+## 4. MCP Protocol Capabilities (2026 Specification)
 
-### A. `pray`
-Initiates or resumes a recovery session for an agent stuck in a loop.
+### A. Tools Contract
+
+#### 1. `pray`
+Initiates a new recovery session OR resumes an existing session.
 
 - **Inputs**:
   - `project_key` (`string`): Unique project namespace.
-  - `request_id` (`string`): Trace ID for idempotency.
+  - `request_id` (`string`): Trace ID for idempotency (repeated IDs return cached results).
   - `problem` (`string`): Concise description of the stuck goal.
-  - `constraints` (`string[]`): Inviolable invariants (e.g. "cannot change database schema").
+  - `session_id` (`string`, optional): Provide to resume an existing recovery session.
+  - `expected_revision` (`number`, optional): Concurrency guard when resuming.
+  - `constraints` (`string[]`): Inviolable invariants.
   - `observations` (`string[]`): Hard, verified facts (error logs, exit codes).
   - `attempts` (`string[]`): Approaches already tried and failed.
   - `candidate_hypotheses` (`string[]`): Plausible root causes.
   - `capabilities` (`string[]`): Available host tools (e.g. `bash`, `read_file`).
   - `budget` (`number`): Remaining step budget.
 - **Outputs**:
-  - `session_id`: Opaque recovery session identifier.
-  - `revision`: Current session version (increments per outcome).
-  - `assessment`: `possible_loop` | `insufficient_evidence` | `progress` | `blocked`.
-  - `next_action`: `experiment` | `request_evidence` | `ask_user`.
-  - `experiment`: One targeted, testable move with expected outcome and risk.
-  - `handoff`: Condensed snapshot for context handoffs.
+  - `session_id`, `revision`, `assessment`, `next_action`, `decision`.
+  - `experiment`: One targeted, testable move selected from the Strategy Catalog.
+  - `known_facts`, `assumptions_to_check`, `rejected_approaches`, `handoff`.
 
-### B. `report_outcome`
-Feeds the observed experimental result back into the recovery ledger.
+#### 2. `report_outcome`
+Feeds experimental results back into the ledger and advances state.
 
 - **Inputs**:
-  - `project_key`, `session_id`: Session pointers.
-  - `expected_revision`: Concurrency guard (rejects stale updates).
-  - `outcome`: `supports` | `contradicts` | `inconclusive` | `blocked`.
+  - `project_key`, `session_id`: Target session pointers.
+  - `expected_revision`: Concurrency guard (rejects stale updates with `STALE_REVISION`).
+  - `request_id`: Idempotency key.
+  - `experiment_id` (`string`, optional): ID of the completed experiment.
+  - `outcome`: `'supports'` | `'contradicts'` | `'inconclusive'` | `'blocked'`.
   - `observations`: New facts discovered during the experiment.
   - `checks`: Verification tests performed.
 - **Outputs**:
-  - Incremented `revision`.
-  - Updated `decision`: `continue` | `pivot` | `ask_user` | `ready_to_verify`.
-  - Next recommended action.
+  - Advanced `revision`, updated `decision` (`continue`, `pivot`, `ask_user`, `ready_to_verify`), and next experiment.
+
+#### 3. `inspect_ledger`
+Read-only inspection of a session's entire audit trail without mutating state.
 
 ---
 
-## 5. Repository Structure
+### B. Dynamic Strategy Catalog
 
-```
-ctrl-alt-pray/
-├── .github/
-│   └── workflows/ci.yml      # GitHub Actions CI (build + test)
-├── .vscode/
-│   └── mcp.json               # Local VS Code MCP server definition
-├── src/
-│   ├── index.ts               # Stdio MCP server entry point & tool registration
-│   └── recovery.ts            # Recovery engine, session ledger, & state machine
-├── tests/
-│   └── recovery.test.ts       # Vitest contract tests for recovery flow
-├── AGENTS.md                  # Agent onboarding guide (this file)
-├── PLAN.md                    # Canonical architectural blueprint & RFC
-├── README.md                  # Public overview & brand identity
-├── package.json               # Scripts & dependencies
-└── tsconfig.json              # TypeScript configuration
-```
+The recovery engine automatically selects one focused strategy based on observed symptoms:
+
+1. **`wrong-altar` (Verify Running Target)**:
+   - *Trigger*: Code edits have zero observed effect, unchanged error, cache suspected.
+   - *Probe*: Injects runtime marker or prints build hash to prove code is actually executing.
+2. **`check-the-check` (Validate Measurement)**:
+   - *Trigger*: Test passes while bug persists, or logs/coverage are missing.
+   - *Probe*: Injects deliberate negative fault to confirm test harness actually runs.
+3. **`assumption-audit` (Audit Hypotheses)**:
+   - *Trigger*: Candidate hypotheses treated as fact without empirical verification.
+   - *Probe*: Direct diagnostic query that attempts to DISPROVE the primary assumption.
+4. **`minimal-counterexample`**:
+   - *Trigger*: Complex multi-step repro, large payload, flaky pipeline.
+   - *Probe*: Reduces input or mocks dependencies to find minimal failing case.
+5. **`divide-and-conquer`**:
+   - *Trigger*: Data transformation chains, regression histories.
+   - *Probe*: Inspects state at the midpoint boundary.
+6. **`boundary-check`**:
+   - *Trigger*: Default subsystem isolation check.
 
 ---
 
-## 6. Engineering & Testing Standards
+### C. Resources & Prompts
 
-1. **Always verify before commit**:
-   - Run `npm run build && npm test` to ensure zero compilation or regression failures.
-   - Git hook `cleanroom-guard check --staged` will automatically prevent leaking secrets or unauthorized benchmarks.
-2. **Deterministic State Transitions**:
-   - Any state change in `recovery.ts` MUST update `revision`.
-   - Stale revisions must throw explicit concurrency errors.
-3. **Single Source of Truth**:
-   - Architectural decisions must align with [PLAN.md](PLAN.md).
+- **Resources**:
+  - `session://{session_id}`: Read-only live inspection of session ledger.
+  - `sessions://active`: List of all active sessions.
+- **Prompts**:
+  - `loop-recovery`: Prompts the caller to gather verified observations and assumptions.
+  - `falsification-check`: Guides construction of a falsification probe.
+
+---
+
+## 5. Storage & Persistence
+
+- Sessions and idempotency records are stored in local SQLite (`~/.ctrl-alt-pray/sessions.sqlite`) using Node 22 native `node:sqlite` (`DatabaseSync`).
+- Data persists across server restarts, subagent context handoffs, and CLI invocations.
