@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "ctrl-alt-pray": {
+      "command": "node",
+      "args": ["dist/index.js"]
+    }
+  }
+}

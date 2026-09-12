@@ -11,11 +11,13 @@ import {
 } from './recovery.js';
 import { runInit } from './init.js';
 import { runStats } from './stats.js';
+import { runHistory } from './history.js';
+import { runPurge } from './purge.js';
 import { harvestEvidence } from './harvester/index.js';
 import { runGuardian } from './guardian.js';
 import { runDashboard } from './dashboard.js';
 
-const server = new McpServer({
+export const server = new McpServer({
   name: 'ctrl-alt-pray',
   version: '2.0.0',
 });
@@ -30,11 +32,20 @@ function getRecoveryHint(errorMessage: string): string {
   if (errorMessage.includes('UNKNOWN_EXPERIMENT')) {
     return 'The experiment_id provided does not match the currently active experiment in this session. Inspect the ledger to see the active experiment.';
   }
+  if (errorMessage.includes('INPUT_TOO_LARGE')) {
+    return 'Reduce the request payload size below 64 KiB. Truncate long logs or inspect targeted stack traces.';
+  }
+  if (errorMessage.includes('OBSERVATION_TOO_LARGE')) {
+    return 'Individual observation exceeds 8 KiB. Sanitize or summarize verbose terminal dumps.';
+  }
+  if (errorMessage.includes('ATTEMPTS_EXCEEDED')) {
+    return 'Session exceeded 50 attempts. Purge the session or reset hypothesis space with clean-slate-rollback.';
+  }
   return 'Review input parameters and retry with verified observations.';
 }
 
 // ---------------------------------------------------------------------------
-// 1. Tools Contract
+// 1. Tools Contract (PLAN.md Section 5)
 // ---------------------------------------------------------------------------
 
 server.registerTool(
@@ -42,6 +53,7 @@ server.registerTool(
   {
     description: 'Summon the Altar of Ground Truth when standard debugging fails or repetitive loops occur. CALL THIS TOOL IMMEDIATELY WHEN: (1) A test or command fails 2+ times with similar errors; (2) An edited code change produced zero difference in output; (3) A terminal command or child process hangs/times out >15s; (4) You are guessing module exports or APIs; (5) You feel the urge to apologize for failed attempts. If auto_harvest is true (default), scans git status, lockfiles, and occupied ports automatically.',
     inputSchema: z.object({
+      schema_version: z.number().int().default(1).describe('Contract schema version (default 1)'),
       project_key: z.string().default('default').describe('Unique project identifier (e.g. repo name or workspace key)'),
       request_id: z.string().optional().describe('Unique client-generated idempotency key for this request'),
       problem: z.string().optional().describe('Concise description of the stuck goal (optional if auto_harvest is true)'),
@@ -83,20 +95,27 @@ server.registerTool(
         observations,
         forced_strategy,
       });
+
       return {
         content: [{
           type: 'text',
           text: JSON.stringify({
+            schema_version: result.schema_version,
             session_id: result.session_id,
             revision: result.revision,
             assessment: result.assessment,
+            pathology: result.pathology,
+            pathology_rationale: result.pathology_rationale,
+            falsification: result.falsification,
             next_action: result.next_action,
             decision: result.decision,
             experiment: result.experiment,
             known_facts: result.known_facts,
             assumptions_to_check: result.assumptions_to_check,
             rejected_approaches: result.rejected_approaches,
+            avoid_repeating: result.avoid_repeating,
             handoff: result.handoff,
+            verification_status: result.verification_status,
             rite: result.rite,
             incantation: result.incantation,
             nhan_pham: result.nhan_pham,
@@ -125,6 +144,7 @@ server.registerTool(
   {
     description: 'Record the empirical result of an experiment and advance the recovery decision ledger.',
     inputSchema: z.object({
+      schema_version: z.number().int().default(1).describe('Contract schema version (default 1)'),
       project_key: z.string().describe('Unique project identifier'),
       session_id: z.string().describe('Active recovery session ID'),
       expected_revision: z.number().int().positive().describe('Current session revision before this report'),
@@ -132,10 +152,16 @@ server.registerTool(
       experiment_id: z.string().optional().describe('ID of the experiment whose result is being reported'),
       outcome: z.enum(['supports', 'contradicts', 'inconclusive', 'blocked']).describe('Observed result relative to the experiment hypothesis'),
       observations: z.array(z.string()).default([]).describe('New verified facts collected during the experiment'),
+      changes: z.array(z.string()).default([]).describe('Relevant code, input, environment, or assumption changes'),
       checks: z.array(z.object({
         name: z.string(),
         result: z.string(),
       })).default([]).describe('Verification checks run with observed results'),
+      cost: z.object({
+        duration_ms: z.number().optional(),
+        tool_calls: z.number().optional(),
+        tokens: z.number().optional(),
+      }).optional().describe('Optional host-reported duration, tool calls, or token usage'),
     }),
   },
   async (args) => {
@@ -145,14 +171,19 @@ server.registerTool(
         content: [{
           type: 'text',
           text: JSON.stringify({
+            schema_version: result.schema_version,
             session_id: result.session_id,
             revision: result.revision,
             assessment: result.assessment,
             decision: result.decision,
             next_action: result.next_action,
+            progress_reason: result.progress_reason,
+            verification_status: result.verification_status,
             experiment: result.experiment,
+            falsification: result.falsification,
             known_facts: result.known_facts,
             rejected_approaches: result.rejected_approaches,
+            avoid_repeating: result.avoid_repeating,
             handoff: result.handoff,
           }, null, 2),
         }],
@@ -322,6 +353,16 @@ async function main() {
     return;
   }
 
+  if (arg === 'history') {
+    runHistory(process.argv[3]);
+    return;
+  }
+
+  if (arg === 'purge') {
+    runPurge(process.argv[3], process.argv[4]);
+    return;
+  }
+
   if (arg === 'dashboard') {
     runDashboard();
     return;
@@ -342,15 +383,17 @@ async function main() {
     pray-run <command>
 
   Commands:
-    init       Auto-detect agent environments (Cursor, Claude, OpenCode) & inject Tripwires
-    stats      Display telemetry on intercepted loops, recovery rates, and tokens saved
-    dashboard  Launch local visual recovery dashboard on http://127.0.0.1:3900
-    run <cmd>  Run a shell command under active freeze (>15s) and failure supervision
-    (no args)  Start the MCP (Model Context Protocol) stdio server
+    init             Auto-detect agent environments (Cursor, Claude, OpenCode) & inject Tripwires
+    stats            Display telemetry on intercepted loops, recovery rates, and tokens saved
+    history [id]     The Confessional: replay the 3-step decision tree of a recovered loop
+    purge [proj] [id]Administrative purge of sessions and expired cache (>7 days)
+    dashboard        Launch local visual recovery dashboard on http://127.0.0.1:3900
+    run <cmd>        Run a shell command under active freeze (>15s) and failure supervision
+    (no args)        Start the MCP (Model Context Protocol) stdio server
 
   Options:
-    -h, --help     Show this divine guidance
-    -v, --version  Show version
+    -h, --help       Show this divine guidance
+    -v, --version    Show version
 `);
     return;
   }
@@ -364,8 +407,11 @@ async function main() {
   await server.connect(transport);
 }
 
-main().catch((error) => {
-  console.error('Ctrl Alt Pray failed to start:', error);
-  process.exit(1);
-});
-
+// Start if executed directly as main script
+const isMain = process.argv[1]?.endsWith('index.js') || process.argv[1]?.endsWith('index.ts');
+if (isMain) {
+  main().catch((error) => {
+    console.error('Ctrl Alt Pray failed to start:', error);
+    process.exit(1);
+  });
+}

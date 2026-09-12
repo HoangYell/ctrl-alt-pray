@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "ctrl-alt-pray": {
+      "command": "npx",
+      "args": ["-y", "ctrl-alt-pray@latest"],
+      "disabled": false,
+      "alwaysAllow": [
+        "pray",
+        "report_outcome",
+        "inspect_ledger"
+      ]
+    }
+  }
+}

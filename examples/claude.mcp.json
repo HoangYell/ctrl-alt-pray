@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "ctrl-alt-pray": {
+      "command": "npx",
+      "args": ["-y", "ctrl-alt-pray"]
+    }
+  }
+}

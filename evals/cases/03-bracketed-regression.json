@@ -1,0 +1,17 @@
+{
+  "id": "case-03-bracketed-regression",
+  "title": "Bracketed Regression with Stable Predicate (Divide and Conquer)",
+  "problem": "Data pipeline breaks intermediate payload transform on commit sequence.",
+  "observations": [
+    "v1.0 produces valid output; v2.0 produces null pointer in data flow transform pipeline.",
+    "Input payload has 15 distinct processing steps in chain.",
+    "Regression occurred between commit c100 and c150."
+  ],
+  "attempts": [
+    "Read entire transformation pipeline (5000 lines)",
+    "Speculatively patched step 14 without intermediate inspection"
+  ],
+  "candidate_hypotheses": [],
+  "expected_strategy": "divide-and-conquer",
+  "expected_pathology": "unspecified"
+}

@@ -1,0 +1,17 @@
+{
+  "id": "case-04-subsystem-elimination",
+  "title": "Subsystem Elimination on Large Payload (Minimal Counterexample)",
+  "problem": "Large payload execution crashes in multi-step pipeline with timeout and intermittent memory spike.",
+  "observations": [
+    "10MB JSON request causes process crash with timeout.",
+    "Small 5-line request succeeds consistently.",
+    "Complex input with 200 fields makes isolating failure difficult."
+  ],
+  "attempts": [
+    "Increased Node heap to 4GB",
+    "Added setTimeout to async loop"
+  ],
+  "candidate_hypotheses": [],
+  "expected_strategy": "minimal-counterexample",
+  "expected_pathology": "unspecified"
+}

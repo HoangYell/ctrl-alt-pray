@@ -1,0 +1,20 @@
+{
+  "id": "case-02-missed-fault-check",
+  "title": "Deliberate Fault Missed by Test (Check the Check)",
+  "problem": "Security auditor reports unauthorized access, but test suite passes with green test status.",
+  "observations": [
+    "pnpm test returns 100% pass across all auth test suites.",
+    "Manual curl with expired token returns 200 OK.",
+    "Assertion not called inside mocked handler; silent fail."
+  ],
+  "attempts": [
+    "Added mock token generator (test passes)",
+    "Reran test suite (green test, no log)"
+  ],
+  "candidate_hypotheses": [
+    "Test assertion is swallowed or never executed",
+    "Endpoint mocks the database incorrectly"
+  ],
+  "expected_strategy": "check-the-check",
+  "expected_pathology": "false-green"
+}

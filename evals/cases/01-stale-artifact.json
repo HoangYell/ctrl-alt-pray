@@ -1,0 +1,19 @@
+{
+  "id": "case-01-stale-artifact",
+  "title": "Stale Running Artifact (Wrong Altar)",
+  "problem": "Updating authentication middleware produces no effect. Same error persists despite changing return codes.",
+  "observations": [
+    "The server response headers and body are completely unchanged after code edits.",
+    "Dev server was started 3 hours ago in background."
+  ],
+  "attempts": [
+    "Changed error status to 403 in src/auth.ts (no effect, same output)",
+    "Added console.log in middleware (no log emitted in terminal)"
+  ],
+  "candidate_hypotheses": [
+    "Middleware is not imported",
+    "Running server is executing stale build artifact in dist/"
+  ],
+  "expected_strategy": "wrong-altar",
+  "expected_pathology": "altar-clash"
+}

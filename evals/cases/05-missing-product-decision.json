@@ -1,0 +1,20 @@
+{
+  "id": "case-05-missing-product-decision",
+  "title": "Missing Product Decision on Concurrent Edits (Human Checkpoint)",
+  "problem": "Unclear requirement on simultaneous document edits. Two users submit changes at the same millisecond. Should the second write overwrite or throw 409 Conflict?",
+  "observations": [
+    "Product specification does not define optimistic locking policy.",
+    "Stakeholder decision needed before implementing version checks.",
+    "Unclear requirement: last-write-wins vs explicit conflict resolution."
+  ],
+  "attempts": [
+    "Implemented optimistic locking with version column",
+    "Reverted and implemented last-write-wins (client complained)"
+  ],
+  "candidate_hypotheses": [
+    "Product owner prefers 409 Conflict",
+    "Product owner prefers silent overwrite"
+  ],
+  "expected_strategy": "human-checkpoint",
+  "expected_action": "ask_user"
+}
