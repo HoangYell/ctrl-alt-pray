@@ -140,16 +140,44 @@ export function redactSecrets(text: string): string {
 
 const generateId = () => Math.random().toString(36).slice(2, 10);
 
-/**
- * Deterministic strategy selector matching PLAN.md section 6 catalog.
- */
 export function selectStrategy(context: {
   problem: string;
   observations: string[];
   attempts: string[];
   candidate_hypotheses: string[];
   capabilities: string[];
+  forced_strategy?: ExperimentStrategy;
 }): Experiment {
+  if (context.forced_strategy) {
+    if (context.forced_strategy === 'clean-slate-rollback') {
+      return {
+        strategy: 'clean-slate-rollback',
+        question: 'Do accumulating uncommitted edits obscure the root cause or introduce secondary regressions?',
+        expected_outcome: 'Stashing or reverting dirty working tree edits returns the codebase to a clean baseline where the minimal failure can be re-established.',
+        risk: 'Low if stashed with git stash push -u -m "ctrl-alt-pray-checkpoint".',
+        probe: 'Run git status and stash all uncommitted changes, then rerun the single failing test to establish the clean red line.',
+      };
+    }
+    if (context.forced_strategy === 'ghost-terminal-breaker') {
+      return {
+        strategy: 'ghost-terminal-breaker',
+        question: 'Has the process already completed without emitting a stream EOF/exit event, or is it blocked on an unhandled interactive prompt/lock?',
+        expected_outcome: 'Inspecting process liveness, lockfiles, and terminal tail reveals whether the task is a finished ghost or an interactive prompt trap.',
+        risk: 'Low: read-only process and log inspection; kill task only if confirmed idle.',
+        probe: '1) Check if .git/index.lock exists; 2) Check process tree liveness; 3) Clear lock or kill zombie process.',
+      };
+    }
+    if (context.forced_strategy === 'wrong-altar') {
+      return {
+        strategy: 'wrong-altar',
+        question: 'Is the failing test or curl request hitting a stale build artifact or colliding with a port occupied by another service?',
+        expected_outcome: 'Verifying occupied dev ports and build timestamps confirms if the test runner is targeting the right runtime.',
+        risk: 'Low: inspect build artifact mtime, occupied ports, and test target.',
+        probe: 'Check occupied ports and confirm dev server mtime against latest source file edit.',
+      };
+    }
+  }
+
   const allText = [
     context.problem,
     ...context.observations,
@@ -356,9 +384,9 @@ export function selectStrategy(context: {
 
 export function createOrResumeRecoverySession(
   input: {
-    project_key: string;
-    request_id: string;
-    problem: string;
+    project_key?: string;
+    request_id?: string;
+    problem?: string;
     session_id?: string;
     expected_revision?: number;
     constraints?: string[];
@@ -367,11 +395,15 @@ export function createOrResumeRecoverySession(
     candidate_hypotheses?: string[];
     capabilities?: string[];
     budget?: number;
+    forced_strategy?: ExperimentStrategy;
   },
   storage: RecoveryStorage = getDefaultStorage(),
 ): RecoverySession {
+  const project_key = input.project_key || 'default';
+  const request_id = input.request_id || `req-${generateId()}`;
+
   // Idempotency check
-  const cached = storage.getIdempotentResponse<RecoverySession>(input.request_id);
+  const cached = storage.getIdempotentResponse<RecoverySession>(request_id);
   if (cached) {
     return cached;
   }
@@ -385,7 +417,7 @@ export function createOrResumeRecoverySession(
 
   // Case A: Resume an existing session
   if (input.session_id) {
-    const existing = storage.getSession(input.project_key, input.session_id);
+    const existing = storage.getSession(project_key, input.session_id);
     if (!existing) {
       throw new Error('SESSION_NOT_FOUND');
     }
@@ -405,6 +437,7 @@ export function createOrResumeRecoverySession(
       attempts: mergedAttempts,
       candidate_hypotheses: mergedHypotheses,
       capabilities,
+      forced_strategy: input.forced_strategy,
     });
 
     const occultRite = STRATEGY_INCANTATIONS[experiment.strategy] || {
@@ -445,18 +478,19 @@ export function createOrResumeRecoverySession(
     };
 
     storage.saveSession(updated);
-    storage.saveIdempotentResponse(input.request_id, updated);
+    storage.saveIdempotentResponse(request_id, updated);
     return updated;
   }
 
   // Case B: Create brand new session
   const session_id = generateId();
   const experiment = selectStrategy({
-    problem,
+    problem: problem || 'Execution loop or stall detected in current task.',
     observations,
     attempts,
     candidate_hypotheses,
     capabilities,
+    forced_strategy: input.forced_strategy,
   });
 
   const occultRite = STRATEGY_INCANTATIONS[experiment.strategy] || {
@@ -477,7 +511,7 @@ export function createOrResumeRecoverySession(
 
   const session: RecoverySession = {
     session_id,
-    project_key: input.project_key,
+    project_key,
     revision: 1,
     assessment: attempts.length >= 2 ? 'possible_loop' : 'insufficient_evidence',
     next_action: 'experiment',
@@ -489,7 +523,7 @@ export function createOrResumeRecoverySession(
     assumptions_to_check: candidate_hypotheses,
     rejected_approaches: attempts,
     avoid_repeating: attempts,
-    handoff: `${occultRite.rite} ${occultRite.incantation} | Goal: ${problem}. Constraints: ${constraints.join('; ') || 'none'}. Active strategy: ${experiment.strategy}.`,
+    handoff: `${occultRite.rite} ${occultRite.incantation} | Goal: ${problem || 'Break execution loop'}. Constraints: ${constraints.join('; ') || 'none'}. Active strategy: ${experiment.strategy}.`,
     updated_at: Date.now(),
     rite: occultRite.rite,
     incantation: occultRite.incantation,
@@ -498,7 +532,7 @@ export function createOrResumeRecoverySession(
   };
 
   storage.saveSession(session);
-  storage.saveIdempotentResponse(input.request_id, session);
+  storage.saveIdempotentResponse(request_id, session);
   return session;
 }
 

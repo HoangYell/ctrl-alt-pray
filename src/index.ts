@@ -11,6 +11,7 @@ import {
 } from './recovery.js';
 import { runInit } from './init.js';
 import { runStats } from './stats.js';
+import { harvestEvidence } from './harvester/index.js';
 
 const server = new McpServer({
   name: 'ctrl-alt-pray',
@@ -37,11 +38,12 @@ function getRecoveryHint(errorMessage: string): string {
 server.registerTool(
   'pray',
   {
-    description: 'Summon the Altar of Ground Truth when standard debugging fails or repetitive loops occur. CALL THIS TOOL IMMEDIATELY WHEN: (1) A test or command fails 2+ times with similar errors; (2) An edited code change produced zero difference in output; (3) A terminal command or child process hangs/times out >15s; (4) You are guessing module exports or APIs; (5) You feel the urge to apologize for failed attempts. Returns one bounded, discriminating falsification experiment to break the loop.',
+    description: 'Summon the Altar of Ground Truth when standard debugging fails or repetitive loops occur. CALL THIS TOOL IMMEDIATELY WHEN: (1) A test or command fails 2+ times with similar errors; (2) An edited code change produced zero difference in output; (3) A terminal command or child process hangs/times out >15s; (4) You are guessing module exports or APIs; (5) You feel the urge to apologize for failed attempts. If auto_harvest is true (default), scans git status, lockfiles, and occupied ports automatically.',
     inputSchema: z.object({
-      project_key: z.string().describe('Unique project identifier (e.g. repo name or workspace key)'),
-      request_id: z.string().describe('Unique client-generated idempotency key for this request'),
-      problem: z.string().describe('Concise description of the stuck goal, actual vs expected behavior'),
+      project_key: z.string().default('default').describe('Unique project identifier (e.g. repo name or workspace key)'),
+      request_id: z.string().optional().describe('Unique client-generated idempotency key for this request'),
+      problem: z.string().optional().describe('Concise description of the stuck goal (optional if auto_harvest is true)'),
+      auto_harvest: z.boolean().default(true).describe('Automatically scan git status, lockfiles, and occupied ports for ground-truth evidence'),
       session_id: z.string().optional().describe('Omit to start a new session; provide to resume an existing session'),
       expected_revision: z.number().int().positive().optional().describe('Required when resuming a session to prevent stale concurrent updates'),
       constraints: z.array(z.string()).default([]).describe('Non-negotiable invariants (e.g. cannot edit schema, cannot add dependencies)'),
@@ -54,7 +56,31 @@ server.registerTool(
   },
   async (args) => {
     try {
-      const result = createOrResumeRecoverySession(args);
+      let observations = [...(args.observations || [])];
+      let problem = args.problem;
+      let forced_strategy: any = undefined;
+
+      if (args.auto_harvest !== false) {
+        try {
+          const evidence = await harvestEvidence();
+          observations = Array.from(new Set([...observations, ...evidence.observations]));
+          if (!problem || problem.trim().length === 0) {
+            problem = evidence.synthesizedProblem;
+          }
+          if (evidence.suggestedStrategy && (!args.attempts || args.attempts.length === 0)) {
+            forced_strategy = evidence.suggestedStrategy;
+          }
+        } catch {
+          // Graceful fallback if harvester fails
+        }
+      }
+
+      const result = createOrResumeRecoverySession({
+        ...args,
+        problem: problem || 'Execution loop or stall detected in current task.',
+        observations,
+        forced_strategy,
+      });
       return {
         content: [{
           type: 'text',
