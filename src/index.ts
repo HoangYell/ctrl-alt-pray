@@ -1,4 +1,5 @@
-#!/usr/bin/env node
+#!/usr/bin/env -S node --no-warnings=ExperimentalWarning
+import './suppress-warnings.js';
 import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { McpServer, ResourceTemplate } from '@modelcontextprotocol/server';
@@ -11,6 +12,8 @@ import {
   inspectSession,
   listSessions,
 } from './recovery.js';
+import { getDefaultStorage } from './storage.js';
+import { generateSecondOpinion } from './critique.js';
 import { runInit } from './init.js';
 import { runStats } from './stats.js';
 import { runHistory } from './history.js';
@@ -71,6 +74,7 @@ server.registerTool(
       capabilities: z.array(z.string()).default([]).describe('Host tool capabilities available (e.g. bash, read_file, git)'),
       budget: z.number().int().positive().default(3).describe('Maximum remaining recovery rounds'),
       heresy_mode: z.boolean().default(false).describe('Explicitly activate Heresy Mode to challenge foundational premises and suggest cheap falsification probes'),
+      second_opinion: z.boolean().default(false).describe("Request an adversarial second opinion / devil's advocate critique to challenge the proposed experiment"),
     }),
   },
   async (args) => {
@@ -101,6 +105,11 @@ server.registerTool(
         forced_strategy,
       });
 
+      if (args.second_opinion) {
+        result.second_opinion = await generateSecondOpinion(result, server);
+        getDefaultStorage().saveSession(result);
+      }
+
       return {
         content: [{
           type: 'text',
@@ -128,6 +137,7 @@ server.registerTool(
             heresy_challenge: result.heresy_challenge,
             offering: result.offering,
             file_flapping: result.file_flapping,
+            second_opinion: result.second_opinion,
           }, null, 2),
         }],
       };

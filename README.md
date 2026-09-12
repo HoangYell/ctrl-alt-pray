@@ -188,6 +188,12 @@ ctrl-alt-pray book
 
 All 12 canonical recipes are version-controlled with applicability triggers, probes, outcome branches, and safety guarantees.
 
+### 7. ⚖️ Second Opinion & Devil's Advocate (`second_opinion: true`)
+When an agent or developer wants to challenge their recovery plan before touching code:
+- **Adversarial Critique**: Challenges the proposed experiment to expose hidden assumptions, non-deterministic flakiness, or uncalled mocks.
+- **MCP 2026 Sampling Protocol**: If the host MCP client advertises sampling (`sampling: {}`), requests an independent Devil's Advocate critique via `sampling/createMessage` with strict resource bounds (<150 tokens, 4s timeout).
+- **Zero-Cost Heuristic Fallback**: Gracefully degrades to a fast, 0-token heuristic critique if sampling is unsupported or unconfigured.
+
 ---
 
 ## 🏛️ The 12 Canonical Recovery Recipes

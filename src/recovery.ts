@@ -3,6 +3,9 @@ import {
   RecoveryStorage,
   validateRequestLimits,
 } from './storage.js';
+import type { SecondOpinion } from './critique.js';
+
+export type { SecondOpinion } from './critique.js';
 
 export type RecoveryAssessment = 'insufficient_evidence' | 'possible_loop' | 'progress' | 'blocked';
 export type RecoveryNextAction = 'experiment' | 'request_evidence' | 'ask_user';
@@ -84,6 +87,7 @@ export interface RecoverySession {
   heresy_challenge?: HeresyChallenge;
   offering?: TheOffering;
   file_flapping?: FileFlappingStatus;
+  second_opinion?: SecondOpinion;
 }
 
 export interface HeresyChallenge {
@@ -958,6 +962,7 @@ export function createOrResumeRecoverySession(
       heresy_challenge,
       offering,
       file_flapping: file_flapping || existing.file_flapping,
+      second_opinion: existing.second_opinion,
     };
 
     storage.saveSession(updated);
@@ -1196,6 +1201,7 @@ export function reportOutcome(
     heresy_challenge,
     offering: offering || existing.offering,
     file_flapping: existing.file_flapping,
+    second_opinion: existing.second_opinion,
   };
 
   storage.saveSession(updated);

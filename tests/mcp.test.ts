@@ -153,6 +153,26 @@ describe('MCP Stdio Round-Trip (PLAN.md M2)', () => {
     expect(ledger.revision).toBe(2);
   });
 
+  it('calls pray tool with second_opinion=true and receives devil advocate critique', async () => {
+    const prayRes = await client.sendRequest('tools/call', {
+      name: 'pray',
+      arguments: {
+        project_key: 'mcp-test-project',
+        problem: 'Stuck on intermittent port conflict',
+        attempts: ['Restarted server twice'],
+        observations: ['EADDRINUSE 3000'],
+        second_opinion: true,
+      },
+    });
+
+    expect(prayRes.result).toBeDefined();
+    const card = JSON.parse(prayRes.result.content[0].text);
+    expect(card.second_opinion).toBeDefined();
+    expect(card.second_opinion.source).toBe('heuristic_devil_advocate');
+    expect(card.second_opinion.critique).toBeDefined();
+    expect(card.second_opinion.blind_spot_warning).toBeDefined();
+  });
+
   it('lists and reads MCP resources', async () => {
     const resourcesRes = await client.sendRequest('resources/list');
     expect(resourcesRes.result).toBeDefined();
