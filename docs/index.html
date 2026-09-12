@@ -4,9 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ctrl Alt Pray — The Anti-Doom-Loop Circuit Breaker for AI Agents</title>
-  <meta name="description" content="When Ctrl+Z isn't enough. Pray. An open-source MCP circuit breaker, 12 canonical falsification rites, and a 15-second process executioner for autonomous coding agents.">
+  <meta name="description" content="When Ctrl+Z isn't enough. Pray. An open-source MCP circuit breaker for Cursor, Claude Code, and Cline. Stop your AI from burning $25 in infinite apology loops when tests fail.">
   <meta property="og:title" content="Ctrl Alt Pray — When Ctrl+Z isn't enough. Pray.">
-  <meta property="og:description" content="Stop letting autonomous coding agents burn $25 in a 3:00 AM doom loop. Evidence ledger, 12 holy rites, and active terminal guardian.">
+  <meta property="og:description" content="Stop letting autonomous coding agents burn $25 in a 3:00 AM doom loop. Real evidence ledger, 12 holy sanity rites, and active terminal guardian.">
   <meta property="og:image" content="./assets/ai-hero-meme.webp">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
@@ -243,13 +243,13 @@
     .dot:nth-child(3) { background: #10b981; }
     .media-title {
       font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-dim);
-      margin-left: 10px; letter-spacing: 0.02em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      margin-left: 10px; letter-spacing: 0.02em; white-space: nowrap; overflow: hidden;
     }
     .hero-img { width: 100%; height: auto; display: block; }
 
     /* Section layout */
     section { padding: 80px 0; border-top: 1px solid var(--border); }
-    .section-header { text-align: center; max-width: 720px; margin: 0 auto 44px; }
+    .section-header { text-align: center; max-width: 740px; margin: 0 auto 44px; }
     .section-tag {
       display: inline-flex; align-items: center; gap: 6px; font-size: 0.75rem;
       font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
@@ -261,22 +261,22 @@
     }
     .section-desc { font-size: 1.05rem; color: var(--text-muted); line-height: 1.6; }
 
-    /* Plain English Grid */
-    .plain-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 20px; margin-bottom: 36px; }
-    .plain-card {
+    /* Practical Traps Grid */
+    .traps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 20px; margin-bottom: 36px; }
+    .trap-card {
       background: var(--surface-1); border: 1px solid var(--border); border-radius: var(--radius-md);
       padding: 24px; transition: all 0.2s ease; display: flex; flex-direction: column; justify-content: space-between;
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
     }
-    .plain-card:hover { border-color: var(--border-hover); background: var(--surface-2); transform: translateY(-2px); }
-    .plain-header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
-    .plain-icon {
+    .trap-card:hover { border-color: var(--border-hover); background: var(--surface-2); transform: translateY(-2px); }
+    .trap-header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+    .trap-icon {
       width: 36px; height: 36px; border-radius: var(--radius-sm); background: var(--surface-3);
       display: flex; align-items: center; justify-content: center; color: var(--accent-light); flex-shrink: 0;
     }
-    .plain-card h3 { font-size: 1.05rem; font-weight: 700; color: #ffffff; }
-    .plain-card p { font-size: 0.925rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 16px; flex-grow: 1; }
-    .plain-highlight {
+    .trap-card h3 { font-size: 1.05rem; font-weight: 700; color: #ffffff; }
+    .trap-card p { font-size: 0.925rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 16px; flex-grow: 1; }
+    .trap-solution {
       font-size: 0.8125rem; font-family: var(--font-mono); color: #cbd5e1;
       padding: 9px 12px; background: var(--surface-2); border-radius: 6px;
       border-left: 3px solid var(--accent); line-height: 1.5;
@@ -784,11 +784,11 @@
 
       <!-- Desktop Navigation -->
       <nav class="desktop-nav">
-        <a href="#what-is-it">Plain English</a>
-        <a href="#occult-sanctum" style="color: #fbbf24; font-weight: 600;">Occult Shrine</a>
+        <a href="#traps">Common Traps</a>
+        <a href="#occult-sanctum" style="color: #fbbf24; font-weight: 600;">Why Pray?</a>
         <a href="#simulator">Simulator</a>
-        <a href="#pillars">Architecture</a>
-        <a href="#rites">12 Holy Rites</a>
+        <a href="#pillars">Safeguards</a>
+        <a href="#rites">12 Sanity Recipes</a>
         <a href="#mcp-setup">1-Click MCP</a>
         <a href="articles/" class="highlight-nav">Articles</a>
         <a href="#telemetry">Telemetry</a>
@@ -796,7 +796,7 @@
 
       <!-- Action Cluster -->
       <div class="nav-actions">
-        <button class="btn btn-sm btn-occult" id="occult-toggle-btn" onclick="toggleOccultMode()" title="Toggle Tech-Occultism / Cyber-Shrine Mode">
+        <button class="btn btn-sm btn-occult" id="occult-toggle-btn" onclick="toggleOccultMode()" title="Toggle Tech-Occultism / The Altar Mode">
           <i data-lucide="flame" style="width: 14px; height: 14px;"></i>
           <span id="occult-btn-text">Occult Mode</span>
         </button>
@@ -822,24 +822,24 @@
         </span>
         <span class="version-tag" style="color: #fbbf24; border-color: rgba(245, 158, 11, 0.4);">PRAY</span>
       </a>
-      <a href="#occult-sanctum" onclick="closeMobileMenu()">
-        <span>Occult Shrine</span>
+      <a href="#traps" onclick="closeMobileMenu()">
+        <span>Common Failure Traps</span>
         <i data-lucide="chevron-right" style="width: 16px; height: 16px;"></i>
       </a>
-      <a href="#what-is-it" onclick="closeMobileMenu()">
-        <span>Plain English (10s)</span>
+      <a href="#occult-sanctum" onclick="closeMobileMenu()">
+        <span>Why "Pray"? The Altar</span>
         <i data-lucide="chevron-right" style="width: 16px; height: 16px;"></i>
       </a>
       <a href="#simulator" onclick="closeMobileMenu()">
-        <span>Simulator</span>
+        <span>Live Simulator</span>
         <i data-lucide="chevron-right" style="width: 16px; height: 16px;"></i>
       </a>
       <a href="#pillars" onclick="closeMobileMenu()">
-        <span>4 Pillars Architecture</span>
+        <span>4 Safeguards</span>
         <i data-lucide="chevron-right" style="width: 16px; height: 16px;"></i>
       </a>
       <a href="#rites" onclick="closeMobileMenu()">
-        <span>12 Holy Rites</span>
+        <span>12 Sanity Recipes</span>
         <i data-lucide="chevron-right" style="width: 16px; height: 16px;"></i>
       </a>
       <a href="#mcp-setup" onclick="closeMobileMenu()">
@@ -847,7 +847,7 @@
         <i data-lucide="chevron-right" style="width: 16px; height: 16px;"></i>
       </a>
       <a href="articles/" style="color: var(--accent-light); font-weight: 600;">
-        <span>Field Manuals & Articles</span>
+        <span>Articles & Field Manuals</span>
         <i data-lucide="arrow-up-right" style="width: 16px; height: 16px;"></i>
       </a>
       <a href="#telemetry" onclick="closeMobileMenu()">
@@ -876,8 +876,8 @@
       <h1>When Ctrl+Z Isn't Enough.<br>Pray.</h1>
 
       <p class="hero-sub">
-        Stop letting autonomous coding agents burn $25 swapping <code>true</code> and <code>false</code> in a 3:00 AM death spiral. 
-        An evidence ledger, 12 canonical falsification rites, and a 15-second terminal executioner.
+        The open-source circuit breaker for Cursor, Claude Code, and Cline. 
+        Stop your AI agent from burning $25 in infinite apology loops swapping <code>true</code> and <code>false</code> when a simple test fails.
       </p>
 
       <div class="hero-cta">
@@ -901,7 +901,7 @@
         </div>
 
         <a href="https://github.com/HoangYell/ctrl-alt-pray" target="_blank" rel="noopener noreferrer" class="btn btn-ghost">
-          <i data-lucide="github" style="width: 15px; height: 15px;"></i>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg>
           <span>GitHub</span>
         </a>
       </div>
@@ -918,61 +918,73 @@
       </div>
     </div>
 
-    <!-- Plain English Section -->
-    <section id="what-is-it">
+    <!-- Practical Failure Traps Section -->
+    <section id="traps">
       <div class="container">
         <div class="section-header">
           <div class="section-tag">
-            <i data-lucide="info" style="width: 14px; height: 14px;"></i>
-            <span>Plain English TL;DR</span>
+            <i data-lucide="alert-triangle" style="width: 14px; height: 14px; color: var(--rose);"></i>
+            <span>Real Developer Failure Traps</span>
           </div>
-          <h2 class="section-title">What Is This In 10 Seconds?</h2>
-          <p class="section-desc">No corporate fluff, no pseudointellectual jargon. Just the exact engineering rationale for skeptical developers.</p>
+          <h2 class="section-title">The 4 Traps Where Your AI Burns Your Money</h2>
+          <p class="section-desc">Every developer pair-programming with Cursor or Claude Code has watched an agent spiral into one of these 4 traps:</p>
         </div>
 
-        <div class="plain-grid">
-          <div class="plain-card">
+        <div class="traps-grid">
+          <!-- Trap 1: Stale Build -->
+          <div class="trap-card">
             <div>
-              <div class="plain-header">
-                <div class="plain-icon"><i data-lucide="terminal" style="width: 18px; height: 18px;"></i></div>
-                <h3>1. What It Actually Is</h3>
+              <div class="trap-header">
+                <div class="trap-icon" style="color: var(--amber);"><i data-lucide="layers" style="width: 18px; height: 18px;"></i></div>
+                <h3>1. The Stale Build Mirage</h3>
               </div>
-              <p>An open-source, local <strong>MCP server + CLI runtime</strong> for Cursor, Claude Code, Cline, and autonomous terminal agents.</p>
+              <p>The AI edits <code>src/auth.ts</code> 6 times. Tests fail with identical 401 error. The AI panics and rewrites entire files, oblivious that tests run against uncompiled <code>dist/auth.js</code>.</p>
             </div>
-            <div class="plain-highlight">Zero runtime deps &bull; Pure TypeScript &bull; Local SQLite WAL &bull; Runs 100% offline</div>
+            <div class="trap-solution">
+              <strong>How pray() solves it:</strong> Injects a print marker. Notices output is unchanged. Tells the AI: <em>"Stop editing. Run npm run build."</em>
+            </div>
           </div>
 
-          <div class="plain-card">
+          <!-- Trap 2: Port Zombie -->
+          <div class="trap-card">
             <div>
-              <div class="plain-header">
-                <div class="plain-icon" style="color: var(--rose);"><i data-lucide="shield-alert" style="width: 18px; height: 18px;"></i></div>
-                <h3>2. The Exact Problem It Solves</h3>
+              <div class="trap-header">
+                <div class="trap-icon" style="color: var(--rose);"><i data-lucide="terminal" style="width: 18px; height: 18px;"></i></div>
+                <h3>2. The Port 3000 Zombie</h3>
               </div>
-              <p><strong>The AI Doom Loop.</strong> An AI agent fails a test. Instead of investigating, it apologizes, tweaks random lines, reverts, and tweaks again—burning $20 in tokens.</p>
+              <p>A background watcher hangs. Next turn, the AI runs tests and gets <code>EADDRINUSE: 3000</code>. Instead of killing the process, it hallucinates and changes port numbers in code!</p>
             </div>
-            <div class="plain-highlight" style="border-left-color: var(--rose);">Empirical telemetry: &gt;96% of 3rd consecutive speculative patches fail.</div>
+            <div class="trap-solution" style="border-left-color: var(--rose);">
+              <strong>How pray() solves it:</strong> <code>pray-run</code> watchdog terminates hanging commands after 15s and frees locked ports with a cascade SIGKILL tree.
+            </div>
           </div>
 
-          <div class="plain-card">
+          <!-- Trap 3: Apology Tax -->
+          <div class="trap-card">
             <div>
-              <div class="plain-header">
-                <div class="plain-icon" style="color: var(--emerald);"><i data-lucide="check-circle" style="width: 18px; height: 18px;"></i></div>
-                <h3>3. How It Physically Stops It</h3>
+              <div class="trap-header">
+                <div class="trap-icon" style="color: var(--cyan);"><i data-lucide="message-square" style="width: 18px; height: 18px;"></i></div>
+                <h3>3. The Endless Apology Tax</h3>
               </div>
-              <p>(1) <strong>2-Strikes Tripwire</strong> blocks code generation after 2 fails.<br>(2) <strong>Universal Harvester</strong> scans git and locked ports.<br>(3) <strong>pray-run</strong> cascade-kills zombie child processes after 15s.</p>
+              <p><em>"I deeply apologize for my previous oversight! Let me correct..."</em> The AI wastes 2,000 tokens per turn on polite groveling while repeating the exact same failed edit.</p>
             </div>
-            <div class="plain-highlight" style="border-left-color: var(--emerald);">Converts 15-turn circular loops into a 30-second single-variable resolution.</div>
+            <div class="trap-solution" style="border-left-color: var(--cyan);">
+              <strong>How pray() solves it:</strong> The tripwire bars apologies and cuts conversational filler. Demands 1 hypothesis, 1 test command, zero speculative code.
+            </div>
           </div>
 
-          <div class="plain-card">
+          <!-- Trap 4: Swallowed Test Error -->
+          <div class="trap-card">
             <div>
-              <div class="plain-header">
-                <div class="plain-icon" style="color: var(--amber);"><i data-lucide="alert-circle" style="width: 18px; height: 18px;"></i></div>
-                <h3>4. Why Not Just A Prompt?</h3>
+              <div class="trap-header">
+                <div class="trap-icon" style="color: var(--emerald);"><i data-lucide="flask-conical" style="width: 18px; height: 18px;"></i></div>
+                <h3>4. The Fake Green (Swallowed Error)</h3>
               </div>
-              <p>Prompts cannot check <code>git diff --stat</code>, cannot check whether port 3000 is occupied, cannot send <code>SIGKILL</code> to child workers, and LLMs ignore prompts under tunnel vision.</p>
+              <p>The AI tweaks code and runs tests. Tests show green! The AI claims <em>"Fixed!"</em>, but in reality an empty <code>try/catch</code> swallowed the assertion error while production is still broken.</p>
             </div>
-            <div class="plain-highlight" style="border-left-color: var(--amber);">Deterministic TypeScript runtime provides hard OS constraints that prompts cannot.</div>
+            <div class="trap-solution" style="border-left-color: var(--emerald);">
+              <strong>How pray() solves it:</strong> Injects a poison assertion (<code>throw new Error("PROVE_IT")</code>). If tests still pass, it proves the test runner is lying.
+            </div>
           </div>
         </div>
 
@@ -990,19 +1002,19 @@
           <div class="flow-step-card">
             <span class="step-badge" style="color: var(--rose); background: rgba(244, 63, 94, 0.1); border-color: rgba(244, 63, 94, 0.25);">
               <i data-lucide="shield-alert" style="width: 12px; height: 12px;"></i>
-              STEP 2: THE TRIPWIRE
+              STEP 2: THE 2-STRIKES TRIPWIRE
             </span>
             <h4>Loop Interception</h4>
-            <p>When the AI fails twice on the same check, the tripwire physically bars further code edits. The agent is forced to call the <code>pray()</code> MCP tool.</p>
+            <p>When the AI fails twice on the same check, the circuit breaker physically bars code edits. The agent is forced to call the <code>pray()</code> MCP tool.</p>
           </div>
 
           <div class="flow-step-card">
             <span class="step-badge" style="color: var(--emerald); background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.25);">
               <i data-lucide="check-circle-2" style="width: 12px; height: 12px;"></i>
-              STEP 3: FALSIFICATION
+              STEP 3: GROUND-TRUTH PROBE
             </span>
-            <h4>Ground Truth Probe</h4>
-            <p>The Altar prescribes 1 of 12 canonical falsification rites. The agent tests one isolated variable, confirms reality, and resolves the issue in 1 clean commit.</p>
+            <h4>Reality Check</h4>
+            <p>The Altar dispenses 1 of 12 proven diagnostic recipes. The agent tests one isolated variable, confirms reality, and resolves the issue in 1 clean commit.</p>
           </div>
         </div>
 
@@ -1012,22 +1024,22 @@
             <i data-lucide="flame" style="width: 20px; height: 20px;"></i>
           </div>
           <div class="cynic-text">
-            <strong>Why the church & prayer theme?</strong> Because every software engineer who has stayed up until 3:00 AM watching an AI agent hallucinate through 20 files has tried <code>Ctrl+C</code>, tried <code>Ctrl+Z</code>, and was left with only one desperate move: <em>praying</em>. We turned developer agony into an open-source engineering tool.
+            <strong>Why did we name it "pray"?</strong> Because every software engineer who has stayed up until 3:00 AM watching an AI agent hallucinate through 20 files has tried <code>Ctrl+C</code>, tried <code>Ctrl+Z</code>, and was left with only one desperate move: <em>praying to the code gods</em>. We turned that developer agony into an open-source engineering tool.
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Tech-Occultism Sanctum & Altar Section -->
+    <!-- Why Pray? The Altar of Ground Truth Section -->
     <section id="occult-sanctum" class="occult-sanctum">
       <div class="container">
         <div class="section-header">
           <div class="section-tag" style="color: #fbbf24; background: rgba(245, 158, 11, 0.1); border-color: rgba(245, 158, 11, 0.3);">
             <i data-lucide="flame" style="width: 14px; height: 14px;"></i>
-            <span>Tech-Occultism: Cyber-Shrine Protocol</span>
+            <span>The Story Behind The Name</span>
           </div>
-          <h2 class="section-title">The Altar of Ground Truth: When Logic Dies at 3:00 AM</h2>
-          <p class="section-desc">When your AI agent enters a doom loop of circular edits and polite apologies: Summon the Altar, burn data incense, roll for Divine Favor, and banish zombie subprocesses.</p>
+          <h2 class="section-title">Why "Pray"? When Logic Dies at 3:00 AM</h2>
+          <p class="section-desc">When your AI agent enters an infinite loop of circular edits and polite apologies: Stop guessing. Summon the Altar, burn data incense, roll for Divine Favor, and banish zombie subprocesses.</p>
         </div>
 
         <!-- Interactive Altar Widget -->
@@ -1035,7 +1047,7 @@
           <!-- Left: The Cyber Incense Burner -->
           <div class="altar-shrine-card">
             <div>
-              <div style="display: flex; align-items: center; justify-content: space-between;">
+              <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
                 <span class="gallery-tag">
                   <i data-lucide="sparkles" style="width: 13px; height: 13px;"></i>
                   Digital Altar &bull; 3 Sticks
@@ -1044,7 +1056,7 @@
               </div>
               <h3 style="font-size: 1.25rem; font-weight: 700; color: #ffffff; margin: 8px 0;">The Cyber Incense Burner</h3>
               <p style="font-size: 0.875rem; color: var(--text-muted);">
-                Luminous data incense purges cognitive tunnel vision and LLM hallucinations. Each purification rite grounds the model in empirical reality.
+                A symbolic ritual to purge hallucinated context. In practice, invoking <code>pray()</code> clears circular assumptions and forces the model to measure ground truth before editing.
               </p>
 
               <!-- Burning Incense Animation -->
@@ -1085,7 +1097,7 @@
           <!-- Right: Divine Favor Oracle Ledger -->
           <div class="altar-shrine-card">
             <div>
-              <div style="display: flex; align-items: center; justify-content: space-between;">
+              <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
                 <span class="gallery-tag">
                   <i data-lucide="scale" style="width: 13px; height: 13px;"></i>
                   rollDivineFavor &bull; Karma
@@ -1107,7 +1119,7 @@
                   <div class="oracle-bar-fill" id="oracle-bar" style="width: 88%;"></div>
                 </div>
                 <div class="oracle-rule" id="oracle-desc">
-                  <strong>The Altar's Decree:</strong> Divine Favor bestowed. The model is enlightened, deploying an atomic single-variable probe to shatter the loop.
+                  <strong>The Altar's Decree:</strong> Divine Favor bestowed. Intuition is sharp; probe isolates the root defect in 1 bounded step.
                 </div>
               </div>
             </div>
@@ -1172,7 +1184,7 @@
             <i data-lucide="cpu" style="width: 14px; height: 14px;"></i>
             <span>Interactive Simulator</span>
           </div>
-          <h2 class="section-title">See The Altar Break a Real 3 AM Loop</h2>
+          <h2 class="section-title">See 'pray()' Break a Real 3:00 AM Loop</h2>
           <p class="section-desc">Experience what happens when blind patching is halted and replaced by an atomic falsification probe.</p>
         </div>
 
@@ -1187,15 +1199,15 @@
               <div class="sim-tabs">
                 <button class="sim-tab-btn active" onclick="switchScenario(0)">
                   <i data-lucide="layers" style="width: 14px; height: 14px;"></i>
-                  <span>Stale Build (Wrong Altar)</span>
+                  <span>1. Stale Build (Wrong Altar)</span>
                 </button>
                 <button class="sim-tab-btn" onclick="switchScenario(1)">
                   <i data-lucide="flask-conical" style="width: 14px; height: 14px;"></i>
-                  <span>Swallowed Error (Poison Chalice)</span>
+                  <span>2. Swallowed Error (Poison Chalice)</span>
                 </button>
                 <button class="sim-tab-btn" onclick="switchScenario(2)">
                   <i data-lucide="terminal" style="width: 14px; height: 14px;"></i>
-                  <span>Frozen Watcher (Ghost Terminal)</span>
+                  <span>3. Frozen Watcher (Ghost Terminal)</span>
                 </button>
               </div>
             </div>
@@ -1251,7 +1263,7 @@
             <i data-lucide="shield" style="width: 14px; height: 14px;"></i>
             <span>Defense in Depth</span>
           </div>
-          <h2 class="section-title">4 Architectural Safeguards</h2>
+          <h2 class="section-title">4 Safeguards That Protect Your Repo</h2>
           <p class="section-desc">Engineered to interrupt cognitive decline before your credit card is drained.</p>
         </div>
 
@@ -1358,10 +1370,10 @@
         <div class="section-header">
           <div class="section-tag">
             <i data-lucide="book-open" style="width: 14px; height: 14px;"></i>
-            <span>The Prayer Book (v2.0.0)</span>
+            <span>The Sanity Recipes (v2.0.0)</span>
           </div>
-          <h2 class="section-title">12 Canonical Recovery Rites</h2>
-          <p class="section-desc">Battle-tested recovery patterns version-controlled with applicability triggers, probes, and safety guarantees.</p>
+          <h2 class="section-title">12 Canonical Recovery Recipes</h2>
+          <p class="section-desc">When your AI calls pray(), it selects 1 of these 12 deterministic checks instead of guessing.</p>
         </div>
 
         <div class="rites-controls">
@@ -2062,7 +2074,7 @@
         grid.innerHTML = `
           <div style="grid-column: 1 / -1; text-align: center; padding: 48px 0; color: var(--text-dim);">
             <i data-lucide="search-x" style="width: 32px; height: 32px; margin-bottom: 12px; color: var(--text-dim);"></i>
-            <p>No rites match your search criteria.</p>
+            <p>No recipes match your search criteria.</p>
           </div>
         `;
         lucide.createIcons();
