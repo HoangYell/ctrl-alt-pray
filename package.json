@@ -1,0 +1,32 @@
+{
+  "name": "ctrl-alt-pray",
+  "version": "1.0.0",
+  "description": "**When Ctrl+Z isn't enough.**",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "start": "node dist/src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HoangYell/ctrl-alt-pray.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HoangYell/ctrl-alt-pray/issues"
+  },
+  "homepage": "https://github.com/HoangYell/ctrl-alt-pray#readme",
+  "dependencies": {
+    "@modelcontextprotocol/server": "^2.0.0",
+    "zod": "^4.6.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.2",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.0"
+  }
+}

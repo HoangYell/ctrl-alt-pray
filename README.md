@@ -12,7 +12,7 @@ Ctrl Alt Pray is designed to turn repeated failed attempts into a small, testabl
 
 ## Status
 
-Planning only. This repository currently contains the product and implementation plan; there is no runnable server, installable package, or published benchmark yet.
+The first runnable MVP is now scaffolded. It exposes `pray` and `report_outcome` over stdio, with an in-memory recovery session engine and contract tests. Persistence, richer strategy selection, and benchmark evaluation are still planned.
 
 ## The Idea
 
@@ -48,6 +48,6 @@ That is a hypothesis to validate, not a claim of proven improvement. The evaluat
 
 See [PLAN.md](PLAN.md) for the product contract, recovery engine, tool designs, worked examples, privacy model, evaluation, and implementation milestones.
 
-Planned stack: TypeScript, the official MCP TypeScript SDK, stdio transport, pnpm, Vitest, and local SQLite storage after the core behavior is tested.
+Stack: TypeScript, the official MCP TypeScript SDK, stdio transport, npm or pnpm, and Vitest. The current implementation uses in-memory state; local SQLite storage is planned after the core behavior is tested.
 
-The working repository slug is `ctrl-alt-pray`. GitHub, npm, domain, and trademark availability have not been checked. No remote has been created.
+The working repository slug is `ctrl-alt-pray`. The public GitHub repository is [HoangYell/ctrl-alt-pray](https://github.com/HoangYell/ctrl-alt-pray). npm package publication, domain, and trademark availability have not been checked.

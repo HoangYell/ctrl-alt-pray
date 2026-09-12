@@ -1,0 +1,9 @@
+{
+  "servers": {
+    "ctrl-alt-pray": {
+      "type": "stdio",
+      "command": "npm",
+      "args": ["run", "start"]
+    }
+  }
+}
