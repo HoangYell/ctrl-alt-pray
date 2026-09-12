@@ -795,8 +795,153 @@
       transform: translateY(0);
     }
 
+    /* Plain English TL;DR Section */
+    .plain-section {
+      background: rgba(13, 17, 24, 0.4);
+    }
+
+    .plain-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      margin-bottom: 36px;
+    }
+
+    .plain-card {
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .plain-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.3);
+    }
+
+    .plain-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .plain-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--cyan);
+      flex-shrink: 0;
+    }
+
+    .plain-card h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      margin: 0;
+      color: var(--text-main);
+    }
+
+    .plain-card p {
+      color: var(--text-muted);
+      font-size: 0.925rem;
+      line-height: 1.6;
+      margin: 0 0 14px;
+      flex-grow: 1;
+    }
+
+    .plain-highlight {
+      background: var(--surface-2);
+      border-left: 3px solid var(--indigo);
+      padding: 10px 14px;
+      border-radius: 0 6px 6px 0;
+      font-size: 0.8125rem;
+      color: #cbd5e1;
+      font-family: var(--font-mono);
+      line-height: 1.5;
+    }
+
+    .flow-steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 36px;
+    }
+
+    .flow-step-card {
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+    }
+
+    .step-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      color: var(--indigo);
+      background: rgba(99, 102, 241, 0.1);
+      border: 1px solid rgba(99, 102, 241, 0.25);
+      padding: 3px 8px;
+      border-radius: 6px;
+      margin-bottom: 12px;
+    }
+
+    .flow-step-card h4 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin: 0 0 8px;
+      color: var(--text-main);
+    }
+
+    .flow-step-card p {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    .cynic-callout {
+      margin-top: 32px;
+      background: rgba(99, 102, 241, 0.06);
+      border: 1px solid rgba(99, 102, 241, 0.25);
+      border-radius: 10px;
+      padding: 18px 22px;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .cynic-icon {
+      color: #818cf8;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .cynic-text {
+      font-size: 0.9rem;
+      color: #cbd5e1;
+      line-height: 1.6;
+    }
+
+    .cynic-text strong {
+      color: #ffffff;
+    }
+
     /* Responsive Mobile First */
-    @media (max-width: 768px) {
+    @media (max-width: 960px) {
       .header-inner {
         height: 56px;
       }
@@ -817,6 +962,14 @@
         font-size: 1rem;
       }
 
+      .plain-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .flow-steps {
+        grid-template-columns: 1fr;
+      }
+
       .sim-body {
         grid-template-columns: 1fr;
       }
@@ -833,6 +986,26 @@
       .footer-inner {
         flex-direction: column;
         align-items: flex-start;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .version-tag {
+        display: none;
+      }
+
+      .nav-actions .btn {
+        padding: 6px 10px;
+        font-size: 0.8125rem;
+      }
+
+      .hero h1 {
+        font-size: 1.95rem;
+      }
+
+      .install-box {
+        width: 100%;
+        justify-content: space-between;
       }
     }
   </style>
@@ -852,6 +1025,7 @@
       </a>
 
       <nav>
+        <a href="#what-is-it">Plain English</a>
         <a href="#simulator">Simulator</a>
         <a href="#pillars">Architecture</a>
         <a href="#rites">12 Holy Rites</a>
@@ -894,6 +1068,11 @@
         </button>
       </div>
 
+      <a href="#what-is-it" class="btn btn-ghost">
+        <i data-lucide="help-circle" style="width: 16px; height: 16px;"></i>
+        <span>What Is This?</span>
+      </a>
+
       <a href="https://github.com/HoangYell/ctrl-alt-pray" target="_blank" class="btn btn-secondary">
         <i data-lucide="github" style="width: 16px; height: 16px;"></i>
         <span>GitHub Repo</span>
@@ -901,7 +1080,7 @@
 
       <a href="#simulator" class="btn btn-ghost">
         <i data-lucide="cpu" style="width: 16px; height: 16px;"></i>
-        <span>Interactive Simulator</span>
+        <span>Simulator</span>
       </a>
     </div>
 
@@ -916,6 +1095,125 @@
       <img src="./assets/ai-hero-meme.webp" alt="Ctrl Alt Pray - AI Agent Doom Loop Comic Strip" class="hero-img" width="1200" height="675" loading="eager">
     </div>
   </div>
+
+  <!-- Plain English for Cynical Engineers Section -->
+  <section id="what-is-it" class="plain-section">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-tag">Plain English TL;DR</div>
+        <h2 class="section-title">What Is This In 10 Seconds?</h2>
+        <p class="section-desc">No metaphors, no esoteric jargon. Just the zero-BS breakdown for cynical engineers who don't have time for tech-occultism.</p>
+      </div>
+
+      <div class="plain-grid">
+        <!-- Card 1 -->
+        <div class="plain-card">
+          <div class="plain-header">
+            <div class="plain-icon">
+              <i data-lucide="terminal" style="width: 20px; height: 20px;"></i>
+            </div>
+            <h3>1. What It Actually Is</h3>
+          </div>
+          <p>
+            An open-source, local <strong>Model Context Protocol (MCP) server + CLI runtime</strong> built for Cursor, Claude Code, Cline, and autonomous terminal agents.
+          </p>
+          <div class="plain-highlight">
+            Zero runtime dependencies • Pure TypeScript • Local SQLite WAL ledger • Runs 100% offline
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="plain-card">
+          <div class="plain-header">
+            <div class="plain-icon" style="color: var(--rose);">
+              <i data-lucide="skull" style="width: 20px; height: 20px;"></i>
+            </div>
+            <h3>2. The Exact Problem It Solves</h3>
+          </div>
+          <p>
+            <strong>The 3:00 AM AI Doom Loop.</strong> An AI agent fails a test. Instead of investigating, it apologizes, tweaks random lines, reverts, and tweaks again—burning $20 in tokens while the real bug was a deadlocked dev port or a stale <code>dist/</code> cache.
+          </p>
+          <div class="plain-highlight" style="border-left-color: var(--rose);">
+            Empirical data: &gt;96% of 3rd consecutive speculative patches fail without new ground truth.
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="plain-card">
+          <div class="plain-header">
+            <div class="plain-icon" style="color: var(--emerald);">
+              <i data-lucide="shield-check" style="width: 20px; height: 20px;"></i>
+            </div>
+            <h3>3. How It Physically Stops It</h3>
+          </div>
+          <p>
+            (1) <strong>2-Strikes Tripwire</strong>: Injects a rule into your agent config blocking edits after 2 failures.<br>
+            (2) <strong>Evidence Ledger (<code>pray</code>)</strong>: Inspects git, diff churn, and ports to give the AI 1 atomic probe.<br>
+            (3) <strong>Process Executioner (<code>pray-run</code>)</strong>: Auto-kills hung child processes and clears zombie ports after 15s.
+          </p>
+          <div class="plain-highlight" style="border-left-color: var(--emerald);">
+            Converts 15-turn circular loops into a 30-second single-variable resolution.
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="plain-card">
+          <div class="plain-header">
+            <div class="plain-icon" style="color: var(--amber);">
+              <i data-lucide="help-circle" style="width: 20px; height: 20px;"></i>
+            </div>
+            <h3>4. Why Not Just Write a Prompt?</h3>
+          </div>
+          <p>
+            Prompts have no memory across sessions, cannot check <code>git diff --stat</code>, cannot check whether port 3000 is deadlocked, cannot kill orphaned processes with <code>SIGKILL</code>, and LLMs routinely ignore prompt advice when caught in tunnel vision.
+          </p>
+          <div class="plain-highlight" style="border-left-color: var(--amber);">
+            Deterministic TypeScript code enforces hard constraints that LLM prompts cannot.
+          </div>
+        </div>
+      </div>
+
+      <!-- 3 Steps Architecture Flow -->
+      <div class="flow-steps">
+        <div class="flow-step-card">
+          <span class="step-badge">
+            <i data-lucide="zap" style="width: 13px; height: 13px;"></i>
+            STEP 1: 10s SETUP
+          </span>
+          <h4>One-Line Arming</h4>
+          <p>Run <code>npx ctrl-alt-pray init</code>. It detects Cursor, Claude, Cline, or Gemini and arms your repo with the 2-strikes tripwire and MCP configuration.</p>
+        </div>
+
+        <div class="flow-step-card">
+          <span class="step-badge" style="color: var(--rose); background: rgba(244, 63, 94, 0.1); border-color: rgba(244, 63, 94, 0.25);">
+            <i data-lucide="shield-alert" style="width: 13px; height: 13px;"></i>
+            STEP 2: THE TRIPWIRE
+          </span>
+          <h4>Loop Interception</h4>
+          <p>When the AI fails twice on the same check, the tripwire physically bars further code edits. The agent is forced to call the <code>pray()</code> MCP tool.</p>
+        </div>
+
+        <div class="flow-step-card">
+          <span class="step-badge" style="color: var(--emerald); background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.25);">
+            <i data-lucide="check-circle-2" style="width: 13px; height: 13px;"></i>
+            STEP 3: FALSIFICATION
+          </span>
+          <h4>Ground Truth Probe</h4>
+          <p>The Altar prescribes 1 of 12 canonical falsification rites. The agent tests one isolated variable, confirms reality, and resolves the issue in 1 clean commit.</p>
+        </div>
+      </div>
+
+      <!-- Why the Church Meme Callout -->
+      <div class="cynic-callout">
+        <div class="cynic-icon">
+          <i data-lucide="flame" style="width: 22px; height: 22px;"></i>
+        </div>
+        <div class="cynic-text">
+          <strong>Why the church & prayer theme?</strong> Because every software engineer who has stayed up until 3:00 AM watching an AI agent hallucinate changes through 20 files has tried <code>Ctrl+C</code>, tried <code>Ctrl+Z</code>, and was left with only one desperate move: <em>praying</em>. We turned developer pain into a memorable meme wrapped around a battle-hardened, zero-dependency engineering circuit breaker.
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- Interactive Simulator Section -->
   <section id="simulator">

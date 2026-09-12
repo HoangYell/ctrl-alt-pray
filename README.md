@@ -28,9 +28,28 @@
        [ PRAYERS ARE OPTIONAL. FALSIFIABLE EVIDENCE IS REQUIRED. ]
 ```
 
-**[🌐 Live Website & Simulator](https://ctrl-alt-pray.pages.dev) • [⭐ Star on GitHub](https://github.com/HoangYell/ctrl-alt-pray) • [Quickstart in 10s](#-quickstart-10-seconds) • [Before vs After](#-the-300-am-agony-before-vs-after) • [Core Superpowers](#-core-superpowers) • [The 12 Canonical Rites](#-the-12-canonical-recovery-recipes) • [CLI Cheat Sheet](#-cli-cheat-sheet)**
+**[🌐 Live Website & Simulator](https://ctrl-alt-pray.pages.dev) • [⭐ Star on GitHub](https://github.com/HoangYell/ctrl-alt-pray) • [Plain English (10s)](#-plain-english-for-cynical-engineers-what-is-this-in-10s) • [Quickstart in 10s](#-quickstart-10-seconds) • [Before vs After](#-the-300-am-agony-before-vs-after) • [Core Superpowers](#-core-superpowers) • [The 12 Canonical Rites](#-the-12-canonical-recovery-recipes)**
 
 </div>
+
+---
+
+## 💡 Plain English for Cynical Engineers (What is this in 10s?)
+
+> *"Wait, is this an RPG meme, a tech cult, or actual software?"*
+
+If you are a skeptical developer looking at this on Hacker News or GitHub, here is the no-BS explanation:
+
+1. **What it is**: An open-source local **MCP (Model Context Protocol) server + CLI runtime** for **Cursor, Claude Code, Cline, and terminal coding agents**. Zero runtime dependencies. 100% TypeScript. Local SQLite ledger.
+2. **The Exact Problem it Solves**: **The AI Doom Loop.** You give an AI agent a bug to fix. Attempt 1 fails. Instead of stopping, the agent apologizes, hallucinates alternative APIs, swaps random lines, and reverts its own code in an infinite loop—burning $20 in tokens while the real defect was a deadlocked dev port or a stale build cache.
+3. **How it Works in 3 Steps**:
+   - **Step 1 (The Tripwire)**: `npx ctrl-alt-pray init` injects a non-negotiable rule into `.cursorrules`, `CLAUDE.md`, or `GEMINI.md`. If the AI fails twice consecutively, it is **strictly blocked from writing more code**.
+   - **Step 2 (The Evidence Ledger)**: The AI is forced to call the `pray()` tool. The tool inspects git status, dirty diffs, and locked ports, and provides 1 of 12 canonical falsification probes (e.g. purge cache, isolate port, run 1-variable probe).
+   - **Step 3 (The Cascade Killer)**: `pray-run` wraps shell commands. If a command hangs on a hidden `(y/n)?` prompt or an orphaned test process for >15s, it kills the entire process tree (`SIGTERM` $\rightarrow$ `SIGKILL`).
+4. **Why not just write a prompt?**:
+   Prompts cannot inspect whether port 3000 is open, cannot check git status, cannot kill orphaned processes, have no cross-session state, and LLMs routinely ignore prompt rules when under cognitive tunnel vision. `ctrl-alt-pray` provides hard, deterministic constraints.
+5. **Why the church / praying theme?**:
+   Because every engineer at 3:00 AM who has watched an AI agent hallucinate through 20 files has tried `Ctrl+C`, `Ctrl+Z`, and was left with only one remaining strategy: **praying**. We turned developer agony into an open-source engineering tool.
 
 ---
 
